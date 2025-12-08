@@ -404,7 +404,7 @@
 
 /* === FEATURES SECTION === */
 .features-section {
-  padding: 5rem 6rem;
+  padding: 0rem 6rem;
   background: rgba(38, 70, 83, 0.3);
   backdrop-filter: blur(10px);
 }
@@ -1358,7 +1358,7 @@
   .features-section,
   .how-it-works-section,
   .extra-section {
-    padding: 3rem 2rem;
+    padding: 1rem 2rem;
   }
 
   .features-grid {
