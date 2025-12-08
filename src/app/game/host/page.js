@@ -908,6 +908,50 @@ export default function HostGamePage() {
             </div>
           </div>
         ) : null}
+
+        {/* Overlay błędnej odpowiedzi */}
+        {gameData?.wrongAnswerAlert && (
+          <div className="wrong-answer-overlay">
+            <div className="wrong-answer-content">
+              <PiXCircleFill className="wrong-answer-icon" />
+              <h2 className="wrong-answer-text">Błędna odpowiedź!</h2>
+              {gameData?.wrongAnswerCount < 4 && (
+                <p className="wrong-answer-count">{gameData?.wrongAnswerCount} {gameData?.wrongAnswerCount === 1 ? 'błąd' : 'błędy'}</p>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Overlay narady drużyny przeciwnej (po 2 błędzie) */}
+        {gameData?.opponentConsultationAlert && (
+          <div className="wrong-answer-overlay consultation-warning">
+            <div className="wrong-answer-content">
+              <PiUsersFill className="wrong-answer-icon" />
+              <h2 className="wrong-answer-text">Drużyna przeciwna się naradza...</h2>
+            </div>
+          </div>
+        )}
+
+        {/* Overlay przejścia pytania do przeciwnej drużyny (po 3 błędzie) */}
+        {gameData?.transferQuestionAlert && (
+          <div className="wrong-answer-overlay transfer-warning">
+            <div className="wrong-answer-content">
+              <PiLightningFill className="wrong-answer-icon" />
+              <h2 className="wrong-answer-text">Pytanie przechodzi do przeciwnej drużyny!</h2>
+            </div>
+          </div>
+        )}
+
+        {/* Overlay wygranej rundy */}
+        {gameData?.roundWinnerAlert && (
+          <div className="wrong-answer-overlay round-winner">
+            <div className="wrong-answer-content">
+              <PiTrophyFill className="wrong-answer-icon" />
+              <h2 className="wrong-answer-text">Rundę wygrywa drużyna</h2>
+              <p className="round-winner-name">{gameData?.roundWinnerName}</p>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
