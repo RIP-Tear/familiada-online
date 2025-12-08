@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { getAvailableCategories, getQuestionsByCategory } from "@/utils/questions";
-import { subscribeToGame, buzzIn } from "@/utils/firebaseUtils";
+import { subscribeToGame, buzzIn, voteForCategory } from "@/utils/firebaseUtils";
 import { 
   PiGameControllerFill,
   PiLightningFill,
@@ -20,7 +20,8 @@ import {
   PiXCircleFill,
   PiArrowRightBold,
   PiCheckCircleFill,
-  PiUsersFill
+  PiUsersFill,
+  PiChartBarFill
 } from "react-icons/pi";
 import { Navbar } from "@/components";
 import "@/css/game.css";
@@ -39,6 +40,7 @@ export default function PlayerGamePage() {
   const [questions, setQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [myTeamNumber, setMyTeamNumber] = useState(null); // 1 lub 2
+  const [myVote, setMyVote] = useState(null); // Głos gracza na kategorię
 
   useEffect(() => {
     if (!gameCode) {
@@ -118,10 +120,27 @@ export default function PlayerGamePage() {
         setMyTeamBuzzed(false);
         setIsFirst(null);
       }
+      
+      // Aktualizuj mój głos na podstawie danych z serwera
+      if (data.categoryVotes && data.categoryVotes[userId]) {
+        setMyVote(data.categoryVotes[userId]);
+      } else if (data.categoryVotes && !data.categoryVotes[userId]) {
+        setMyVote(null);
+      }
     });
 
     return () => unsubscribe && unsubscribe();
   }, [gameCode, router, selectedCategory, userId, myTeamBuzzed, questions]);
+
+  const handleVoteCategory = async (categoryName) => {
+    try {
+      await voteForCategory(gameCode, userId, categoryName);
+      setMyVote(categoryName);
+      console.log(`[PLAYER] Voted for category: ${categoryName}`);
+    } catch (error) {
+      console.error("[PLAYER] Error voting for category:", error);
+    }
+  };
 
   const handleBuzz = async () => {
     if (myTeamBuzzed || buzzedTeam) return; // Już wciśnięty
@@ -287,8 +306,16 @@ export default function PlayerGamePage() {
       <div className="game-header">
         <h1 className="header-title">
           {gamePhase === "category-selection" ? "Oczekiwanie na wybór zestawu" :
-          gamePhase === "buzz" ? `Pytanie ${(gameData?.currentQuestionIndex || 0) + 1}` :
-          gamePhase === "playing" ? `Pytanie ${(gameData?.currentQuestionIndex || 0) + 1}` :
+          gamePhase === "buzz" ? (
+            (gameData?.currentQuestionIndex || 0) === 4 
+              ? "Ostatnie pytanie" 
+              : `Pytanie ${(gameData?.currentQuestionIndex || 0) + 1}`
+          ) :
+          gamePhase === "playing" ? (
+            (gameData?.currentQuestionIndex || 0) === 4 
+              ? "Ostatnie pytanie" 
+              : `Pytanie ${(gameData?.currentQuestionIndex || 0) + 1}`
+          ) :
           "Podsumowanie"}
         </h1>
         <div className="header-team">{userName}</div>
@@ -297,17 +324,23 @@ export default function PlayerGamePage() {
       {gamePhase === "category-selection" ? (
         // FAZA 1: Wybór kategorii
         <div className="category-selection">
-          <p className="instruction">Prowadzący wybiera zestaw pytań...</p>
+          <p className="instruction">Głosuj na kategorię pytań!</p>
           
           <div className="categories-grid">
             {categories.map((cat, index) => (
               <div
                 key={index}
-                className={`category-card ${selectedCategory === cat.category ? "selected" : ""} readonly`}
+                className={`category-card ${myVote === cat.category ? "voted" : ""} votable`}
+                onClick={() => handleVoteCategory(cat.category)}
               >
                 <div className="category-icon">{getDifficultyStars(cat.difficulty)}</div>
                 <h3 className="category-name">{cat.category}</h3>
                 <p className="category-difficulty">{getDifficultyLabel(cat.difficulty)}</p>
+                {myVote === cat.category && (
+                  <div className="vote-badge">
+                    <PiCheckBold /> Twój głos
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -319,14 +352,24 @@ export default function PlayerGamePage() {
             </div>
           ) : (
             <div className="waiting-message">
-              <div className="spinner"></div>
-              <p>Czekaj na decyzję prowadzącego</p>
+              <p>Prowadzący wybiera zestaw pytań...</p>
             </div>
           )}
         </div>
       ) : gamePhase === "buzz" ? (
         // FAZA 2: Pytanie buzz
         <div className="buzz-round-player">
+          {/* Informacja o podwojonych punktach - tylko dla ostatniego pytania */}
+          {(gameData?.currentQuestionIndex || 0) === 4 && (
+            <div className="doubled-points-card">
+              <div className="doubled-points-icon">⚡</div>
+              <div className="doubled-points-content">
+                <h3 className="doubled-points-title">PODWOJONE PUNKTY!</h3>
+                <p className="doubled-points-text">Punkty w tej rundzie są liczone x2</p>
+              </div>
+            </div>
+          )}
+          
           <div className="buzz-instruction">
             <p>Prowadzący odczyta pytanie na głos</p>
             <p className="buzz-hint">Naciśnij przycisk jak najszybciej! <PiLightningFill className="hint-icon" /></p>

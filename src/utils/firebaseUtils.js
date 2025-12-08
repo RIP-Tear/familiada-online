@@ -61,6 +61,9 @@ export const createGame = async (hostId) => {
       wrongAnswers: [],
       selectedTeam: null,
       
+      // Głosowanie na kategorie
+      categoryVotes: {}, // { teamId: categoryName }
+      
       // Gracze
       players: [],
       rounds: questions,
@@ -170,6 +173,49 @@ export const startGame = async (gameCode) => {
   }
 };
 
+// Głosowanie na kategorię przez drużynę
+export const voteForCategory = async (gameCode, teamId, categoryName) => {
+  console.log(`[VOTE] Team ${teamId} voting for category: ${categoryName}`);
+  
+  if (useFirebase) {
+    const gameRef = doc(db, 'games', gameCode);
+    await updateDoc(gameRef, {
+      [`categoryVotes.${teamId}`]: categoryName,
+    });
+    console.log(`[VOTE] Vote saved to Firestore`);
+  } else {
+    // Demo mode
+    const game = await localGameStorage.getGame(gameCode);
+    if (game) {
+      const categoryVotes = game.categoryVotes || {};
+      categoryVotes[teamId] = categoryName;
+      await localGameStorage.updateGame(gameCode, {
+        categoryVotes,
+      });
+    }
+    console.log(`[VOTE] Vote saved to local storage`);
+  }
+};
+
+// Wyczyść wszystkie głosy na kategorie
+export const clearCategoryVotes = async (gameCode) => {
+  console.log(`[VOTE] Clearing all category votes for game ${gameCode}`);
+  
+  if (useFirebase) {
+    const gameRef = doc(db, 'games', gameCode);
+    await updateDoc(gameRef, {
+      categoryVotes: {},
+    });
+    console.log(`[VOTE] Votes cleared in Firestore`);
+  } else {
+    // Demo mode
+    await localGameStorage.updateGame(gameCode, {
+      categoryVotes: {},
+    });
+    console.log(`[VOTE] Votes cleared in local storage`);
+  }
+};
+
 // Wybór kategorii pytań (tylko host)
 export const selectCategory = async (gameCode, category) => {
   console.log(`[SELECT] Setting category for game ${gameCode}: ${category}`);
@@ -183,6 +229,7 @@ export const selectCategory = async (gameCode, category) => {
       buzzedTeam: null,
       buzzTimestamp: null,
       gamePhase: 'buzz', // Rozpoczyna fazę buzz
+      categoryVotes: {}, // Wyczyść głosy po wyborze
     });
     console.log(`[SELECT] Category ${category} saved to Firestore`);
     
@@ -197,6 +244,7 @@ export const selectCategory = async (gameCode, category) => {
       buzzedTeam: null,
       buzzTimestamp: null,
       gamePhase: 'buzz',
+      categoryVotes: {}, // Wyczyść głosy po wyborze
     });
     console.log(`[SELECT] Category ${category} saved to local storage`);
     
@@ -848,6 +896,9 @@ export const restartGame = async (gameCode) => {
       team2Score: 0,
       totalPoints: 0,
       
+      // Resetuj głosowanie
+      categoryVotes: {},
+      
       // Resetuj stan rundy
       buzzedTeam: null,
       buzzedTeamName: null,
@@ -879,6 +930,9 @@ export const restartGame = async (gameCode) => {
       team1Score: 0,
       team2Score: 0,
       totalPoints: 0,
+      
+      // Resetuj głosowanie
+      categoryVotes: {},
       
       buzzedTeam: null,
       buzzedTeamName: null,

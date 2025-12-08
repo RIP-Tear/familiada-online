@@ -178,6 +178,7 @@
   border: 3px solid transparent;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   color: #ffffff;
+  position: relative;
 }
 
 .category-card:hover:not(.readonly) {
@@ -771,5 +772,142 @@
   /* Buzz round player - mniejsze odstępy */
   .buzz-round-player {
     gap: 1.2rem;
+  }
+}
+
+/* ==================== GŁOSOWANIE NA KATEGORIE ==================== */
+
+/* Kategoria z możliwością głosowania */
+.category-card.votable {
+  cursor: pointer;
+  position: relative;
+}
+
+.category-card.votable:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 8px 30px rgba(42, 157, 143, 0.5);
+  border-color: var(--verdigris);
+}
+
+.category-card.voted {
+  background: linear-gradient(135deg, var(--verdigris) 0%, var(--sandy-brown) 100%);
+  border-color: var(--jasmine);
+  transform: scale(1.05);
+  animation: voteConfirm 0.4s ease;
+}
+
+@keyframes voteConfirm {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1.05); }
+}
+
+.vote-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--jasmine);
+  color: var(--charcoal-blue);
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Badge liczby głosów na karcie kategorii */
+.category-card.has-votes {
+  border-color: rgba(233, 196, 106, 0.5);
+}
+
+.vote-teams-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--jasmine);
+  color: var(--charcoal-blue);
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  z-index: 10;
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Modal potwierdzenia kategorii */
+.confirm-modal-category {
+  margin: 1.5rem 0;
+  padding: 1.5rem;
+  background: rgba(42, 157, 143, 0.2);
+  border-radius: 15px;
+  border: 2px solid var(--verdigris);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.confirm-modal-category-stars {
+  font-size: 2rem;
+}
+
+.confirm-modal-category-name {
+  font-size: 1.8rem;
+  color: var(--jasmine);
+  font-weight: bold;
+  text-align: center;
+}
+
+.confirm-modal-warning {
+  background: rgba(244, 162, 97, 0.2);
+  border: 3px solid #f4a261;
+  padding: 0.9rem 1.2rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  color: #ffd89b;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 1rem 0;
+  font-weight: 500;
+}
+
+.confirm-modal-warning svg {
+  font-size: 1.8rem;
+  color: #f4a261;
+  flex-shrink: 0;
+}
+
+/* Responsive dla sticky panelu */
+@media (max-width: 768px) {
+  .vote-badge,
+  .vote-teams-badge {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
+  }
+  
+  .confirm-modal-category-stars {
+    font-size: 1.5rem;
+  }
+  
+  .confirm-modal-category-name {
+    font-size: 1.4rem;
+  }
+  
+  .confirm-modal-warning {
+    font-size: 0.85rem;
+    padding: 0.8rem 1rem;
+  }
+  
+  .confirm-modal-warning svg {
+    font-size: 1.5rem;
   }
 }
