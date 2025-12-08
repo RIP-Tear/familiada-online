@@ -314,7 +314,7 @@
 
 .host-instruction {
   font-family: 'BPdots', monospace;
-  font-size: 0.85rem;
+  font-size: 1rem;
   color: rgba(255, 255, 255, 0.8);
   font-style: italic;
 }
@@ -382,6 +382,26 @@
 
 .waiting-buzz {
   width: 100%;
+}
+
+.waiting-buzz.processing {
+  color: var(--jasmine);
+}
+
+.waiting-buzz.processing .pulse-animation {
+  color: var(--jasmine);
+  animation: processingPulse 0.8s ease-in-out infinite;
+}
+
+@keyframes processingPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.7;
+  }
 }
 
 .pulse-animation {
@@ -704,7 +724,7 @@
   }
 
   .host-instruction {
-    font-size: 0.5rem;
+    font-size: 0.75rem;
   }
 
   .instruction-icon {

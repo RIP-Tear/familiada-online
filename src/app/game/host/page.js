@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { getAvailableCategories, getQuestionsByCategory } from "@/utils/questions";
@@ -59,6 +59,8 @@ export default function HostGamePage() {
   const [warningInterval, setWarningInterval] = useState(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [selectedTeamForTransfer, setSelectedTeamForTransfer] = useState(null);
+  const [buzzProcessing, setBuzzProcessing] = useState(false);
+  const buzzDelayTimeoutRef = useRef(null);
 
   useEffect(() => {
     if (!gameCode) {
@@ -97,11 +99,31 @@ export default function HostGamePage() {
         setCurrentQuestion(questions[data.currentQuestionIndex]);
       }
 
-      // Aktualizuj stan przycisku buzz
+      // Aktualizuj stan przycisku buzz z krótkim opóźnieniem dla stabilności wizualnej
       if (data.buzzedTeamName) {
-        setBuzzedTeam(data.buzzedTeamName);
+        if (!buzzedTeam) {
+          // Nowy buzz - pokaż "przetwarzanie" przez krótką chwilę
+          setBuzzProcessing(true);
+          
+          // Wyczyść poprzedni timeout jeśli istnieje
+          if (buzzDelayTimeoutRef.current) {
+            clearTimeout(buzzDelayTimeoutRef.current);
+          }
+          
+          buzzDelayTimeoutRef.current = setTimeout(() => {
+            setBuzzedTeam(data.buzzedTeamName);
+            setBuzzProcessing(false);
+            buzzDelayTimeoutRef.current = null;
+          }, 300);
+        }
       } else {
+        // Reset wszystkiego
+        if (buzzDelayTimeoutRef.current) {
+          clearTimeout(buzzDelayTimeoutRef.current);
+          buzzDelayTimeoutRef.current = null;
+        }
         setBuzzedTeam(null);
+        setBuzzProcessing(false);
       }
 
       // Obsługa ostrzeżenia
@@ -118,8 +140,20 @@ export default function HostGamePage() {
       if (warningInterval) {
         clearInterval(warningInterval);
       }
+      if (buzzDelayTimeoutRef.current) {
+        clearTimeout(buzzDelayTimeoutRef.current);
+      }
     };
-  }, [gameCode, router, selectedCategory, questions, warningInterval]);
+  }, [gameCode, router, selectedCategory, questions, warningInterval, buzzedTeam]);
+  
+  // Cleanup przy unmount
+  useEffect(() => {
+    return () => {
+      if (buzzDelayTimeoutRef.current) {
+        clearTimeout(buzzDelayTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleSelectCategory = async (category) => {
     if (isSelecting) return;
@@ -420,7 +454,12 @@ export default function HostGamePage() {
           </div>
 
           <div className="buzz-status">
-            {buzzedTeam ? (
+            {buzzProcessing ? (
+              <div className="waiting-buzz processing">
+                <div className="pulse-animation"><PiClockCountdownFill /></div>
+                <p>Przetwarzanie...</p>
+              </div>
+            ) : buzzedTeam ? (
               <div className="buzzed-info">
                 <div className="buzzed-info-content">
                   <div className="buzzed-label">

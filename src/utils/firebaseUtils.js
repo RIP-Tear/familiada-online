@@ -10,6 +10,7 @@ import {
   arrayUnion,
   arrayRemove,
   increment,
+  runTransaction,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import questions from './questions';
@@ -211,24 +212,42 @@ export const buzzIn = async (gameCode, teamId, teamName) => {
   
   if (useFirebase) {
     const gameRef = doc(db, 'games', gameCode);
-    const gameSnap = await getDoc(gameRef);
     
-    if (gameSnap.exists()) {
-      const gameData = gameSnap.data();
+    try {
+      // Użyj transakcji dla atomowej operacji - zapobiega race condition
+      const result = await runTransaction(db, async (transaction) => {
+        const gameSnap = await transaction.get(gameRef);
+        
+        if (!gameSnap.exists()) {
+          throw new Error('Gra nie istnieje');
+        }
+        
+        const gameData = gameSnap.data();
+        
+        // Tylko jeśli nikt jeszcze nie wcisnął
+        if (!gameData.buzzedTeam) {
+          // Atomowa aktualizacja - gwarantuje że tylko jedna drużyna zdoła to wykonać
+          transaction.update(gameRef, {
+            buzzedTeam: teamId,
+            buzzedTeamName: teamName,
+            buzzTimestamp: timestamp,
+          });
+          return { success: true, first: true };
+        } else {
+          return { success: true, first: false };
+        }
+      });
       
-      // Tylko jeśli nikt jeszcze nie wcisnął
-      if (!gameData.buzzedTeam) {
-        await updateDoc(gameRef, {
-          buzzedTeam: teamId,
-          buzzedTeamName: teamName,
-          buzzTimestamp: timestamp,
-        });
+      if (result.first) {
         console.log(`[BUZZ] ${teamName} buzzed first!`);
-        return { success: true, first: true };
       } else {
         console.log(`[BUZZ] ${teamName} was too slow`);
-        return { success: true, first: false };
       }
+      
+      return result;
+    } catch (error) {
+      console.error(`[BUZZ] Error during buzz transaction:`, error);
+      return { success: false, first: false };
     }
   } else {
     // Demo mode
