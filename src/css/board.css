@@ -94,7 +94,40 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  min-width: 60px;
+  min-width: 80px;
+}
+
+.wrong-x-box {
+  width: 70px;
+  height: 70px;
+  border: 3px solid rgba(231, 111, 81, 0.3);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(231, 111, 81, 0.05);
+  transition: all 0.3s ease;
+}
+
+.wrong-x-box.active {
+  background: rgba(231, 111, 81, 0.2);
+  border-color: var(--burnt-peach);
+  box-shadow: 0 0 20px rgba(231, 111, 81, 0.4);
+  animation: boxActivate 0.3s ease-out;
+}
+
+@keyframes boxActivate {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .wrong-x-large {
@@ -813,10 +846,34 @@
     justify-content: flex-end;
   }
 
+  /* Mobile wrong answer boxes */
+  .wrong-x-box-mobile {
+    width: 50px;
+    height: 50px;
+    border: 2px solid rgba(231, 111, 81, 0.3);
+    border-radius: 8px;
+    background: rgba(231, 111, 81, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+
+  .wrong-x-box-mobile.active {
+    background: rgba(231, 111, 81, 0.2);
+    border-color: var(--burnt-peach);
+    box-shadow: 0 0 15px rgba(231, 111, 81, 0.6);
+    animation: boxActivate 0.3s ease-out;
+  }
+
   .wrong-x-small {
     font-size: 1.5rem;
     color: var(--burnt-peach);
     text-shadow: 0 2px 4px rgba(231, 111, 81, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
   }
 
   .answers-grid {

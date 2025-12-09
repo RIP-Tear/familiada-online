@@ -677,13 +677,18 @@ export default function HostGamePage() {
             <div className="board-with-wrong-answers">
               {/* 3 błędne po lewej (pierwsza drużyna) */}
               <div className="wrong-answers-left">
-                {Array.from({
-                  length: Math.min(gameData?.wrongAnswersCount || 0, 3),
-                }).map((_, i) => (
-                  <span key={i} className="wrong-x-large">
-                    <PiXBold />
-                  </span>
-                ))}
+                {Array.from({ length: 3 }).map((_, i) => {
+                  const isActive = i < Math.min(gameData?.wrongAnswersCount || 0, 3);
+                  return (
+                    <div key={i} className={`wrong-x-box ${isActive ? 'active' : ''}`}>
+                      {isActive && (
+                        <span className="wrong-x-large">
+                          <PiXBold />
+                        </span>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
 
               {/* Siatka odpowiedzi */}
@@ -722,31 +727,40 @@ export default function HostGamePage() {
 
               {/* 4-ty błąd po prawej (druga drużyna) */}
               <div className="wrong-answers-right">
-                {(gameData?.wrongAnswersCount || 0) >= 4 && (
-                  <span className="wrong-x-large">
-                    <PiXBold />
-                  </span>
-                )}
+                <div className={`wrong-x-box ${(gameData?.wrongAnswersCount || 0) >= 4 ? 'active' : ''}`}>
+                  {(gameData?.wrongAnswersCount || 0) >= 4 && (
+                    <span className="wrong-x-large">
+                      <PiXBold />
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
 
             {/* Małe X-y pod odpowiedziami (tylko mobile) */}
             <div className="wrong-answers-mobile">
               <div className="wrong-answers-mobile-left">
-                {Array.from({
-                  length: Math.min(gameData?.wrongAnswersCount || 0, 3),
-                }).map((_, i) => (
-                  <span key={i} className="wrong-x-small">
-                    <PiXBold />
-                  </span>
-                ))}
+                {Array.from({ length: 3 }).map((_, i) => {
+                  const isActive = i < Math.min(gameData?.wrongAnswersCount || 0, 3);
+                  return (
+                    <div key={i} className={`wrong-x-box-mobile ${isActive ? 'active' : ''}`}>
+                      {isActive && (
+                        <span className="wrong-x-small">
+                          <PiXBold />
+                        </span>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
               <div className="wrong-answers-mobile-right">
-                {(gameData?.wrongAnswersCount || 0) >= 4 && (
-                  <span className="wrong-x-small">
-                    <PiXBold />
-                  </span>
-                )}
+                <div className={`wrong-x-box-mobile ${(gameData?.wrongAnswersCount || 0) >= 4 ? 'active' : ''}`}>
+                  {(gameData?.wrongAnswersCount || 0) >= 4 && (
+                    <span className="wrong-x-small">
+                      <PiXBold />
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
 
