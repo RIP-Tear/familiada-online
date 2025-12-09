@@ -299,7 +299,10 @@ export default function HostGamePage() {
         `[HOST] Points transferred to team ${selectedTeamForTransfer}`
       );
       setShowConfirmModal(false);
-      setSelectedTeamForTransfer(null);
+      // Opóźnij reset selectedTeamForTransfer, aby animacja zamykania mogła się zakończyć
+      setTimeout(() => {
+        setSelectedTeamForTransfer(null);
+      }, 300);
     } catch (error) {
       console.error("[HOST] Error transferring points:", error);
     }
@@ -307,7 +310,10 @@ export default function HostGamePage() {
 
   const cancelTransferPoints = () => {
     setShowConfirmModal(false);
-    setSelectedTeamForTransfer(null);
+    // Opóźnij reset selectedTeamForTransfer, aby animacja zamykania mogła się zakończyć
+    setTimeout(() => {
+      setSelectedTeamForTransfer(null);
+    }, 300);
   };
 
   const handleNextQuestion = async () => {
