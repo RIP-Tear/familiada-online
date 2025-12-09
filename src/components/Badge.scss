@@ -1,0 +1,36 @@
+@import '../styles/variables';
+@import '../styles/mixins';
+
+.badge {
+  @include txt($fs-1, 600, $c-white);
+  padding: $s-xs $s-sm;
+  border-radius: $r-round;
+  display: inline-flex;
+  align-items: center;
+  gap: $s-xs;
+  white-space: nowrap;
+  
+  // Variants
+  &--primary { background: $g-main; }
+  &--secondary { background: $g-warm; }
+  &--success { background: $c-green; }
+  &--warning { background: $c-orange; }
+  &--danger { background: $c-red; }
+  &--info { background: $c-yellow; color: $c-blue; }
+  
+  &--outline {
+    background: transparent;
+    border: 2px solid currentColor;
+  }
+  
+  &--dot::before {
+    content: '';
+    @include size(6px);
+    border-radius: 50%;
+    background: currentColor;
+  }
+  
+  // Sizes
+  &--sm { padding: 2px $s-xs; font-size: $fs-1 * .85; }
+  &--lg { padding: $s-sm $s-md; font-size: $fs-2; }
+}

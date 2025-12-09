@@ -1,0 +1,66 @@
+@import '../styles/variables';
+@import '../styles/mixins';
+
+.txt {
+  @include txt;
+  
+  // Sizes - single line definitions
+  &--xs { font-size: $fs-1; }
+  &--sm { font-size: $fs-2; }
+  &--md { font-size: $fs-3; }
+  &--lg { font-size: $fs-4; }
+  &--xl { font-size: $fs-5; }
+  &--2xl { font-size: $fs-6; }
+  &--3xl { font-size: $fs-7; }
+  
+  // Weights
+  &--light { font-weight: 300; }
+  &--normal { font-weight: 400; }
+  &--medium { font-weight: 500; }
+  &--bold { font-weight: 700; }
+  &--black { font-weight: 900; }
+  
+  // Colors - ultra compact
+  &--primary { color: $c-white; }
+  &--secondary { color: $c-yellow; }
+  &--accent { color: $c-orange; }
+  &--success { color: $c-green; }
+  &--danger { color: $c-red; }
+  &--muted { color: rgba($c-white, .6); }
+  
+  // Alignment
+  &--left { text-align: left; }
+  &--center { text-align: center; }
+  &--right { text-align: right; }
+  &--justify { text-align: justify; }
+  
+  // Styles
+  &--italic { font-style: italic; }
+  &--uppercase { text-transform: uppercase; }
+  &--lowercase { text-transform: lowercase; }
+  &--capitalize { text-transform: capitalize; }
+  
+  // Effects
+  &--shadow { text-shadow: 2px 2px 4px rgba($c-black, .3); }
+  &--glow { text-shadow: 0 0 10px currentColor; }
+  &--gradient {
+    background: $g-bright;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  // Truncate
+  &--truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  &--clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}

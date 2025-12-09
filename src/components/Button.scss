@@ -1,0 +1,97 @@
+@import '../styles/variables';
+@import '../styles/mixins';
+
+// Optimized button with BEM methodology
+.btn {
+  @include btn;
+  
+  &__icon { 
+    font-size: 1.5em; 
+    @include fx-c; 
+  }
+  
+  &__text { 
+    position: relative; 
+    z-index: 1; 
+  }
+  
+  // Variants - using shorthand
+  &--primary { 
+    background: $g-main;
+    &:hover:not(:disabled) { 
+      background: linear-gradient(135deg, lighten($c-green, 10%), lighten($c-blue, 5%));
+    }
+  }
+  
+  &--secondary { 
+    background: $g-warm;
+    &:hover:not(:disabled) { 
+      background: linear-gradient(135deg, lighten($c-orange, 5%), lighten($c-red, 5%));
+    }
+  }
+  
+  &--accent { 
+    background: linear-gradient(135deg, $c-yellow, $c-orange);
+    color: $c-blue;
+    &:hover:not(:disabled) { 
+      background: linear-gradient(135deg, lighten($c-yellow, 5%), lighten($c-orange, 5%));
+    }
+  }
+  
+  &--danger { 
+    background: linear-gradient(135deg, $c-red, darken($c-red, 10%));
+    &:hover:not(:disabled) { 
+      background: linear-gradient(135deg, lighten($c-red, 5%), darken($c-red, 5%));
+    }
+  }
+  
+  &--outline { 
+    background: transparent;
+    border: 3px solid $c-green;
+    color: $c-green;
+    box-shadow: none;
+    
+    &:hover:not(:disabled) { 
+      background: rgba($c-green, .15);
+      border-color: lighten($c-green, 15%);
+    }
+  }
+  
+  &--ghost { 
+    background: rgba($c-white, .1);
+    border: 2px solid rgba($c-white, .3);
+    box-shadow: none;
+    
+    &:hover:not(:disabled) { 
+      background: rgba($c-white, .2);
+      border-color: rgba($c-white, .5);
+    }
+  }
+  
+  // Sizes - ultra compact
+  &--xs { padding: $s-xs; font-size: $fs-1; }
+  &--sm { padding: $s-xs $s-sm; font-size: $fs-2; }
+  &--lg { padding: $s-md $s-xl; font-size: $fs-4; }
+  &--xl { padding: $s-lg $s-xl * 1.5; font-size: $fs-5; }
+  
+  // States
+  &--loading {
+    pointer-events: none;
+    &::after {
+      content: '';
+      @include size(1em);
+      border: 2px solid transparent;
+      border-top-color: currentColor;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-left: $s-xs;
+    }
+  }
+  
+  &--block { width: 100%; justify-content: center; }
+  &--rounded { border-radius: $r-round; }
+}
+
+@include keyframes(spin) {
+  to { transform: rotate(360deg); }
+}

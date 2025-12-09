@@ -1,0 +1,141 @@
+@import './variables';
+
+// Flexbox - ultra short names
+@mixin fx-c { display: flex; justify-content: center; align-items: center; }
+@mixin fx-b { display: flex; justify-content: space-between; align-items: center; }
+@mixin fx-col { display: flex; flex-direction: column; }
+@mixin fx-wrap { display: flex; flex-wrap: wrap; }
+
+// Card - optimized with shorthand properties
+@mixin card {
+  background: rgba($c-blue, .95);
+  border-radius: $r-3;
+  padding: $s-lg;
+  box-shadow: $s-3;
+  transition: all $t-norm;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba($c-green, .2);
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba($c-green, .4);
+    border-color: rgba($c-green, .6);
+  }
+}
+
+// Button - combined properties for optimization
+@mixin btn($bg: $g-bright) {
+  font: bold #{$fs-3}/1.5 $f;
+  padding: $s-sm $s-lg;
+  border: 0;
+  border-radius: $r-2;
+  cursor: pointer;
+  transition: all $t-norm;
+  display: inline-flex;
+  align-items: center;
+  gap: .75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: $s-2;
+  background: $bg;
+  color: $c-white;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 50% 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba($c-white, .2);
+    transform: translate(-50%, -50%);
+    transition: width .6s, height .6s;
+  }
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $s-3;
+    &::before { width: 300px; height: 300px; }
+  }
+  
+  &:active { transform: translateY(0); }
+  &:disabled { opacity: .5; cursor: not-allowed; pointer-events: none; }
+}
+
+// Glass effect - modern glassmorphism
+@mixin glass($blur: 20px, $opacity: .1) {
+  background: rgba($c-white, $opacity);
+  backdrop-filter: blur($blur);
+  border: 2px solid rgba($c-white, .2);
+}
+
+// Text styles - combined font properties
+@mixin txt($size: $fs-2, $weight: normal, $color: $c-white) {
+  font: $weight #{$size}/1.5 $f;
+  color: $color;
+}
+
+// Responsive - simplified media queries
+$bp-sm: 576px;
+$bp-md: 768px;
+$bp-lg: 992px;
+$bp-xl: 1200px;
+
+@mixin mq($size) {
+  @if $size == sm { @media (max-width: $bp-sm) { @content; } }
+  @else if $size == md { @media (max-width: $bp-md) { @content; } }
+  @else if $size == lg { @media (max-width: $bp-lg) { @content; } }
+  @else if $size == xl { @media (max-width: $bp-xl) { @content; } }
+}
+
+// Positioning shortcuts
+@mixin abs($t: null, $r: null, $b: null, $l: null) {
+  position: absolute;
+  @if $t { top: $t; }
+  @if $r { right: $r; }
+  @if $b { bottom: $b; }
+  @if $l { left: $l; }
+}
+
+@mixin fix($t: null, $r: null, $b: null, $l: null) {
+  position: fixed;
+  @if $t { top: $t; }
+  @if $r { right: $r; }
+  @if $b { bottom: $b; }
+  @if $l { left: $l; }
+}
+
+// Size shortcut
+@mixin size($w, $h: $w) { width: $w; height: $h; }
+
+// Animation keyframes helper
+@mixin keyframes($name) {
+  @keyframes #{$name} { @content; }
+}
+
+// Glass effect
+@mixin glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+// Text gradient
+@mixin text-gradient($color1, $color2) {
+  background: linear-gradient(135deg, $color1 0%, $color2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// Smooth shadow animation
+@mixin smooth-shadow($color) {
+  box-shadow: 0 4px 15px rgba($color, 0.2);
+  transition: box-shadow $transition-normal;
+
+  &:hover {
+    box-shadow: 0 8px 30px rgba($color, 0.4);
+  }
+}

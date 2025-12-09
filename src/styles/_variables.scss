@@ -1,0 +1,55 @@
+// Colors - shortened variable names for better optimization
+$c-blue: #264653;
+$c-green: #2a9d8f;
+$c-yellow: #e9c46a;
+$c-orange: #f4a261;
+$c-red: #e76f51;
+$c-white: #fff;
+$c-black: #000;
+
+// Gradients - using shorter syntax
+$g-main: linear-gradient(135deg, $c-blue, $c-green);
+$g-warm: linear-gradient(135deg, $c-orange, $c-red);
+$g-bright: linear-gradient(135deg, $c-green, $c-orange);
+
+// Shadows - optimized with single property
+$s-1: 0 2px 8px rgba($c-black, .2);
+$s-2: 0 4px 16px rgba($c-black, .3);
+$s-3: 0 8px 32px rgba($c-black, .4);
+$s-glow: 0 0 20px rgba($c-yellow, .4);
+
+// Border Radius - using single digit for common sizes
+$r-1: 8px;
+$r-2: 12px;
+$r-3: 16px;
+$r-4: 20px;
+$r-round: 50px;
+
+// Spacing scale - simplified
+$s: 1rem; // base spacing
+$s-xs: $s * 0.5;
+$s-sm: $s;
+$s-md: $s * 1.5;
+$s-lg: $s * 2;
+$s-xl: $s * 3;
+
+// Transitions - shortened
+$t-fast: .2s ease;
+$t-norm: .3s ease;
+$t-slow: .5s ease;
+
+// Typography
+$f: 'BPdots', monospace;
+$fs-1: .875rem;
+$fs-2: 1rem;
+$fs-3: 1.2rem;
+$fs-4: 1.5rem;
+$fs-5: 2rem;
+$fs-6: 3rem;
+$fs-7: 4rem;
+
+// Breakpoints
+$breakpoint-sm: 640px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;

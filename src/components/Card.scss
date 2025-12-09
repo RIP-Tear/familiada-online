@@ -1,0 +1,46 @@
+@import '../styles/variables';
+@import '../styles/mixins';
+
+.card {
+  @include card;
+  
+  &__header { 
+    @include txt($fs-4, bold, $c-yellow);
+    margin-bottom: $s-md; 
+    padding-bottom: $s-sm;
+    border-bottom: 2px solid rgba($c-green, .3);
+  }
+  
+  &__body { 
+    @include txt($fs-2);
+    line-height: 1.6; 
+  }
+  
+  &__footer { 
+    margin-top: $s-md; 
+    padding-top: $s-sm;
+    border-top: 1px solid rgba($c-white, .1);
+    @include fx-b;
+  }
+  
+  // Variants - ultra compact
+  &--primary { border-color: $c-green; }
+  &--secondary { border-color: $c-orange; }
+  &--danger { border-color: $c-red; }
+  
+  &--gradient {
+    background: $g-main;
+    &:hover { background: $g-bright; }
+  }
+  
+  &--glass {
+    @include glass;
+    backdrop-filter: blur(20px);
+  }
+  
+  // Sizes
+  &--sm { padding: $s-sm; }
+  &--lg { padding: $s-xl; }
+  
+  &--flat { box-shadow: none; border-width: 1px; }
+}

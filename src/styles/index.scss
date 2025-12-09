@@ -1,0 +1,336 @@
+@import './multiplayer.scss';
+@import '../styles/variables';
+@import '../styles/mixins';
+
+/* === FONT FACE === */
+@font-face {
+  font-family: 'BPdots';
+  src: url('/fonts/BPdots.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* === GLOBAL STYLES === */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  font-family: $f;
+  background: $g-main;
+  color: $c-white;
+  min-height: 100vh;
+}
+
+/* === FAMILIADA GAME === */
+.familiada {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  &__title {
+    @include fx-c;
+    font-family: $f;
+    padding: $s-md;
+    font-size: 130px;
+  }
+
+  &__question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 40px;
+    color: rgb(224, 196, 175);
+    background: linear-gradient(97deg, rgba(0, 0, 0, 1) 0%, rgba(255, 128, 41, 1) 100%);
+    padding: $r-1;
+    font-family: $f;
+    padding-left: 30px;
+    letter-spacing: 2px;
+    border: orange solid;
+  }
+
+  &__game {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    border: 2px solid;
+    background-image: url('https://i.pinimg.com/originals/64/cc/88/64cc884a74ccb65145f66ac81b177e07.gif');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
+    &_error {
+      padding: $s-md;
+      flex-direction: column;
+      display: flex;
+
+      &_substytut {
+        width: 90px;
+      }
+
+      &_symbol {
+        height: 90px;
+      }
+
+      &_team {
+        display: flex;
+        justify-content: end;
+        align-items: center;
+        margin-left: auto;
+
+        &_symbol {
+          height: 320px;
+        }
+      }
+    }
+
+    &_table {
+      padding: $s-md;
+      height: 500px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      &_list {
+        display: flex;
+      }
+
+      &_answer {
+        &_number {
+          font-size: 30px;
+          font-family: 'Starting Machine';
+          padding: $r-1;
+        }
+
+        &_text {
+          font-size: 30px;
+          padding-top: 15px;
+          font-family: $f;
+        }
+      }
+    }
+
+    &_total {
+      display: flex;
+      justify-content: space-between;
+      background-color: black;
+
+      &_points {
+        padding: $s-md;
+        border: orange solid 2px;
+        font-size: 30px;
+        font-family: $f;
+        padding-top: 30px;
+      }
+
+      &_send {
+        @include fx-c;
+        color: orange;
+        background: rgba(75, 42, 20, 1);
+        padding: $s-md;
+        font-size: 30px;
+        text-align: end;
+        border: orange solid 2px;
+        font-family: $f;
+      }
+    }
+  }
+
+  &__answer {
+    display: flex;
+    background-color: black;
+    border-bottom: 2px solid;
+    border: orange solid;
+
+    &_input {
+      background: rgba(75, 42, 20, 1);
+      border: orange solid;
+      width: 20%;
+      padding: 40px;
+      font-size: 30px;
+      font-family: $f;
+      color: orange;
+    }
+
+    &_button {
+      @include fx-c;
+      color: orange;
+      background: rgba(75, 42, 20, 1);
+      padding: $s-md;
+      font-size: 30px;
+      text-align: end;
+      border: orange solid 2px;
+      font-family: $f;
+    }
+  }
+
+  &__players {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: black;
+    padding: $r-1;
+    border: orange solid 2px;
+
+    &_div {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: black;
+      padding: $r-1;
+    }
+
+    &_avatar {
+      height: 50px;
+    }
+
+    &_name {
+      font-size: 30px;
+      padding: $s-md;
+      font-family: $f;
+
+      &_selected {
+        font-size: 30px;
+        padding: $s-md;
+        color: rgb(255, 0, 0);
+      }
+    }
+  }
+
+  &__actions {
+    @include fx-c;
+    color: orange;
+    background: rgba(75, 42, 20, 1);
+    padding: $s-md;
+    font-size: 30px;
+    text-align: end;
+    border: orange solid 2px;
+    justify-content: space-between;
+
+    &_next {
+      margin-left: auto;
+    }
+  }
+}
+
+/* === MODAL === */
+.modal {
+  &-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    @include fx-c;
+  }
+
+  background: linear-gradient(225deg, rgba(70, 36, 13, 1) 0%, rgba(255, 128, 41, 1) 100%);
+  border-radius: $r-2;
+  box-shadow: $s-3;
+  padding: $s-md;
+  position: relative;
+  width: 90%;
+  height: 90%;
+  max-width: 90%;
+  text-align: center;
+  border: orange solid;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &-close {
+    position: absolute;
+    top: $r-1;
+    right: $r-1;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #555;
+    outline: none;
+  }
+
+  &-content {
+    padding: $s-md;
+    @include fx-c;
+  }
+
+  &_avatar {
+    height: 300px;
+    margin-top: $s-md;
+    padding: 40px;
+    width: 400px;
+    opacity: 0.2;
+    transform: scale(0.7);
+
+    &_active {
+      height: 300px;
+      margin-top: $s-md;
+      padding: 40px;
+      width: 400px;
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  &_timer {
+    font-size: 60px;
+    font-family: $f;
+    background-color: rgb(70, 13, 13);
+    padding: $r-1;
+    border-radius: $r-1;
+    border: red solid;
+    margin-top: 50px;
+    color: white;
+    width: 30%;
+    margin-top: -15px;
+  }
+
+  &_question {
+    font-size: 80px;
+    font-family: $f;
+    background-color: rgba(70, 36, 13, 1);
+    padding: $s-md;
+    border-radius: $r-1;
+    border: orange solid;
+    margin-top: 50px;
+    color: rgb(224, 196, 175);
+  }
+}
+
+.avatars {
+  display: flex;
+}
+
+.avatar-number {
+  font-size: 80px;
+  font-family: $f;
+  background-color: rgba(70, 36, 13, 1);
+  padding: $r-1;
+  border: orange solid;
+  margin-bottom: $s-md;
+
+  &_first {
+    font-size: 80px;
+    font-family: $f;
+    background-color: rgb(0, 116, 12);
+    padding: $r-1;
+    border: rgb(17, 255, 0) solid;
+    margin-bottom: $s-md;
+    color: white;
+  }
+}

@@ -1,6 +1,6 @@
 {
   "name": "familiada",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -20,8 +20,13 @@
     "redux-persist": "^6.0.0"
   },
   "devDependencies": {
+    "@types/node": "^24.10.2",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
     "baseline-browser-mapping": "^2.8.32",
     "eslint": "^9",
-    "eslint-config-next": "16.0.5"
+    "eslint-config-next": "16.0.5",
+    "sass": "^1.95.0",
+    "typescript": "^5.9.3"
   }
 }
