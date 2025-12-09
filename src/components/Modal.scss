@@ -137,7 +137,7 @@
     @include fx-c;
     gap: .5rem;
     padding: $s-sm $s-md;
-    border-radius: 50px;
+    border-radius: $r-round !important;
     font-size: 1rem;
     font-weight: bold;
     font-family: $f;
