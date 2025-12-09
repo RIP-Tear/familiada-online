@@ -1,4 +1,5 @@
-@import './variables', './mixins';
+@use './variables' as *;
+@use './mixins' as *;
 
 // === LANDING PAGE ===
 .landing {

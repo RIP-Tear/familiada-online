@@ -1,6 +1,6 @@
-@import './multiplayer.scss';
-@import '../styles/variables';
-@import '../styles/mixins';
+@use './multiplayer.scss';
+@use './variables' as *;
+@use './mixins' as *;
 
 /* === FONT FACE === */
 @font-face {

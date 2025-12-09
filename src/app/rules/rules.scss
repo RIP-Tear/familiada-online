@@ -1,9 +1,11 @@
+@use '../../styles/variables' as *;
+
 /* Rules Page Styles */
 .rules-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--charcoal-blue) 0%, var(--verdigris) 100%);
+  background: linear-gradient(135deg, $c-blue 0%, $c-green 100%);
   padding: 2rem;
-  font-family: 'BPdots', monospace;
+  font-family: $f;
 }
 
 .rules-content {
@@ -14,52 +16,52 @@
 
 /* Przycisk powrotu */
 .btn-back {
-  font-family: 'BPdots', monospace;
-  background: rgba(38, 70, 83, 0.95);
-  color: var(--jasmine);
+  font-family: $f;
+  background: rgba($c-blue, 0.95);
+  color: $c-yellow;
   border: none;
   padding: 0.8rem 1.5rem;
   font-size: 1rem;
-  border-radius: 10px;
+  border-radius: $r-2;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  transition: all 0.3s ease;
+  transition: all $t-norm;
   margin-bottom: 2rem;
 }
 
 .btn-back:hover {
-  background: var(--verdigris);
+  background: $c-green;
   transform: translateX(-5px);
 }
 
 /* Tytuł główny */
 .rules-title {
-  font-family: 'BPdots', monospace;
+  font-family: $f;
   font-size: 2.5rem;
-  color: var(--jasmine);
+  color: $c-yellow;
   text-align: center;
   margin-bottom: 2rem;
   text-shadow: 
-    2px 2px 0 var(--sandy-brown),
-    4px 4px 0 var(--burnt-peach),
-    6px 6px 10px rgba(0, 0, 0, 0.3);
+    2px 2px 0 $c-orange,
+    4px 4px 0 $c-red,
+    6px 6px 10px rgba($c-black, 0.3);
 }
 
 /* Sekcje */
 .rules-section {
-  background: rgba(38, 70, 83, 0.95);
-  border-radius: 20px;
+  background: rgba($c-blue, 0.95);
+  border-radius: $r-4;
   padding: 2rem;
   margin-bottom: 2rem;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: $s-3;
 }
 
 .section-title {
-  font-family: 'BPdots', monospace;
+  font-family: $f;
   font-size: 1.8rem;
-  color: var(--jasmine);
+  color: $c-yellow;
   margin-bottom: 1.5rem;
   display: flex;
   align-items: center;
@@ -67,13 +69,13 @@
 }
 
 .section-title svg {
-  color: var(--sandy-brown);
+  color: $c-orange;
 }
 
 /* Tekst zasad */
 .rules-text {
-  font-family: 'BPdots', monospace;
-  color: rgba(255, 255, 255, 0.95);
+  font-family: $f;
+  color: rgba($c-white, 0.95);
   font-size: 1rem;
   line-height: 1.8;
 }
@@ -83,16 +85,16 @@
 }
 
 .rules-text h3 {
-  font-family: 'BPdots', monospace;
-  color: var(--sandy-brown);
+  font-family: $f;
+  color: $c-orange;
   font-size: 1.3rem;
   margin-top: 1.5rem;
   margin-bottom: 1rem;
 }
 
 .rules-text h4 {
-  font-family: 'BPdots', monospace;
-  color: var(--verdigris);
+  font-family: $f;
+  color: $c-green;
   font-size: 1.1rem;
   margin-bottom: 0.5rem;
 }
@@ -117,18 +119,18 @@
 }
 
 .rules-text strong {
-  color: var(--jasmine);
+  color: $c-yellow;
 }
 
 /* Boksy informacyjne */
 .info-box,
 .warning-box,
 .success-box {
-  background: rgba(42, 157, 143, 0.2);
-  border-left: 4px solid var(--verdigris);
+  background: rgba($c-green, 0.2);
+  border-left: 4px solid $c-green;
   padding: 1rem 1.5rem;
   margin: 1.5rem 0;
-  border-radius: 10px;
+  border-radius: $r-2;
   display: flex;
   align-items: flex-start;
   gap: 1rem;
@@ -143,25 +145,25 @@
 }
 
 .info-box svg {
-  color: var(--jasmine);
+  color: $c-yellow;
 }
 
 .warning-box {
-  background: rgba(231, 111, 81, 0.2);
-  border-left-color: var(--burnt-peach);
+  background: rgba($c-red, 0.2);
+  border-left-color: $c-red;
 }
 
 .warning-box svg {
-  color: var(--burnt-peach);
+  color: $c-red;
 }
 
 .success-box {
-  background: rgba(42, 157, 143, 0.2);
-  border-left-color: var(--verdigris);
+  background: rgba($c-green, 0.2);
+  border-left-color: $c-green;
 }
 
 .success-box svg {
-  color: var(--verdigris);
+  color: $c-green;
 }
 
 .info-box p,
@@ -173,9 +175,9 @@
 
 /* FAQ */
 .faq-item {
-  background: rgba(42, 157, 143, 0.1);
+  background: rgba($c-green, 0.1);
   padding: 1rem 1.5rem;
-  border-radius: 10px;
+  border-radius: $r-2;
   margin-bottom: 1rem;
 }
 
@@ -195,26 +197,26 @@
 }
 
 .btn-start-game {
-  font-family: 'BPdots', monospace;
-  background: var(--sandy-brown);
-  color: var(--charcoal-blue);
+  font-family: $f;
+  background: $c-orange;
+  color: $c-blue;
   border: none;
   padding: 1.2rem 3rem;
   font-size: 1.3rem;
   font-weight: bold;
-  border-radius: 15px;
+  border-radius: $r-3;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 0.8rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 20px rgba(233, 196, 106, 0.4);
+  transition: all $t-norm;
+  box-shadow: 0 4px 20px rgba($c-yellow, 0.4);
 }
 
 .btn-start-game:hover {
-  background: var(--jasmine);
+  background: $c-yellow;
   transform: translateY(-3px);
-  box-shadow: 0 6px 30px rgba(233, 196, 106, 0.6);
+  box-shadow: 0 6px 30px rgba($c-yellow, 0.6);
 }
 
 .btn-start-game svg {

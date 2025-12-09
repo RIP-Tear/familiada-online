@@ -1,4 +1,5 @@
-@import './variables', './mixins';
+@use './variables' as *;
+@use './mixins' as *;
 
 // === GAME CONTAINER ===
 .game-container { min-height: calc(100vh - 80px); background: $g-main; padding: $s-lg; @include fx-col; align-items: center; }

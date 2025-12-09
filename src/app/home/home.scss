@@ -1,3 +1,5 @@
+@use '../../styles/variables' as *;
+
 /* Home Page Styles */
 .home-container {
   min-height: 100vh;
@@ -5,7 +7,7 @@
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  background: linear-gradient(135deg, #264653 0%, #2a9d8f 50%, #264653 100%);
+  background: linear-gradient(135deg, $c-blue 0%, $c-green 50%, $c-blue 100%);
   position: relative;
   overflow: hidden;
 }
@@ -17,7 +19,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(233, 196, 106, 0.1) 0%, transparent 50%);
+  background: radial-gradient(circle at 50% 50%, rgba($c-yellow, 0.1) 0%, transparent 50%);
   pointer-events: none;
 }
 
@@ -30,17 +32,17 @@
 }
 
 .home-title {
-  font-family: 'BPdots', monospace;
+  font-family: $f;
   font-size: 4rem;
   font-weight: bold;
-  color: #e9c46a;
+  color: $c-yellow;
   text-transform: uppercase;
   letter-spacing: 3px;
   margin-bottom: 1rem;
   text-shadow: 
-    2px 2px 0 #f4a261,
-    4px 4px 0 #e76f51,
-    6px 6px 20px rgba(0, 0, 0, 0.5);
+    2px 2px 0 $c-orange,
+    4px 4px 0 $c-red,
+    6px 6px 20px rgba($c-black, 0.5);
   animation: titlePulse 2s ease-in-out infinite;
 }
 
@@ -54,9 +56,9 @@
 }
 
 .home-subtitle {
-  font-family: 'BPdots', monospace;
+  font-family: $f;
   font-size: 1.5rem;
-  color: #ffffff;
+  color: $c-white;
   margin-bottom: 3rem;
   opacity: 0.9;
   letter-spacing: 2px;
@@ -70,16 +72,16 @@
 }
 
 .mode-button {
-  font-family: 'BPdots', monospace;
+  font-family: $f;
   display: flex;
   align-items: center;
   gap: 2rem;
   padding: 2rem 3rem;
   border: none;
-  border-radius: 16px;
+  border-radius: $r-3;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transition: all $t-norm;
+  box-shadow: $s-3;
   position: relative;
   overflow: hidden;
 }
@@ -92,7 +94,7 @@
   width: 0;
   height: 0;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba($c-white, 0.2);
   transform: translate(-50%, -50%);
   transition: width 0.6s, height 0.6s;
 }
@@ -107,34 +109,34 @@
 }
 
 .host-button {
-  background: linear-gradient(135deg, #2a9d8f 0%, #264653 100%);
+  background: linear-gradient(135deg, $c-green 0%, $c-blue 100%);
 }
 
 .host-button:hover {
-  box-shadow: 0 12px 40px rgba(42, 157, 143, 0.5);
+  box-shadow: 0 12px 40px rgba($c-green, 0.5);
 }
 
 .player-button {
-  background: linear-gradient(135deg, #f4a261 0%, #e76f51 100%);
+  background: linear-gradient(135deg, $c-orange 0%, $c-red 100%);
 }
 
 .player-button:hover {
-  box-shadow: 0 12px 40px rgba(244, 162, 97, 0.5);
+  box-shadow: 0 12px 40px rgba($c-orange, 0.5);
 }
 
 .rules-button {
-  background: linear-gradient(135deg, #e9c46a 0%, #f4a261 100%);
+  background: linear-gradient(135deg, $c-yellow 0%, $c-orange 100%);
 }
 
 .rules-button:hover {
-  box-shadow: 0 12px 40px rgba(233, 196, 106, 0.5);
+  box-shadow: 0 12px 40px rgba($c-yellow, 0.5);
 }
 
 .button-icon {
   font-size: 4rem;
   position: relative;
   z-index: 1;
-  color: #ffffff;
+  color: $c-white;
 }
 
 .button-text {
@@ -147,7 +149,7 @@
 .button-text h2 {
   font-size: 2rem;
   font-weight: bold;
-  color: #ffffff;
+  color: $c-white;
   margin: 0 0 0.5rem 0;
   text-transform: uppercase;
   letter-spacing: 2px;
@@ -155,14 +157,14 @@
 
 .button-text p {
   font-size: 1.2rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba($c-white, 0.8);
   margin: 0;
 }
 
 .home-footer {
-  font-family: 'BPdots', monospace;
+  font-family: $f;
   font-size: 1rem;
-  color: rgba(233, 196, 106, 0.7);
+  color: rgba($c-yellow, 0.7);
   letter-spacing: 1px;
 }
 
@@ -176,19 +178,19 @@
 }
 
 .footer-link {
-  color: #e9c46a;
+  color: $c-yellow;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  transition: all 0.3s ease;
+  transition: all $t-norm;
   padding: 0.3rem 0.6rem;
-  border-radius: 8px;
+  border-radius: $r-1;
 }
 
 .footer-link:hover {
-  color: #f4a261;
-  background: rgba(233, 196, 106, 0.1);
+  color: $c-orange;
+  background: rgba($c-yellow, 0.1);
   transform: translateY(-2px);
 }
 

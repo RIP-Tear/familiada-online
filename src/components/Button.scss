@@ -1,5 +1,6 @@
-@import '../styles/variables';
-@import '../styles/mixins';
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+@use 'sass:color';
 
 // Optimized button with BEM methodology
 .btn {
@@ -19,14 +20,14 @@
   &--primary { 
     background: $g-main;
     &:hover:not(:disabled) { 
-      background: linear-gradient(135deg, lighten($c-green, 10%), lighten($c-blue, 5%));
+      background: linear-gradient(135deg, color.adjust($c-green, $lightness: 10%), color.adjust($c-blue, $lightness: 5%));
     }
   }
   
   &--secondary { 
     background: $g-warm;
     &:hover:not(:disabled) { 
-      background: linear-gradient(135deg, lighten($c-orange, 5%), lighten($c-red, 5%));
+      background: linear-gradient(135deg, color.adjust($c-orange, $lightness: 5%), color.adjust($c-red, $lightness: 5%));
     }
   }
   
@@ -34,14 +35,14 @@
     background: linear-gradient(135deg, $c-yellow, $c-orange);
     color: $c-blue;
     &:hover:not(:disabled) { 
-      background: linear-gradient(135deg, lighten($c-yellow, 5%), lighten($c-orange, 5%));
+      background: linear-gradient(135deg, color.adjust($c-yellow, $lightness: 5%), color.adjust($c-orange, $lightness: 5%));
     }
   }
   
   &--danger { 
-    background: linear-gradient(135deg, $c-red, darken($c-red, 10%));
+    background: linear-gradient(135deg, $c-red, color.adjust($c-red, $lightness: -10%));
     &:hover:not(:disabled) { 
-      background: linear-gradient(135deg, lighten($c-red, 5%), darken($c-red, 5%));
+      background: linear-gradient(135deg, color.adjust($c-red, $lightness: 5%), color.adjust($c-red, $lightness: -5%));
     }
   }
   
@@ -53,7 +54,7 @@
     
     &:hover:not(:disabled) { 
       background: rgba($c-green, .15);
-      border-color: lighten($c-green, 15%);
+      border-color: color.adjust($c-green, $lightness: 15%);
     }
   }
   

@@ -1,6 +1,6 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
-import storage from 'redux-persist/lib/storage';
+import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 
 import questionReducer from "./reducer/questionReducer";
 import gameReducer from "./reducer/gameSlice";
@@ -12,6 +12,27 @@ export interface RootState {
   question: QuestionState;
   game: GameState;
 }
+
+// Tworzenie noop storage dla SSR
+const createNoopStorage = () => {
+  return {
+    getItem(_key: string) {
+      return Promise.resolve(null);
+    },
+    setItem(_key: string, value: any) {
+      return Promise.resolve(value);
+    },
+    removeItem(_key: string) {
+      return Promise.resolve();
+    },
+  };
+};
+
+// Użyj localStorage tylko po stronie klienta
+const storage =
+  typeof window !== "undefined"
+    ? createWebStorage("local")
+    : createNoopStorage();
 
 const rootReducer = combineReducers({
   question: questionReducer,
