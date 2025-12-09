@@ -1,0 +1,219 @@
+@import '../styles/variables';
+@import '../styles/mixins';
+
+.modal {
+  &-overlay {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba($c-black, 0);
+    @include fx-c;
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    will-change: opacity, visibility, background;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out, background 0.3s ease-in-out;
+
+    &.active {
+      background: rgba($c-black, .8);
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  &-content {
+    background: linear-gradient(135deg, rgba($c-blue, .98), rgba($c-green, .95));
+    border-radius: $r-4;
+    padding: $s-lg;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba($c-black, .5);
+    border: 3px solid rgba($c-yellow, .3);
+    text-align: center;
+    transform: translateY(-50px) scale(.9);
+    opacity: 0;
+    visibility: hidden;
+    will-change: transform, opacity, visibility;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                visibility 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &.active {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  &-icon {
+    font-size: 4rem;
+    color: $c-yellow;
+    margin-bottom: $s-xs;
+    animation: iconPulse 2s ease-in-out infinite;
+    display: inline-block;
+  }
+
+  &-title {
+    @include txt(2rem, bold, $c-yellow);
+    margin: 0 0 $s-xs 0;
+    text-shadow: 2px 2px 4px rgba($c-black, .3);
+  }
+
+  &-message,
+  &-description,
+  &-text {
+    @include txt(1.2rem, normal, $c-white);
+    margin: $s-xs 0;
+    line-height: 1.4;
+    opacity: .85;
+  }
+
+  &-team {
+    @include txt(2rem, bold, $c-yellow);
+    @include fx-c;
+    gap: .5rem;
+    margin: $s-xs 0;
+    padding: $s-sm;
+    background: rgba($c-black, .3);
+    border-radius: $r-2;
+  }
+
+  &-warning {
+    background: rgba($c-orange, .2);
+    border: 3px solid $c-orange;
+    padding: .75rem 1rem;
+    border-radius: 12px;
+    @include txt(1rem, 500, #ffd89b);
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin: $s-xs 0;
+    text-align: left;
+
+    svg {
+      font-size: 2rem;
+      color: $c-orange;
+      flex-shrink: 0;
+    }
+  }
+
+  &-category {
+    margin: $s-xs 0;
+    padding: $s-sm;
+    background: rgba($c-green, .2);
+    border-radius: $r-3;
+    border: 2px solid $c-green;
+    @include fx-col;
+    align-items: center;
+    gap: $s-xs;
+
+    &-stars {
+      font-size: 2.5rem;
+      color: $c-yellow;
+    }
+
+    &-name {
+      font-size: 2rem;
+      color: $c-yellow;
+      font-weight: bold;
+      text-align: center;
+    }
+  }
+
+  &-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: $s-sm;
+    margin-top: $s-md;
+    justify-content: stretch;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  &-btn {
+    @include fx-c;
+    gap: .5rem;
+    padding: $s-sm $s-md;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: bold;
+    font-family: $f;
+    cursor: pointer;
+    border: none;
+    transition: all $t-norm;
+    width: 100% !important;
+    min-width: auto !important;
+    flex: 1;
+
+    &.btn-confirm,
+    &.confirm-yes {
+      background: $g-bright;
+      color: $c-white;
+      box-shadow: 0 4px 15px rgba($c-green, .3);
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba($c-green, .5);
+      }
+    }
+
+    &.btn-cancel,
+    &.confirm-no {
+      background: $g-warm;
+      color: $c-white;
+      box-shadow: 0 4px 15px rgba($c-red, .3);
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba($c-red, .5);
+      }
+    }
+
+    svg {
+      font-size: 1.3rem;
+    }
+  }
+}
+
+@keyframes iconPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+// Responsive
+@include mq(md) {
+  .modal {
+    &-content {
+      padding: $s-lg;
+    }
+
+    &-title {
+      font-size: 1.4rem;
+    }
+
+    &-message,
+    &-description,
+    &-text {
+      font-size: $fs-2;
+    }
+
+    &-team {
+      font-size: $fs-4;
+    }
+
+    &-buttons {
+      flex-direction: column;
+    }
+
+    &-category {
+      &-stars {
+        font-size: $fs-4;
+      }
+
+      &-name {
+        font-size: 1.4rem;
+      }
+    }
+  }
+}

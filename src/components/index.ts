@@ -5,3 +5,4 @@ export { default as Text } from './Text';
 export { default as Table } from './Table';
 export { default as Badge } from './Badge';
 export { default as Navbar } from './Navbar';
+export { default as Modal } from './Modal';

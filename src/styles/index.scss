@@ -234,7 +234,9 @@ body {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.7);
-    @include fx-c;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   background: linear-gradient(225deg, rgba(70, 36, 13, 1) 0%, rgba(255, 128, 41, 1) 100%);
@@ -247,10 +249,10 @@ body {
   max-width: 90%;
   text-align: center;
   border: orange solid;
-  justify-content: center;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 
   &-close {
     position: absolute;
@@ -265,8 +267,11 @@ body {
   }
 
   &-content {
-    padding: $s-md;
-    @include fx-c;
+    padding: $s-sm;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $s-xs;
   }
 
   &_avatar {

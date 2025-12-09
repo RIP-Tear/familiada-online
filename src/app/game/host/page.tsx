@@ -45,7 +45,7 @@ import {
   PiQuestionFill,
   PiUsersFill,
 } from "react-icons/pi";
-import { Navbar } from "@/components";
+import { Navbar, Modal } from "@/components";
 import "@/styles/game.scss";
 import "@/styles/board.scss";
 
@@ -395,98 +395,90 @@ export default function HostGamePage() {
       <Navbar />
       <div className="game-container">
         {/* Modal potwierdzenia wyboru kategorii */}
-        {showCategoryConfirmModal && (
-          <div className="confirm-modal-overlay">
-            <div className="confirm-modal">
-              <div className="confirm-modal-icon">
-                <PiQuestionFill />
-              </div>
-              <h2 className="confirm-modal-title">
-                Potwierdzenie wyboru kategorii
-              </h2>
-              <p className="confirm-modal-description">
-                Czy na pewno chcesz wybrać kategorię:
-              </p>
-              <div className="confirm-modal-category">
-                {(() => {
-                  const selectedCat = categories.find(
-                    (c) => c.category === pendingCategory
-                  );
-                  return (
-                    <>
-                      <div className="confirm-modal-category-stars">
-                        {getDifficultyStars(selectedCat?.difficulty)}
-                      </div>
-                      <div className="confirm-modal-category-name">
-                        {pendingCategory}
-                      </div>
-                    </>
-                  );
-                })()}
-              </div>
-              <p className="confirm-modal-warning">
-                <PiWarningFill /> Będzie można zmienić kategorię dopiero po
-                zakończeniu gry.
-              </p>
-              <div className="confirm-modal-buttons">
-                <button
-                  className="confirm-btn confirm-no"
-                  onClick={cancelCategorySelection}
-                >
-                  <PiXBold /> Nie, anuluj
-                </button>
-                <button
-                  className="confirm-btn confirm-yes"
-                  onClick={confirmCategorySelection}
-                >
-                  <PiCheckBold /> Tak, wybierz kategorię
-                </button>
-              </div>
-            </div>
+        <Modal isOpen={showCategoryConfirmModal} onClose={cancelCategorySelection}>
+          <div className="modal-icon">
+            <PiQuestionFill />
           </div>
-        )}
+          <h2 className="modal-title">
+            Potwierdzenie wyboru kategorii
+          </h2>
+          <p className="modal-description">
+            Czy na pewno chcesz wybrać kategorię:
+          </p>
+          <div className="modal-category">
+            {(() => {
+              const selectedCat = categories.find(
+                (c) => c.category === pendingCategory
+              );
+              return (
+                <>
+                  <div className="modal-category-stars">
+                    {getDifficultyStars(selectedCat?.difficulty)}
+                  </div>
+                  <div className="modal-category-name">
+                    {pendingCategory}
+                  </div>
+                </>
+              );
+            })()}
+          </div>
+          <p className="modal-warning">
+            <PiWarningFill /> Będzie można zmienić kategorię dopiero po
+            zakończeniu gry.
+          </p>
+          <div className="modal-buttons">
+            <button
+              className="modal-btn confirm-no"
+              onClick={cancelCategorySelection}
+            >
+              <PiXBold /> Nie, anuluj
+            </button>
+            <button
+              className="modal-btn confirm-yes"
+              onClick={confirmCategorySelection}
+            >
+              <PiCheckBold /> Tak, wybierz kategorię
+            </button>
+          </div>
+        </Modal>
 
         {/* Modal potwierdzenia przekazania punktów */}
-        {showConfirmModal && (
-          <div className="confirm-modal-overlay">
-            <div className="confirm-modal">
-              <div className="confirm-modal-icon">
-                <PiQuestionFill />
-              </div>
-              <h2 className="confirm-modal-title">
-                Potwierdzenie przekazania punktów
-              </h2>
-              <p className="confirm-modal-message">
-                Czy na pewno chcesz przekazać{" "}
-                <strong>{gameData?.totalPoints || 0} punktów</strong> drużynie
-              </p>
-              <p className="confirm-modal-team">
-                <PiTrophyFill />{" "}
-                {selectedTeamForTransfer === 1
-                  ? gameData?.team1Name
-                  : gameData?.team2Name}
-              </p>
-              <p className="confirm-modal-warning">
-                <PiWarningFill /> Później nie będzie można tego zmienić podczas
-                gry
-              </p>
-              <div className="confirm-modal-buttons">
-                <button
-                  className="confirm-btn confirm-no"
-                  onClick={cancelTransferPoints}
-                >
-                  <PiXBold /> Nie, anuluj
-                </button>
-                <button
-                  className="confirm-btn confirm-yes"
-                  onClick={confirmTransferPoints}
-                >
-                  <PiCheckBold /> Tak, przekaż punkty
-                </button>
-              </div>
-            </div>
+        <Modal isOpen={showConfirmModal} onClose={cancelTransferPoints}>
+          <div className="modal-icon">
+            <PiQuestionFill />
           </div>
-        )}
+          <h2 className="modal-title">
+            Potwierdzenie przekazania punktów
+          </h2>
+          <p className="modal-message">
+            Czy na pewno chcesz przekazać{" "}
+            <strong>{gameData?.totalPoints || 0} punktów</strong> drużynie
+          </p>
+          <p className="modal-team">
+            <PiTrophyFill />{" "}
+            {selectedTeamForTransfer === 1
+              ? gameData?.team1Name
+              : gameData?.team2Name}
+          </p>
+          <p className="modal-warning">
+            <PiWarningFill /> Później nie będzie można tego zmienić podczas
+            gry
+          </p>
+          <div className="modal-buttons">
+            <button
+              className="modal-btn confirm-no"
+              onClick={cancelTransferPoints}
+            >
+              <PiXBold /> Nie, anuluj
+            </button>
+            <button
+              className="modal-btn confirm-yes"
+              onClick={confirmTransferPoints}
+            >
+              <PiCheckBold /> Tak, przekaż punkty
+            </button>
+          </div>
+        </Modal>
 
         {/* Overlay ostrzeżenia */}
         {gameData?.warningActive && (

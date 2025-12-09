@@ -123,7 +123,8 @@
 .warning {
   &-overlay { 
     @include abs(0, 0, 0, 0); position: fixed; width: 100vw; height: 100vh; 
-    background: rgba($c-red, .95); @include fx-c; z-index: 9999; animation: fadeIn $t-norm ease-in-out; 
+    background: rgba($c-red, .95); @include fx-col; justify-content: center; align-items: center; z-index: 9999;
+    animation: overlayFadeIn .3s ease-in-out;
   }
   &-content { @include fx-col; align-items: center; gap: $s-lg; max-width: 600px; width: 90%; }
   &-icon { font-size: 8rem; color: $c-white; animation: warningPulse .8s ease-in-out infinite; filter: drop-shadow(0 10px 30px rgba($c-black, .5)); }
@@ -132,6 +133,7 @@
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+@keyframes overlayFadeIn { from { opacity: 0; transform: scale(.95); } to { opacity: 1; transform: scale(1); } }
 @keyframes warningPulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.2); opacity: .8; } }
 
 .progress-bar {
@@ -144,8 +146,8 @@
 .wrong-answer {
   &-overlay { 
     @include abs(0, 0, 0, 0); position: fixed; width: 100vw; height: 100vh; 
-    background: rgba(#e74c3c, .95); @include fx-c; z-index: 9999; 
-    animation: wrongAnswerFadeIn .2s ease-in-out, wrongAnswerFadeOut .3s ease-in-out 1.7s forwards;
+    background: rgba(#e74c3c, .95); @include fx-col; justify-content: center; align-items: center; z-index: 9999; 
+    animation: overlayFadeIn .3s ease-in-out;
   }
   &-overlay.consultation-warning { background: rgba(244, 162, 97, .95); }
   &-overlay.transfer-warning { background: rgba(233, 196, 106, .95); }
@@ -209,49 +211,6 @@
 
 @keyframes celebratePulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
 
-// === CONFIRM MODAL ===
-.confirm-modal {
-  &-overlay { @include abs(0, 0, 0, 0); position: fixed; width: 100vw; height: 100vh; background: rgba($c-black, .8); @include fx-c; z-index: 10000; animation: fadeIn $t-fast ease-in-out; }
-  
-  background: linear-gradient(135deg, rgba($c-blue, .98), rgba($c-green, .95));
-  border-radius: $r-4; padding: 2.5rem; max-width: 500px; width: 90%; box-shadow: 0 20px 60px rgba($c-black, .5);
-  animation: modalSlideIn $t-norm ease-out; text-align: center;
-  
-  &-icon { font-size: 4rem; color: $c-yellow; margin-bottom: $s-sm; animation: iconPulse 2s ease-in-out infinite; }
-  &-title { @include txt(1.8rem, bold, $c-yellow); margin: 0 0 $s-sm 0; }
-  &-message { @include txt(1.2rem, normal, $c-white); margin: $s-sm 0 .5rem; line-height: 1.6; }
-  &-team { @include txt(2rem, bold, $c-yellow); @include fx-c; margin: $s-sm 0; padding: $s-sm; background: rgba($c-black, .3); border-radius: $r-2; gap: .5rem; }
-  &-warning { 
-    background: rgba($c-orange, .2); border: 3px solid $c-orange; padding: .9rem 1.2rem; border-radius: 10px; 
-    @include txt(.95rem, 500, #ffd89b); @include fx-c; gap: .8rem; margin: $s-sm 0; align-items: center; 
-    svg { font-size: 1.8rem; color: $c-orange; flex-shrink: 0; } 
-  }
-  &-buttons { display: flex; gap: $s-sm; margin-top: $s-lg; }
-  &-category {
-    margin: $s-md 0; padding: $s-md; background: rgba($c-green, .2); border-radius: $r-3;
-    border: 2px solid $c-green; @include fx-col; align-items: center; gap: .8rem;
-  }
-  &-category-stars { font-size: 2rem; }
-  &-category-name { font-size: 1.8rem; color: $c-yellow; font-weight: bold; text-align: center; }
-}
-
-@keyframes modalSlideIn { from { opacity: 0; transform: translateY(-30px) scale(.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
-
-.confirm-btn {
-  flex: 1; padding: $s-sm $s-md; @include txt(1.1rem, bold, $c-white); border: none; border-radius: $r-2;
-  cursor: pointer; transition: all $t-norm; @include fx-c; gap: .5rem; align-items: center; justify-content: center;
-}
-
-.confirm-yes { 
-  background: $g-bright; box-shadow: 0 4px 15px rgba($c-green, .4); 
-  &:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba($c-green, .6); } 
-}
-
-.confirm-no { 
-  background: linear-gradient(135deg, rgba($c-red, .9), rgba($c-orange, .9)); box-shadow: 0 4px 15px rgba($c-red, .4);
-  &:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba($c-red, .6); } 
-}
-
 // === RESPONSIVE ===
 @include mq('md') {
   .game-board { padding: .5rem; }
@@ -297,7 +256,4 @@
   .summary { &-title { font-size: $fs-4; } &-actions { flex-direction: column; width: 100%; } }
   .team-score { &-name { font-size: 1.1rem; } &-points { font-size: 2rem; } &-card { padding: $s-sm; } }
   .transfer-card { h3 { font-size: $fs-4; } p { font-size: $fs-2; } }
-  
-  .confirm-modal { padding: $s-lg; &-title { font-size: 1.4rem; } &-message { font-size: $fs-2; } &-team { font-size: $fs-4; } &-buttons { flex-direction: column; } &-category-stars { font-size: $fs-4; } &-category-name { font-size: 1.4rem; } }
-  .confirm-btn { font-size: $fs-2; }
 }
