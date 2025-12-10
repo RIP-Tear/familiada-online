@@ -24,6 +24,7 @@ import {
   nextQuestion,
   endGame,
   restartGame,
+  hostLeftGame,
 } from "@/utils/firebaseUtils";
 import {
   PiGameControllerFill,
@@ -168,6 +169,16 @@ export default function HostGamePage() {
       }
     };
   }, []);
+
+  // Osobny useEffect dla przekierowania gdy drużyna opuściła grę
+  useEffect(() => {
+    if (gameData?.teamLeftAlert) {
+      const redirectTimer = setTimeout(() => {
+        router.push('/home');
+      }, 3000);
+      return () => clearTimeout(redirectTimer);
+    }
+  }, [gameData?.teamLeftAlert, router]);
 
   const handleSelectCategory = async (category) => {
     if (isSelecting) return;
@@ -369,6 +380,16 @@ export default function HostGamePage() {
     }
   };
 
+  const handleHostLeaveGame = async () => {
+    try {
+      await hostLeftGame(gameCode);
+      console.log("[HOST] Host left the game");
+      await new Promise(resolve => setTimeout(resolve, 500)); // Poczekaj na zapisanie danych
+    } catch (error) {
+      console.error("[HOST] Error leaving game:", error);
+    }
+  };
+
   const handleEndGame = async () => {
     try {
       await endGame(gameCode);
@@ -441,7 +462,7 @@ export default function HostGamePage() {
 
   return (
     <>
-      <Navbar />
+      <Navbar onLeaveGame={handleHostLeaveGame} />
       <div className="game-container">
         {/* Modal potwierdzenia przekazania punktów */}
         <Modal isOpen={showConfirmModal} onClose={cancelTransferPoints}>
@@ -594,6 +615,16 @@ export default function HostGamePage() {
               <h2 className="team-vs-name">{gameData?.team1Name || 'Drużyna 1'}</h2>
               <h1 className="team-vs-text">VS</h1>
               <h2 className="team-vs-name">{gameData?.team2Name || 'Drużyna 2'}</h2>
+            </div>
+          </div>
+        )}
+
+        {/* Overlay opuszczenia gry przez drużynę */}
+        {gameData?.teamLeftAlert && (
+          <div className="wrong-answer-overlay team-left">
+            <div className="wrong-answer-content">
+              <PiWarningFill className="wrong-answer-icon" />
+              <h2 className="wrong-answer-text">{gameData?.teamLeftName}<br />opuścili grę</h2>
             </div>
           </div>
         )}

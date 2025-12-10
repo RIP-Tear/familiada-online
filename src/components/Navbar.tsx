@@ -5,7 +5,11 @@ import { PiSignOutBold, PiWarningFill, PiCheckBold, PiXBold } from 'react-icons/
 import Modal from './Modal';
 import './Navbar.scss';
 
-export default function Navbar() {
+interface NavbarProps {
+  onLeaveGame?: () => Promise<void>;
+}
+
+export default function Navbar({ onLeaveGame }: NavbarProps = {}) {
   const [showExitModal, setShowExitModal] = useState(false);
   const router = useRouter();
 
@@ -13,7 +17,13 @@ export default function Navbar() {
     setShowExitModal(true);
   };
 
-  const handleConfirmExit = () => {
+  const handleConfirmExit = async () => {
+    if (onLeaveGame) {
+      // W grze - wywołaj funkcję opuszczenia gry i poczekaj na zapisanie danych
+      await onLeaveGame();
+      await new Promise(resolve => setTimeout(resolve, 500));
+    }
+    // W poczekalni lub po opuszczeniu gry - przekieruj od razu
     router.push('/home');
   };
 

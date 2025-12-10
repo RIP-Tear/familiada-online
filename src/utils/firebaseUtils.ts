@@ -1130,3 +1130,51 @@ export const showGameResultAlert = async (gameCode: string): Promise<void> => {
   }
 };
 
+// Prowadzący opuszcza grę
+export const hostLeftGame = async (gameCode: string): Promise<void> => {
+  console.log(`[HOST_LEFT] Host leaving game: ${gameCode}`);
+  console.log(`[HOST_LEFT] useFirebase: ${useFirebase}`);
+  
+  if (useFirebase) {
+    const gameRef = doc(db, 'games', gameCode);
+    console.log(`[HOST_LEFT] Updating Firestore...`);
+    await updateDoc(gameRef, {
+      hostLeftAlert: true,
+      hostLeftAt: new Date().toISOString(),
+    });
+    console.log(`[HOST_LEFT] Firestore updated successfully`);
+  } else {
+    // Demo mode
+    console.log(`[HOST_LEFT] Updating local storage...`);
+    await localGameStorage.updateGame(gameCode, {
+      hostLeftAlert: true,
+      hostLeftAt: new Date().toISOString(),
+    } as any);
+    console.log(`[HOST_LEFT] Local storage updated successfully`);
+  }
+  
+  console.log(`[HOST_LEFT] Host left alert set for game ${gameCode}`);
+};
+
+// Drużyna opuszcza grę
+export const teamLeftGame = async (gameCode: string, teamName: string): Promise<void> => {
+  console.log(`[TEAM_LEFT] Team "${teamName}" leaving game: ${gameCode}`);
+  
+  if (useFirebase) {
+    const gameRef = doc(db, 'games', gameCode);
+    await updateDoc(gameRef, {
+      teamLeftAlert: true,
+      teamLeftName: teamName,
+      teamLeftAt: new Date().toISOString(),
+    });
+  } else {
+    // Demo mode
+    await localGameStorage.updateGame(gameCode, {
+      teamLeftAlert: true,
+      teamLeftName: teamName,
+      teamLeftAt: new Date().toISOString(),
+    } as any);
+  }
+  
+  console.log(`[TEAM_LEFT] Team left alert set for game ${gameCode}`);
+};
