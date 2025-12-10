@@ -306,6 +306,8 @@ export const buzzIn = async (gameCode: string, teamId: string, teamName: string)
             buzzedTeam: teamId,
             buzzedTeamName: teamName,
             buzzTimestamp: timestamp,
+            buzzAlert: true,
+            buzzAlertTeamName: teamName,
           });
           return { success: true, first: true };
         } else {
@@ -315,6 +317,13 @@ export const buzzIn = async (gameCode: string, teamId: string, teamName: string)
       
       if (result.first) {
         console.log(`[BUZZ] ${teamName} buzzed first!`);
+        // Automatycznie ukryj alert po 2 sekundach
+        setTimeout(async () => {
+          await updateDoc(gameRef, {
+            buzzAlert: false,
+            buzzAlertTeamName: null,
+          });
+        }, 2000);
       } else {
         console.log(`[BUZZ] ${teamName} was too slow`);
       }
@@ -332,7 +341,18 @@ export const buzzIn = async (gameCode: string, teamId: string, teamName: string)
         buzzedTeam: teamId,
         buzzedTeamName: teamName,
         buzzTimestamp: timestamp,
+        buzzAlert: true,
+        buzzAlertTeamName: teamName,
       } as any);
+      
+      // Automatycznie ukryj alert po 2 sekundach
+      setTimeout(async () => {
+        await localGameStorage.updateGame(gameCode, {
+          buzzAlert: false,
+          buzzAlertTeamName: null,
+        } as any);
+      }, 2000);
+      
       return { success: true, first: true };
     }
     return { success: true, first: false };

@@ -176,6 +176,10 @@
     background: linear-gradient(135deg, rgba(255, 215, 0, .95), rgba(255, 165, 0, .95)); 
     .wrong-answer-icon { animation: topAnswerPulse 1s ease-in-out infinite; }
   }
+  &-overlay.buzz-alert { 
+    background: linear-gradient(135deg, rgba(52, 152, 219, .95), rgba(41, 128, 185, .95)); 
+    .wrong-answer-icon { animation: buzzPulse 0.8s ease-in-out infinite; }
+  }
   &-content { @include fx-col; align-items: center; gap: $s-md; max-width: 500px; width: 90%; }
   &-icon { font-size: 10rem; color: $c-white; animation: wrongAnswerShake .5s ease-in-out; filter: drop-shadow(0 10px 30px rgba($c-black, .5)); }
   &-text { @include txt(3rem, bold, $c-white); text-align: center; text-shadow: 0 5px 20px rgba($c-black, .5); margin: 0; animation: wrongAnswerPulse .5s ease-in-out; }
@@ -191,6 +195,11 @@
   25% { transform: scale(1.15) rotate(-5deg); } 
   50% { transform: scale(1.2) rotate(0deg); } 
   75% { transform: scale(1.15) rotate(5deg); } 
+}
+
+@keyframes buzzPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.2); opacity: 0.9; }
 }
 
 .round-winner-name { 

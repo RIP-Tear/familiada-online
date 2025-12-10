@@ -576,6 +576,17 @@ export default function HostGamePage() {
           </div>
         )}
 
+        {/* Overlay informacji o buzzowaniu - tylko dla prowadzącego */}
+        {gameData?.buzzAlert && (
+          <div className="wrong-answer-overlay buzz-alert">
+            <div className="wrong-answer-content">
+              <PiHandshakeFill className="wrong-answer-icon" />
+              <p className="round-winner-name">{gameData?.buzzAlertTeamName}</p>
+              <h2 className="wrong-answer-text">byli pierwsi!</h2>
+            </div>
+          </div>
+        )}
+
         <div className="game-header">
           <h1 className="header-title">
             {gamePhase === "category-selection"
