@@ -880,17 +880,18 @@ export default function HostGamePage() {
               </div>
             </div>
 
+            {/* Pasek statusu */}
+            <div className="status-bar">
+              <div className="status-item">
+                <span className="status-label">Punkty w rundzie:</span>
+                <span className="status-value points">
+                  {gameData?.totalPoints || 0}
+                </span>
+              </div>
+            </div>
+
             {/* Panel kontrolny */}
             <div className="host-controls">
-              <div className="status-bar">
-                <div className="status-item">
-                  <span className="status-label">Punkty w rundzie:</span>
-                  <span className="status-value points">
-                    {gameData?.totalPoints || 0}
-                  </span>
-                </div>
-              </div>
-
               <div className="controls-section">
                 <button
                   className="control-btn btn-wrong"

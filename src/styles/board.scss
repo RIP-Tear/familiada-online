@@ -124,8 +124,8 @@
 
 .status {
   &-bar { 
-    background: rgba($c-green, .2); border-radius: $r-4; padding: $s-xs $s-sm; 
-    box-shadow: 0 10px 30px rgba($c-black, .2); @include fx-b; flex-wrap: wrap; gap: $s-sm; justify-content: flex-end; align-items: center;
+    background: rgba($c-blue, .95); border-radius: $r-4; padding: $s-xs $s-sm; 
+    box-shadow: $s-3; @include fx-b; flex-wrap: wrap; gap: $s-sm; justify-content: flex-end; align-items: center;
   }
   &-item { @include fx-c; gap: .5rem; align-items: center; }
   &-label { @include txt($fs-2, 600, rgba($c-white, .8)); }
