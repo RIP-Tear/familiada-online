@@ -272,6 +272,17 @@ export default function PlayerGamePage() {
           </div>
         )}
 
+        {/* Overlay Team VS Team */}
+        {gameData?.teamVsAlert && (
+          <div className="wrong-answer-overlay team-vs">
+            <div className="wrong-answer-content">
+              <h2 className="team-vs-name">{gameData?.team1Name || 'Drużyna 1'}</h2>
+              <h1 className="team-vs-text">VS</h1>
+              <h2 className="team-vs-name">{gameData?.team2Name || 'Drużyna 2'}</h2>
+            </div>
+          </div>
+        )}
+
         {/* Overlay wyniku końcowego gry */}
         {gameData?.gameResultAlert && (() => {
           const team1Score = gameData?.team1Score || 0;

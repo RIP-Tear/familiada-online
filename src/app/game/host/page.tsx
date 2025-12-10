@@ -619,6 +619,17 @@ export default function HostGamePage() {
           </div>
         )}
 
+        {/* Overlay Team VS Team */}
+        {gameData?.teamVsAlert && (
+          <div className="wrong-answer-overlay team-vs">
+            <div className="wrong-answer-content">
+              <h2 className="team-vs-name">{gameData?.team1Name || 'Drużyna 1'}</h2>
+              <h1 className="team-vs-text">VS</h1>
+              <h2 className="team-vs-name">{gameData?.team2Name || 'Drużyna 2'}</h2>
+            </div>
+          </div>
+        )}
+
         <div className="game-header">
           <h1 className="header-title">
             {gamePhase === "category-selection"

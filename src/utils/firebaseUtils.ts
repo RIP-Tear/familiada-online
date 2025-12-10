@@ -167,12 +167,28 @@ export const startGame = async (gameCode: string): Promise<void> => {
     const gameRef = doc(db, 'games', gameCode);
     await updateDoc(gameRef, {
       status: 'playing',
+      teamVsAlert: true,
     });
+    
+    // Ukryj overlay po 3 sekundach
+    setTimeout(async () => {
+      await updateDoc(gameRef, {
+        teamVsAlert: false,
+      });
+    }, 3000);
   } else {
     // Demo mode
     await localGameStorage.updateGame(gameCode, {
       status: 'playing',
-    });
+      teamVsAlert: true,
+    } as any);
+    
+    // Ukryj overlay po 3 sekundach
+    setTimeout(async () => {
+      await localGameStorage.updateGame(gameCode, {
+        teamVsAlert: false,
+      } as any);
+    }, 3000);
   }
 };
 

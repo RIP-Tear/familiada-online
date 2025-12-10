@@ -187,6 +187,9 @@
     background: linear-gradient(135deg, rgba(155, 89, 182, .95), rgba(142, 68, 173, .95)); 
     .wrong-answer-icon { animation: roundEndPulse 1s ease-in-out infinite; }
   }
+  &-overlay.team-vs { 
+    background: linear-gradient(135deg, rgba($c-blue, .95), rgba($c-green, .95)); 
+  }
   &-content { @include fx-col; align-items: center; gap: $s-md; max-width: 500px; width: 90%; }
   &-icon { font-size: 10rem; color: $c-white; animation: wrongAnswerShake .5s ease-in-out; filter: drop-shadow(0 10px 30px rgba($c-black, .5)); }
   &-text { @include txt(3rem, bold, $c-white); text-align: center; text-shadow: 0 5px 20px rgba($c-black, .5); margin: 0; animation: wrongAnswerPulse .5s ease-in-out; }
@@ -226,6 +229,37 @@
 }
 
 @keyframes winnerPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+.team-vs {
+  &-text {
+    @include txt(5rem, bold, $c-yellow);
+    text-align: center;
+    margin: $s-md 0;
+    text-shadow: 0 5px 20px rgba($c-black, .5);
+    animation: vsPulse 1.5s ease-in-out infinite;
+  }
+  
+  &-name {
+    @include txt(3rem, bold, $c-white);
+    text-align: center;
+    margin: 0;
+    padding: $s-sm $s-xl;
+    background: rgba($c-black, .3);
+    border-radius: $r-4;
+    text-shadow: 0 3px 15px rgba($c-black, .4);
+    animation: teamPulse 2s ease-in-out infinite;
+  }
+}
+
+@keyframes vsPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+@keyframes teamPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
 
 .game-summary {
   width: 100%; max-width: 800px; background: rgba($c-blue, .95); border-radius: $r-4; 
