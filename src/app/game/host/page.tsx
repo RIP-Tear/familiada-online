@@ -44,6 +44,7 @@ import {
   PiChartBarFill,
   PiQuestionFill,
   PiUsersFill,
+  PiCheckCircleFill,
 } from "react-icons/pi";
 import { Navbar, Modal } from "@/components";
 import "@/styles/game.scss";
@@ -593,6 +594,17 @@ export default function HostGamePage() {
             <div className="wrong-answer-content">
               <PiFlagCheckeredFill className="wrong-answer-icon" />
               <h2 className="wrong-answer-text">Koniec rundy</h2>
+            </div>
+          </div>
+        )}
+
+        {/* Overlay wybranej kategorii */}
+        {gameData?.categorySelectedAlert && (
+          <div className="wrong-answer-overlay category-selected">
+            <div className="wrong-answer-content">
+              <PiCheckCircleFill className="wrong-answer-icon" />
+              <h2 className="wrong-answer-text">Wybrano kategorię</h2>
+              <p className="round-winner-name">{gameData?.selectedCategoryName}</p>
             </div>
           </div>
         )}
