@@ -255,8 +255,8 @@ const Page = () => {
             <div className="step-content">
               <h3 className="step-title">Utwórz pokój</h3>
               <p className="step-description">
-                Kliknij "Rozpocznij grę", wybierz tryb Demo lub Firebase i otrzymaj
-                unikalny kod gry do udostępnienia znajomym.
+                Jako prowadzący kliknij "Rozpocznij grę" i otrzymaj
+                unikalny kod, który przekażesz drużynom do dołączenia.
               </p>
             </div>
           </div>

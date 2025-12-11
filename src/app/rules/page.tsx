@@ -36,8 +36,8 @@ export default function RulesPage() {
               </li>
               <li><strong>Błędne odpowiedzi:</strong>
                 <ul>
-                  <li>Grająca drużyna może udzielić maksymalnie <strong>4 błędne odpowiedzi</strong> (wyświetlane jako czerwone X)</li>
-                  <li>Po 4 błędach pytanie automatycznie przechodzi do drugiej drużyny</li>
+                  <li>Grająca drużyna może udzielić maksymalnie <strong>3 błędne odpowiedzi</strong> (wyświetlane jako czerwone X)</li>
+                  <li>Po 3 błędach pytanie automatycznie przechodzi do drugiej drużyny</li>
                   <li>Druga drużyna ma <strong>tylko jedną szansę</strong> na odpowiedź:</li>
                   <ul>
                     <li>Jeśli odpowiedzą poprawnie (niezależnie od punktacji) - <strong>wszystkie punkty z rundy przechodzą do nich</strong></li>
@@ -48,10 +48,27 @@ export default function RulesPage() {
               <li><strong>Pytanie finałowe:</strong> 5. pytanie jest pytaniem finałowym - wszystkie punkty są podwojone!</li>
               <li><strong>Zwycięzca:</strong> Wygrywa drużyna, która zdobędzie więcej punktów po wszystkich 5 rundach.</li>
             </ol>
+          </div>
+        </section>
 
-            <div className="info-box">
-              <PiTrophyFill />
-              <p><strong>Pamiętaj:</strong> Gra wymaga minimum 2 drużyn i jednego prowadzącego. Prowadzący kontroluje przebieg gry, a drużyny odpowiadają na pytania.</p>
+        {/* WYMAGANIA TECHNICZNE */}
+        <section className="rules-section">
+          <h2 className="section-title"><PiUsersFill /> Wymagania do gry</h2>
+          <div className="rules-text">
+            <div className="requirements-box">
+              <h3>Minimalne wymagania:</h3>
+              <ul>
+                <li><strong>Liczba graczy:</strong> Minimum 3 osoby (1 prowadzący + 2 drużyny)</li>
+                <li><strong>Drużyny:</strong> Każda drużyna może składać się z nieograniczonej liczby graczy</li>
+                <li><strong>Urządzenia:</strong> Minimum 3 urządzenia (telefony, tablety lub komputery) - jedno dla prowadzącego i po jednym dla każdej drużyny</li>
+                <li><strong>Internet:</strong> Stałe połączenie z internetem dla wszystkich uczestników</li>
+                <li><strong>Przeglądarka:</strong> Aktualna wersja przeglądarki internetowej (Chrome, Firefox, Safari, Edge)</li>
+              </ul>
+
+              <div className="info-box">
+                <PiCheckCircleFill />
+                <p><strong>Gra działa w czasie rzeczywistym!</strong> Wszystkie akcje prowadzącego (odkrywanie odpowiedzi, przyznawanie punktów, przechodzenie do kolejnych pytań) są automatycznie synchronizowane i widoczne natychmiast dla wszystkich graczy bez potrzeby odświeżania strony.</p>
+              </div>
             </div>
           </div>
         </section>
@@ -71,19 +88,21 @@ export default function RulesPage() {
 
             <h3>2. Wybór kategorii</h3>
             <ol>
-              <li>Po rozpoczęciu gry zobaczysz listę dostępnych kategorii pytań</li>
-              <li>Każda kategoria ma oznaczony poziom trudności (gwiazdki)</li>
-              <li>Kliknij na wybraną kategorię, aby załadować pytania</li>
+              <li>Po rozpoczęciu gry drużyny zobaczą listę dostępnych kategorii pytań</li>
+              <li><strong>Poczekaj, aż obie drużyny zagłosują na kategorię</strong></li>
+              <li>Zobaczysz, na którą kategorię zagłosowała każda drużyna</li>
+              <li><strong>Jeśli obie drużyny wybrały tę samą kategorię:</strong> możecie przejść do gry</li>
+              <li><strong>Jeśli drużyny wybrały różne kategorie:</strong> kliknij przycisk <strong>"Losowanie kategorii"</strong>, aby system wylosował jedną z dwóch wybranych kategorii i przejść do gry</li>
             </ol>
 
             <h3>3. Faza buzzera</h3>
             <ol>
-              <li>Po wyborze kategorii wyświetli się pytanie dla prowadzącego</li>
+              <li>Po wyborze kategorii możesz odkryć pytanie w rudzie przyciskiem <strong>"Odkryj pytanie"</strong></li>
               <li>Przeczytaj pytanie na głos dla drużyn</li>
               <li>Drużyny wciskają swoje buzzery na swoich urządzeniach</li>
               <li>System automatycznie wykryje, która drużyna była pierwsza</li>
               <li>Zobaczysz komunikat: <strong>"Drużyna która wcisneła pierwsza: [Nazwa drużyny]"</strong></li>
-              <li>Kliknij <strong>"Rozpocznij tablicę"</strong>, aby przejść do fazy odpowiedzi</li>
+              <li>Kliknij <strong>"Przejdź do tablicy"</strong>, aby przejść do fazy odpowiedzi</li>
             </ol>
 
             <h3>4. Odkrywanie odpowiedzi</h3>
@@ -96,14 +115,13 @@ export default function RulesPage() {
 
             <h3>5. Błędne odpowiedzi i ostrzeżenia</h3>
             <ol>
-              <li><PiXCircleFill style={{color: 'var(--burnt-peach)', verticalAlign: 'middle'}} /> <strong>Błędna odpowiedź:</strong> Kliknij ten przycisk, gdy drużyna udzieli złej odpowiedzi lub nie odpowie w czasie. Pojawi się czerwony X.</li>
-              <li><strong>Ostrzeżenie:</strong> Włącz 3-sekundowe ostrzeżenie, gdy drużyna zbyt długo zastanawia się nad odpowiedzią. Drużyna ma tylko 3 sekundy na udzielenie odpowiedzi - jeśli czas minie, kliknij przycisk "Błędna odpowiedź".</li>
+              <li><strong>Błędna odpowiedź:</strong> Kliknij ten przycisk, gdy drużyna udzieli złej odpowiedzi.</li>
+              <li><strong>Ostrzeżenie:</strong> Włącz 3-sekundowe ostrzeżenie, gdy drużyna zbyt długo zastanawia się nad odpowiedzią. Drużyna ma tylko 3 sekundy na udzielenie odpowiedzi - jeśli czas minie, kliknij przycisk <strong>"Błędna odpowiedź"</strong>.</li>
               <li><strong>Reset błędnych:</strong> Opcja dostępna w nagłych przypadkach, jeśli chcesz cofnąć pomyłkowo dodany błąd.</li>
             </ol>
 
             <h3>6. Przekazywanie punktów</h3>
             <ol>
-              <li>Po zebraniu 5 błędnych odpowiedzi lub odkryciu wszystkich odpowiedzi, przyciski przekazania punktów staną się aktywne</li>
               <li>Kliknij przycisk <strong>"Przekaż punkty - [Nazwa drużyny]"</strong>, aby przyznać punkty zwycięskiej drużynie</li>
               <li>Po przekazaniu punktów wszystkie przyciski kontrolne zostają zablokowane</li>
               <li>Kliknij <strong>"Przejdź do następnego pytania"</strong>, aby kontynuować grę</li>
@@ -113,7 +131,7 @@ export default function RulesPage() {
             <ol>
               <li>Po 5 pytaniach gra automatycznie przechodzi do podsumowania</li>
               <li>Zobaczysz wyniki obu drużyn i zwycięzcę</li>
-              <li>Możesz rozpocząć nową grę klikając <strong>"Rozpocznij kolejną grę"</strong></li>
+              <li>Możesz rozpocząć nową grę klikając <strong>"Nowa gra"</strong></li>
             </ol>
 
             <div className="warning-box">
@@ -136,11 +154,16 @@ export default function RulesPage() {
               <li>Poczekaj, aż prowadzący rozpocznie grę</li>
             </ol>
 
-            <h3>2. Ekran oczekiwania</h3>
+            <h3>2. Głosowanie na kategorię</h3>
             <ol>
-              <li>Po dołączeniu zobaczysz ekran oczekiwania</li>
-              <li>Zobaczysz listę drużyn, które już dołączyły</li>
-              <li>Poczekaj, aż prowadzący wybierze kategorię i rozpocznie rundę</li>
+              <li>Po rozpoczęciu gry przez prowadzącego zobaczysz listę dostępnych kategorii pytań</li>
+              <li>Każda kategoria ma oznaczony poziom trudności (gwiazdki)</li>
+              <li><strong>Kliknij na kategorię, aby zagłosować</strong></li>
+              <li>Możesz zmienić swój wybór w dowolnym momencie - po prostu kliknij inną kategorię</li>
+              <li>Zobaczysz, na którą kategorię zagłosowała druga drużyna (możecie zagłosować na tę samą)</li>
+              <li><strong>Jeśli obie drużyny wybiorą tę samą kategorię:</strong> gra rozpocznie się automatycznie</li>
+              <li><strong>Jeśli wybierzecie różne kategorie:</strong> prowadzący wylosuje jedną z dwóch wybranych kategorii</li>
+              <li>Po wyborze kategorii przechodzicie do fazy buzzera</li>
             </ol>
 
             <h3>3. Faza buzzera</h3>
@@ -174,7 +197,7 @@ export default function RulesPage() {
               <li>Grajcie strategicznie!</li>
             </ol>
 
-            <h3>7. Podsumowanie</h3>
+            <h3>6. Podsumowanie</h3>
             <ol>
               <li>Po 5 pytaniach zobaczycie ekran podsumowania</li>
               <li>Zobaczysz wyniki obu drużyn</li>
@@ -188,36 +211,6 @@ export default function RulesPage() {
           </div>
         </section>
 
-        {/* PYTANIA I ODPOWIEDZI */}
-        <section className="rules-section">
-          <h2 className="section-title">Najczęściej zadawane pytania</h2>
-          <div className="rules-text">
-            <div className="faq-item">
-              <h4>Ile osób może grać?</h4>
-              <p>Gra wymaga 1 prowadzącego i minimum 2 drużyn. Każda drużyna może składać się z dowolnej liczby osób.</p>
-            </div>
-
-            <div className="faq-item">
-              <h4>Czy potrzebuję rejestracji?</h4>
-              <p>Nie! Gra nie wymaga rejestracji. Wystarczy, że prowadzący stworzy grę i poda kod drużynom.</p>
-            </div>
-
-            <div className="faq-item">
-              <h4>Jak działa synchronizacja?</h4>
-              <p>Gra używa Firebase do synchronizacji w czasie rzeczywistym. Wszystkie akcje prowadzącego (odkrywanie odpowiedzi, dodawanie błędów) są natychmiast widoczne u wszystkich graczy.</p>
-            </div>
-
-            <div className="faq-item">
-              <h4>Czy mogę dostosować pytania?</h4>
-              <p>Obecnie gra używa predefiniowanych pytań podzielonych na kategorie. Możliwość dodawania własnych pytań może pojawić się w przyszłych wersjach.</p>
-            </div>
-
-            <div className="faq-item">
-              <h4>Jak długo trwa jedna gra?</h4>
-              <p>Standardowa gra (5 pytań) trwa około 15-20 minut, w zależności od szybkości odpowiedzi drużyn.</p>
-            </div>
-          </div>
-        </section>
 
         <div className="rules-footer">
           <button className="btn-start-game" onClick={() => router.push('/home')}>
