@@ -90,7 +90,7 @@ export default function HostPage() {
   };
 
   const handleCancel = () => {
-    router.push('/home');
+    router.push('/gra');
   };
 
   if (isCreating) {

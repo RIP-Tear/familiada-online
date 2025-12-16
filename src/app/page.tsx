@@ -78,7 +78,7 @@ const Page = () => {
   }, []);
 
   const handleStart = () => {
-    router.push('/home');
+    router.push('/gra');
   };
 
   return (

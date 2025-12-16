@@ -73,7 +73,7 @@ export default function HostGamePage() {
 
   useEffect(() => {
     if (!gameCode) {
-      router.push("/home");
+      router.push("/gra");
       return;
     }
 
@@ -175,7 +175,7 @@ export default function HostGamePage() {
   useEffect(() => {
     if (gameData?.teamLeftAlert) {
       const redirectTimer = setTimeout(() => {
-        router.push('/home');
+        router.push('/gra');
       }, 3000);
       return () => clearTimeout(redirectTimer);
     }

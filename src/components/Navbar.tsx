@@ -24,7 +24,7 @@ export default function Navbar({ onLeaveGame }: NavbarProps = {}) {
       await new Promise(resolve => setTimeout(resolve, 500));
     }
     // W poczekalni lub po opuszczeniu gry - przekieruj od razu
-    router.push('/home');
+    router.push('/gra');
   };
 
   const handleCancelExit = () => {

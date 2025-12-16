@@ -84,7 +84,7 @@ export default function JoinPage() {
         console.error("Error leaving game:", err);
       }
     }
-    router.push('/home');
+    router.push('/gra');
   };
 
   if (isJoining && gameId) {
