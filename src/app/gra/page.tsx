@@ -33,16 +33,16 @@ export default function Home() {
 
   const handleCreateGame = () => {
     dispatch(setMode("host"));
-    router.push("/prowadzacy");
+    router.push("/prowadzacy/");
   };
 
   const handleJoinGame = () => {
     dispatch(setMode("player"));
-    router.push("/druzyna");
+    router.push("/druzyna/");
   };
 
   const handleRules = () => {
-    router.push("/zasady");
+    router.push("/zasady/");
   };
 
   return (

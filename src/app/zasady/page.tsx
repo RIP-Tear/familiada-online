@@ -19,7 +19,7 @@ export default function RulesPage() {
   return (
     <div className="rules-container">
       <div className="rules-content">
-        <button className="btn-back" onClick={() => router.push('/gra')}>
+        <button className="btn-back" onClick={() => router.push('/gra/')}>
           <PiArrowLeftBold /> Powrót
         </button>
 
@@ -223,7 +223,7 @@ export default function RulesPage() {
 
 
         <div className="rules-footer">
-          <button className="btn-start-game" onClick={() => router.push('/gra')}>
+          <button className="btn-start-game" onClick={() => router.push('/gra/')}>
             <PiGameControllerFill /> Rozpocznij grę
           </button>
         </div>

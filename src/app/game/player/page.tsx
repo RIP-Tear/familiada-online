@@ -47,7 +47,7 @@ export default function PlayerGamePage() {
 
   useEffect(() => {
     if (!gameCode) {
-      router.push("/gra");
+      router.push("/gra/");
       return;
     }
 
@@ -66,7 +66,7 @@ export default function PlayerGamePage() {
       
       // Jeśli gra została zakończona, przekieruj do gra
       if (data.status === 'ended') {
-        router.push("/gra");
+        router.push("/gra/");
         return;
       }
       
@@ -146,7 +146,7 @@ export default function PlayerGamePage() {
       console.log('[PLAYER] Host left alert detected, redirecting in 2s...');
       const redirectTimer = setTimeout(() => {
         console.log('[PLAYER] Redirecting to /gra');
-        router.push('/gra');
+        router.push('/gra/');
       }, 2000);
       return () => clearTimeout(redirectTimer);
     }
@@ -154,7 +154,7 @@ export default function PlayerGamePage() {
       console.log('[PLAYER] Team left alert detected, redirecting in 2s...');
       const redirectTimer = setTimeout(() => {
         console.log('[PLAYER] Redirecting to /gra');
-        router.push('/gra');
+        router.push('/gra/');
       }, 2000);
       return () => clearTimeout(redirectTimer);
     }

@@ -32,7 +32,7 @@ export default function JoinPage() {
       const unsubscribe = subscribeToGame(gameId, (gameData) => {
         // Jeśli gra się rozpoczęła, przekieruj do widoku gracza
         if (gameData.status === 'playing') {
-          router.push('/game/player');
+          router.push('/druzyna/');
         }
       });
 
@@ -84,7 +84,7 @@ export default function JoinPage() {
         console.error("Error leaving game:", err);
       }
     }
-    router.push('/gra');
+    router.push('/gra/');
   };
 
   if (isJoining && gameId) {
