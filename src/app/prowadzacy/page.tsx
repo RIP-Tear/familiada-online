@@ -42,7 +42,7 @@ export default function HostPage() {
         
         // Jeśli status zmienił się na 'playing', przekieruj do gry
         if (gameData.status === 'playing') {
-          router.push('/prowadzacy/');
+          router.push('/game/host/');
         }
       });
 
