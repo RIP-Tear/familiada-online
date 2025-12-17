@@ -98,7 +98,17 @@ export default function HostPage() {
       <>
         <Navbar />
         <div className="host-container">
-          <div className="loading">Tworzenie gry...</div>
+          <div className="title-section">
+            <h1 className="host-title">Tworzenie gry</h1>
+          </div>
+          
+          <div className="host-content">
+            <div className="loading-section">
+              <p className="loading-text">Przygotowujemy twój pokój gry...</p>
+              <div className="loading-spinner"></div>
+              <p className="loading-hint">Za chwilę otrzymasz kod dla drużyn</p>
+            </div>
+          </div>
         </div>
       </>
     );

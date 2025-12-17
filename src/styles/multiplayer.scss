@@ -140,7 +140,7 @@
   &-label {
     font-family: $f;
     font-size: $fs-2;
-    color: $c-white;
+    color: $c-yellow;
     font-weight: 600;
     margin: 0;
     text-align: left;
@@ -521,6 +521,38 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.loading-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: $s-lg;
+  padding: $s-xl 0;
+  min-height: 300px;
+}
+
+.loading-text {
+  font-size: 1.5rem;
+  color: $c-yellow;
+  font-weight: 600;
+  text-align: center;
+  margin: 0;
+  animation: textPulse 2s ease-in-out infinite;
+}
+
+.loading-hint {
+  font-size: $fs-2;
+  color: rgba($c-white, .7);
+  text-align: center;
+  margin: 0;
+  font-style: italic;
+}
+
+@keyframes textPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
 }
 
 /* === RESPONSIVE === */

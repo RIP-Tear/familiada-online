@@ -133,7 +133,7 @@ export default function JoinPage() {
         <div className="join-content">
         <form onSubmit={handleJoinGame} className="join-form">
           <div className="form-group">
-            <label htmlFor="gameCode">Kod gry</label>
+            <label htmlFor="gameCode">Wpisz kod gry który poda prowadzący</label>
             <input
               id="gameCode"
               type="text"
