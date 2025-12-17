@@ -281,6 +281,13 @@
     &.buzz-first { background: linear-gradient(135deg, $c-green, $c-yellow); animation: celebrate .5s ease-in-out; box-shadow: 0 0 60px rgba($c-green, .8); }
     &.buzz-second { background: linear-gradient(135deg, $c-yellow, $c-orange); color: $c-blue; cursor: not-allowed; }
     &.buzz-disabled { background: linear-gradient(135deg, #95a5a6, #7f8c8d); cursor: not-allowed; opacity: .6; }
+    &.question-locked { 
+      background: linear-gradient(135deg, rgba(#95a5a6, .4), rgba(#7f8c8d, .4)); 
+      cursor: not-allowed; 
+      opacity: .4; 
+      backdrop-filter: blur(2px);
+      box-shadow: 0 5px 20px rgba($c-black, .2);
+    }
     
     svg { font-size: 1.8rem; }
   }

@@ -450,12 +450,14 @@ export const resetBuzz = async (gameCode: string): Promise<void> => {
       buzzedTeam: null,
       buzzedTeamName: null,
       buzzTimestamp: null,
+      questionRevealed: false,
     });
   } else {
     await localGameStorage.updateGame(gameCode, {
       buzzedTeam: null,
       buzzedTeamName: null,
       buzzTimestamp: null,
+      questionRevealed: false,
     } as any);
   }
   console.log(`[BUZZ] Reset complete`);

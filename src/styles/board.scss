@@ -143,8 +143,8 @@
     animation: overlayFadeIn .3s ease-in-out;
   }
   &-content { @include fx-col; align-items: center; gap: $s-lg; max-width: 600px; width: 90%; }
-  &-icon { font-size: 8rem; color: $c-white; animation: warningPulse .8s ease-in-out infinite; filter: drop-shadow(0 10px 30px rgba($c-black, .5)); }
-  &-text { @include txt(2.5rem, bold, $c-white); text-align: center; text-shadow: 0 5px 20px rgba($c-black, .5); margin: 0; }
+  &-icon { font-size: 8rem; color: $c-white; animation: warningPulse .8s ease-in-out infinite; }
+  &-text { @include txt(2.5rem, bold, $c-white); text-align: center; margin: 0; }
 }
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -204,15 +204,14 @@
     .wrong-answer-icon { animation: newGamePulse 1s ease-in-out infinite; }
   }
   &-content { @include fx-col; align-items: center; gap: $s-md; max-width: 500px; width: 90%; }
-  &-icon { font-size: 10rem; color: $c-white; animation: wrongAnswerShake .5s ease-in-out; filter: drop-shadow(0 10px 30px rgba($c-black, .5)); }
-  &-text { @include txt(3rem, bold, $c-white); text-align: center; text-shadow: 0 5px 20px rgba($c-black, .5); margin: 0; animation: wrongAnswerPulse .5s ease-in-out; }
-  &-count { @include txt(1.8rem, normal, rgba($c-white, .9)); text-align: center; margin: 0; padding: .8rem $s-lg; background: rgba($c-black, .3); border-radius: $r-3; text-shadow: 0 2px 10px rgba($c-black, .3); }
+  &-icon { font-size: 10rem; color: $c-white; animation: wrongAnswerShake .5s ease-in-out; }
+  &-text { @include txt(3rem, bold, $c-white); text-align: center; margin: 0; animation: wrongAnswerPulse .5s ease-in-out; }
+  &-count { @include txt(1.8rem, normal, rgba($c-white, .9)); text-align: center; margin: 0; padding: .8rem $s-lg; background: rgba($c-black, .3); border-radius: $r-3; }
 }
 
 .team-left-message {
   @include txt(1.8rem, normal, rgba($c-white, .95));
   font-style: italic;
-  text-shadow: 0 2px 10px rgba($c-black, .4);
 }
 
 @keyframes wrongAnswerFadeIn { from { opacity: 0; transform: scale(.9); } to { opacity: 1; transform: scale(1); } }
@@ -248,7 +247,7 @@
 
 .round-winner-name { 
   @include txt(2.5rem, bold, $c-white); text-align: center; margin: 0; padding: $s-sm 2.5rem; 
-  background: rgba($c-black, .3); border-radius: $r-4; text-shadow: 0 3px 15px rgba($c-black, .4); 
+  background: rgba($c-black, .3); border-radius: $r-4; 
   animation: winnerPulse 1s ease-in-out infinite; 
 }
 
@@ -259,7 +258,6 @@
     @include txt(5rem, bold, $c-yellow);
     text-align: center;
     margin: $s-md 0;
-    text-shadow: 0 5px 20px rgba($c-black, .5);
     animation: vsPulse 1.5s ease-in-out infinite;
   }
   

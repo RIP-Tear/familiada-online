@@ -500,14 +500,16 @@ export default function PlayerGamePage() {
 
           <button
             className={`buzz-button ${
+              !gameData?.questionRevealed ? "question-locked" :
               isFirst === true ? "buzz-first" : 
               isFirst === false ? "buzz-second" : 
               buzzedTeam ? "buzz-disabled" : ""
             }`}
             onClick={handleBuzz}
-            disabled={myTeamBuzzed || buzzedTeam !== null}
+            disabled={!gameData?.questionRevealed || myTeamBuzzed || buzzedTeam !== null}
           >
-            {isFirst === true ? <>PIERWSZY!</> : 
+            {!gameData?.questionRevealed ? <>CZEKAJ...</> :
+             isFirst === true ? <>PIERWSZY!</> : 
              isFirst === false ? <>ZA PÓŹNO</> : 
              buzzedTeam ? <>ZABLOKOWANY</> : 
              "NACIŚNIJ!"}
