@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { createGame as createGameAction } from "@/redux/reducer/gameSlice";
 import { createGame, generateUserId, startGame, subscribeToGame } from "@/utils/firebaseUtils";
 import { Navbar } from "@/components";
-import { PiUsers, PiUsersThree } from "react-icons/pi";
+import { PiUsers, PiUsersThree, PiBookOpenFill } from "react-icons/pi";
 import "@/styles/multiplayer.scss";
 
 export default function HostPage() {
@@ -178,6 +178,17 @@ export default function HostPage() {
               Anuluj
             </button>
           </div>
+        </div>
+        
+        <div className="rules-link-section">
+          <button className="btn-rules-link" onClick={() => router.push('/zasady/')}>
+            <div className="button-icon">
+              <PiBookOpenFill size={24} />
+            </div>
+            <div className="button-text">
+              <h2>Instrukcja gry</h2>
+            </div>
+          </button>
         </div>
       </div>
     </>

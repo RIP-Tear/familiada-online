@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { joinGame as joinGameAction } from "@/redux/reducer/gameSlice";
 import { joinGame, leaveGame, subscribeToGame } from "@/utils/firebaseUtils";
 import { Navbar } from "@/components";
+import { PiBookOpenFill } from "react-icons/pi";
 import "@/styles/multiplayer.scss";
 
 export default function JoinPage() {
@@ -180,6 +181,17 @@ export default function JoinPage() {
             </button>
           </div>
         </form>
+      </div>
+      
+      <div className="rules-link-section">
+        <button className="btn-rules-link" onClick={() => router.push('/zasady/')}>
+          <div className="button-icon">
+            <PiBookOpenFill size={24} />
+          </div>
+          <div className="button-text">
+            <h2>Instrukcja gry</h2>
+          </div>
+        </button>
       </div>
       </div>
     </>

@@ -19,7 +19,7 @@ export default function RulesPage() {
   return (
     <div className="rules-container">
       <div className="rules-content">
-        <button className="btn-back" onClick={() => router.push('/gra/')}>
+        <button className="btn-back" onClick={() => router.back()}>
           <PiArrowLeftBold /> Powrót
         </button>
 
