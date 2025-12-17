@@ -297,10 +297,10 @@ export const clearCategoryVotes = async (gameCode: string): Promise<void> => {
 };
 
 // Wybór kategorii pytań (tylko host)
-export const selectCategory = async (gameCode: string, category: string): Promise<void> => {
+export const selectCategory = async (gameCode: string, category: string, isRandomlySelected: boolean = false): Promise<void> => {
   console.log(`[SELECT] Setting category for game ${gameCode}: ${category}`);
   
-  const showCategorySelectedAlert = async (gameCode: string, category: string) => {
+  const showCategorySelectedAlert = async (gameCode: string, category: string, isRandomlySelected: boolean) => {
     console.log(`[GAME] Showing category selected alert: ${category}`);
     
     if (useFirebase) {
@@ -308,6 +308,7 @@ export const selectCategory = async (gameCode: string, category: string): Promis
       await updateDoc(gameRef, {
         categorySelectedAlert: true,
         selectedCategoryName: category,
+        isCategoryRandomlySelected: isRandomlySelected,
       });
       
       setTimeout(async () => {
@@ -319,6 +320,7 @@ export const selectCategory = async (gameCode: string, category: string): Promis
       await localGameStorage.updateGame(gameCode, {
         categorySelectedAlert: true,
         selectedCategoryName: category,
+        isCategoryRandomlySelected: isRandomlySelected,
       });
       
       setTimeout(async () => {
@@ -342,7 +344,7 @@ export const selectCategory = async (gameCode: string, category: string): Promis
     });
     console.log(`[SELECT] Category ${category} saved to Firestore`);
     
-    await showCategorySelectedAlert(gameCode, category);
+    await showCategorySelectedAlert(gameCode, category, isRandomlySelected);
   } else {
     // Demo mode
     await localGameStorage.updateGame(gameCode, {
@@ -356,7 +358,7 @@ export const selectCategory = async (gameCode: string, category: string): Promis
     });
     console.log(`[SELECT] Category ${category} saved to local storage`);
     
-    await showCategorySelectedAlert(gameCode, category);
+    await showCategorySelectedAlert(gameCode, category, isRandomlySelected);
   }
 };
 

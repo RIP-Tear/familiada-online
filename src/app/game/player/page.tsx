@@ -304,7 +304,7 @@ export default function PlayerGamePage() {
           <div className="wrong-answer-overlay category-selected">
             <div className="wrong-answer-content">
               <PiCheckCircleFill className="wrong-answer-icon" />
-              <h2 className="wrong-answer-text">Wybrano kategorię</h2>
+              <h2 className="wrong-answer-text">{gameData?.isCategoryRandomlySelected ? 'Wylosowano' : 'Wybrano'} kategorię</h2>
               <p className="round-winner-name">{gameData?.selectedCategoryName}</p>
             </div>
           </div>

@@ -76,6 +76,7 @@ export interface GameData {
   gameResultAlert?: boolean;
   categorySelectedAlert?: boolean;
   selectedCategoryName?: string;
+  isCategoryRandomlySelected?: boolean;
   topAnswerAlert?: boolean;
   buzzAlert?: boolean;
   buzzAlertTeamName?: string;

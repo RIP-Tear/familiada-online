@@ -181,12 +181,12 @@ export default function HostGamePage() {
     }
   }, [gameData?.teamLeftAlert, router]);
 
-  const handleSelectCategory = async (category) => {
+  const handleSelectCategory = async (category, isRandomlySelected = false) => {
     if (isSelecting) return;
     setIsSelecting(true);
 
     try {
-      await selectCategory(gameCode, category);
+      await selectCategory(gameCode, category, isRandomlySelected);
       console.log(`[HOST] Selected category: ${category}`);
     } catch (error) {
       console.error("[HOST] Error selecting category:", error);
@@ -215,13 +215,13 @@ export default function HostGamePage() {
     
     // Jeśli obie drużyny wybrały tę samą kategorię
     if (uniqueCategories.length === 1) {
-      await handleSelectCategory(uniqueCategories[0]);
+      await handleSelectCategory(uniqueCategories[0], false);
     } else {
       // Losuj kategorię
       const randomCategory = uniqueCategories[
         Math.floor(Math.random() * uniqueCategories.length)
       ];
-      await handleSelectCategory(randomCategory);
+      await handleSelectCategory(randomCategory, true);
     }
   };
 
@@ -599,7 +599,7 @@ export default function HostGamePage() {
           <div className="wrong-answer-overlay category-selected">
             <div className="wrong-answer-content">
               <PiCheckCircleFill className="wrong-answer-icon" />
-              <h2 className="wrong-answer-text">Wybrano kategorię</h2>
+              <h2 className="wrong-answer-text">{gameData?.isCategoryRandomlySelected ? 'Wylosowano' : 'Wybrano'} kategorię</h2>
               <p className="round-winner-name">{gameData?.selectedCategoryName}</p>
             </div>
           </div>
