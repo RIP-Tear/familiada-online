@@ -1034,6 +1034,10 @@ export const restartGame = async (gameCode: string): Promise<void> => {
       warningActive: false,
       warningCountdown: null,
       questionRevealed: false,
+      hostLeftAlert: false,
+      hostLeftAt: null,
+      teamLeftAlert: false,
+      teamLeftName: null,
     });
     
     console.log(`[GAME] Game restarted - teams preserved`);
@@ -1059,6 +1063,10 @@ export const restartGame = async (gameCode: string): Promise<void> => {
       warningActive: false,
       warningCountdown: null,
       questionRevealed: false,
+      hostLeftAlert: false,
+      hostLeftAt: null,
+      teamLeftAlert: false,
+      teamLeftName: null,
     } as any);
   }
 };

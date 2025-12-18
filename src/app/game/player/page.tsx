@@ -501,11 +501,12 @@ export default function PlayerGamePage() {
       {gamePhase === "creating-custom-category" ? (
         // FAZA: Prowadzący tworzy własną kategorię
         <div className="custom-category-waiting">
-          <div className="waiting-content">
-            <PiQuestionFill className="waiting-icon rotating" size={80} />
-            <h2 className="waiting-title">Prowadzący tworzy własną kategorię</h2>
-            <p className="waiting-subtitle">Czekaj, aż prowadzący przygotuje pytania...</p>
+          <div className="waiting-content-horizontal">
             <div className="loading-spinner"></div>
+            <div className="waiting-text-content">
+              <h2 className="waiting-title">Prowadzący tworzy własną kategorię</h2>
+              <p className="waiting-subtitle">Czekaj, aż prowadzący przygotuje pytania...</p>
+            </div>
           </div>
         </div>
       ) : gamePhase === "category-selection" ? (

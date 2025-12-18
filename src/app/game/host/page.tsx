@@ -84,6 +84,7 @@ export default function HostGamePage() {
     question: '',
     answers: ['', '', '']
   })));
+  const [creatorStep, setCreatorStep] = useState(0); // 0 = nazwa i trudność, 1-5 = pytania
 
   useEffect(() => {
     if (!gameCode) {
@@ -324,6 +325,13 @@ export default function HostGamePage() {
 
   const handleCancelCustomCategory = async () => {
     setIsCreatingCustom(false);
+    setCreatorStep(0);
+    setCustomCategoryName('');
+    setCustomDifficulty('medium');
+    setCustomQuestions(Array.from({ length: 5 }, () => ({
+      question: '',
+      answers: ['', '', '']
+    })));
     // Powrót do wyboru kategorii
     await saveCustomCategory(gameCode, null);
   };
@@ -824,132 +832,185 @@ export default function HostGamePage() {
 
         {isCreatingCustom ? (
           // FAZA: Tworzenie własnej kategorii
-          <div className="custom-category-creator">
-            <h2 className="creator-title">Stwórz własną kategorię</h2>
-            
-            <div className="creator-form">
-              <div className="form-group">
-                <label>Nazwa kategorii:</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={customCategoryName}
-                  onChange={(e) => setCustomCategoryName(e.target.value)}
-                  placeholder="np. Zwierzęta domowe"
-                  maxLength={50}
-                />
-              </div>
-              
-              <div className="form-group">
-                <label>Trudność:</label>
-                <div className="difficulty-buttons">
-                  <button
-                    className={`btn-difficulty ${customDifficulty === 'easy' ? 'active' : ''}`}
+          <div className="custom-category-creator-steps">
+            {creatorStep === 0 ? (
+              // KROK 1: Nazwa kategorii i trudność
+              <>
+                <h2 className="creator-step-title">Nazwa kategorii i trudność</h2>
+                
+                <div className="creator-name-input">
+                  <input
+                    type="text"
+                    className="form-input-large"
+                    value={customCategoryName}
+                    onChange={(e) => setCustomCategoryName(e.target.value)}
+                    placeholder="Wpisz nazwę kategorii..."
+                    maxLength={50}
+                  />
+                </div>
+                
+                <div className="difficulty-cards">
+                  <div
+                    className={`difficulty-card ${customDifficulty === 'easy' ? 'selected' : ''}`}
                     onClick={() => setCustomDifficulty('easy')}
                   >
-                    ⭐ Łatwa
-                  </button>
-                  <button
-                    className={`btn-difficulty ${customDifficulty === 'medium' ? 'active' : ''}`}
+                    <div className="difficulty-stars easy">
+                      <PiStarFill />
+                    </div>
+                    <div className="difficulty-label">Łatwy</div>
+                  </div>
+                  <div
+                    className={`difficulty-card ${customDifficulty === 'medium' ? 'selected' : ''}`}
                     onClick={() => setCustomDifficulty('medium')}
                   >
-                    ⭐⭐ Średnia
-                  </button>
-                  <button
-                    className={`btn-difficulty ${customDifficulty === 'hard' ? 'active' : ''}`}
+                    <div className="difficulty-stars medium">
+                      <PiStarFill />
+                      <PiStarFill />
+                    </div>
+                    <div className="difficulty-label">Średni</div>
+                  </div>
+                  <div
+                    className={`difficulty-card ${customDifficulty === 'hard' ? 'selected' : ''}`}
                     onClick={() => setCustomDifficulty('hard')}
                   >
-                    ⭐⭐⭐ Trudna
+                    <div className="difficulty-stars hard">
+                      <PiStarFill />
+                      <PiStarFill />
+                      <PiStarFill />
+                    </div>
+                    <div className="difficulty-label">Trudny</div>
+                  </div>
+                </div>
+                
+                <div className="actions-container">
+                  <button 
+                    className="btn-step-next" 
+                    onClick={() => setCreatorStep(1)}
+                    disabled={!customCategoryName.trim()}
+                  >
+                    Pierwsze pytanie
+                    <PiArrowRightBold />
+                  </button>
+                  <button className="btn-step-cancel" onClick={handleCancelCustomCategory}>
+                    Anuluj
                   </button>
                 </div>
-              </div>
-              
-              <div className="questions-list">
-                {customQuestions.map((q, qIdx) => (
-                  <div key={qIdx} className="question-block">
-                    <h3 className="question-number">Pytanie {qIdx + 1}</h3>
-                    <input
-                      type="text"
-                      className="form-input question-input"
-                      value={q.question}
-                      onChange={(e) => {
-                        const newQuestions = [...customQuestions];
-                        newQuestions[qIdx].question = e.target.value;
-                        setCustomQuestions(newQuestions);
-                      }}
-                      placeholder="Wpisz pytanie..."
-                      maxLength={200}
-                    />
-                    
-                    <div className="answers-list">
-                      <label className="answers-label">Odpowiedzi (kolejność ważna - od najczęstszej do najrzadszej):</label>
-                      {q.answers.map((ans, aIdx) => (
-                        <div key={aIdx} className="answer-item">
-                          <span className="answer-number">{aIdx + 1}.</span>
-                          <input
-                            type="text"
-                            className="form-input answer-input"
-                            value={ans}
-                            onChange={(e) => {
-                              const newQuestions = [...customQuestions];
-                              newQuestions[qIdx].answers[aIdx] = e.target.value;
-                              setCustomQuestions(newQuestions);
-                            }}
-                            placeholder="Wpisz odpowiedź..."
-                            maxLength={100}
-                          />
-                          <div className="answer-controls">
+              </>
+            ) : (
+              // KROKI 2-6: Pytania
+              <>
+                <h2 className="creator-step-title">Pytanie {creatorStep}</h2>
+                
+                <div className="question-creator-board">
+                  <input
+                    type="text"
+                    className="question-input-large"
+                    value={customQuestions[creatorStep - 1].question}
+                    onChange={(e) => {
+                      const newQuestions = [...customQuestions];
+                      newQuestions[creatorStep - 1].question = e.target.value;
+                      setCustomQuestions(newQuestions);
+                    }}
+                    placeholder="Wpisz pytanie..."
+                    maxLength={200}
+                  />
+                  
+                  <div className="answers-board">
+                    {customQuestions[creatorStep - 1].answers.map((ans, aIdx) => (
+                      <div key={aIdx} className="answer-row">
+                        <span className="answer-num">{aIdx + 1}</span>
+                        <input
+                          type="text"
+                          className="answer-input-board"
+                          value={ans}
+                          onChange={(e) => {
+                            const newQuestions = [...customQuestions];
+                            newQuestions[creatorStep - 1].answers[aIdx] = e.target.value;
+                            setCustomQuestions(newQuestions);
+                          }}
+                          placeholder="Wpisz odpowiedź..."
+                          maxLength={100}
+                        />
+                        <div className="answer-controls-board">
+                          <button
+                            className="btn-control-board"
+                            onClick={() => handleMoveAnswer(creatorStep - 1, aIdx, 'up')}
+                            disabled={aIdx === 0}
+                          >
+                            ↑
+                          </button>
+                          <button
+                            className="btn-control-board"
+                            onClick={() => handleMoveAnswer(creatorStep - 1, aIdx, 'down')}
+                            disabled={aIdx === customQuestions[creatorStep - 1].answers.length - 1}
+                          >
+                            ↓
+                          </button>
+                          {customQuestions[creatorStep - 1].answers.length > 3 && (
                             <button
-                              className="btn-answer-control"
-                              onClick={() => handleMoveAnswer(qIdx, aIdx, 'up')}
-                              disabled={aIdx === 0}
-                              title="Przesuń w górę"
+                              className="btn-control-board btn-remove-board"
+                              onClick={() => handleRemoveAnswer(creatorStep - 1, aIdx)}
                             >
-                              ↑
+                              ✕
                             </button>
-                            <button
-                              className="btn-answer-control"
-                              onClick={() => handleMoveAnswer(qIdx, aIdx, 'down')}
-                              disabled={aIdx === q.answers.length - 1}
-                              title="Przesuń w dół"
-                            >
-                              ↓
-                            </button>
-                            {q.answers.length > 3 && (
-                              <button
-                                className="btn-answer-control btn-remove"
-                                onClick={() => handleRemoveAnswer(qIdx, aIdx)}
-                                title="Usuń odpowiedź"
-                              >
-                                ✕
-                              </button>
-                            )}
-                          </div>
+                          )}
                         </div>
-                      ))}
-                      {q.answers.length < 10 && (
-                        <button
-                          className="btn-add-answer"
-                          onClick={() => handleAddAnswer(qIdx)}
-                        >
-                          + Dodaj odpowiedź
-                        </button>
-                      )}
-                    </div>
+                      </div>
+                    ))}
+                    {customQuestions[creatorStep - 1].answers.length < 10 && (
+                      <button
+                        className="btn-add-answer-board"
+                        onClick={() => handleAddAnswer(creatorStep - 1)}
+                      >
+                        + Dodaj odpowiedź
+                      </button>
+                    )}
                   </div>
-                ))}
-              </div>
-              
-              <div className="creator-actions">
-                <button className="btn-cancel" onClick={handleCancelCustomCategory}>
-                  Anuluj
-                </button>
-                <button className="btn-save" onClick={handleSaveCustomCategory}>
-                  <PiCheckBold className="btn-icon" />
-                  Zapisz i użyj kategorii
-                </button>
-              </div>
-            </div>
+                </div>
+                
+                <div className="actions-container">
+                  <div className="step-navigation">
+                    {(() => {
+                      const currentQ = customQuestions[creatorStep - 1];
+                      const isQuestionValid = currentQ.question.trim() && 
+                                            currentQ.answers.filter(a => a.trim()).length >= 3;
+                      
+                      return creatorStep < 5 ? (
+                        <button 
+                          className="btn-nav-next" 
+                          onClick={() => setCreatorStep(creatorStep + 1)}
+                          disabled={!isQuestionValid}
+                        >
+                          Pytanie {creatorStep + 1}
+                          <PiArrowRightBold />
+                        </button>
+                      ) : (
+                        <button 
+                          className="btn-nav-save" 
+                          onClick={handleSaveCustomCategory}
+                          disabled={!isQuestionValid}
+                        >
+                          <PiCheckBold />
+                          Zapisz kategorię
+                        </button>
+                      );
+                    })()}
+                    
+                    <button 
+                      className="btn-nav-prev" 
+                      onClick={() => setCreatorStep(creatorStep - 1)}
+                    >
+                      <PiArrowRightBold style={{ transform: 'rotate(180deg)' }} />
+                      {creatorStep === 1 ? 'Nazwa kategorii' : `Pytanie ${creatorStep - 1}`}
+                    </button>
+                  </div>
+                  
+                  <button className="btn-nav-cancel" onClick={handleCancelCustomCategory}>
+                    Anuluj
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         ) : gamePhase === "category-selection" ? (
           // FAZA 1: Wybór kategorii
