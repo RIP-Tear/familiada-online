@@ -13,6 +13,7 @@ export interface GameHistoryEntry {
     team2: number;
   };
   status: 'waiting' | 'playing' | 'finished';
+  customCategoriesCount?: number;
 }
 
 const STORAGE_KEY = 'familiada_game_history';

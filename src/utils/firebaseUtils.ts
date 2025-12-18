@@ -1034,6 +1034,10 @@ export const restartGame = async (gameCode: string): Promise<void> => {
       warningActive: false,
       warningCountdown: null,
       questionRevealed: false,
+      hostLeftAlert: false,
+      hostLeftAt: null,
+      teamLeftAlert: false,
+      teamLeftName: null,
     });
     
     console.log(`[GAME] Game restarted - teams preserved`);
@@ -1059,6 +1063,10 @@ export const restartGame = async (gameCode: string): Promise<void> => {
       warningActive: false,
       warningCountdown: null,
       questionRevealed: false,
+      hostLeftAlert: false,
+      hostLeftAt: null,
+      teamLeftAlert: false,
+      teamLeftName: null,
     } as any);
   }
 };
@@ -1337,4 +1345,38 @@ export const teamLeftGame = async (gameCode: string, teamName: string): Promise<
   }
   
   console.log(`[TEAM_LEFT] Team left alert set for game ${gameCode}`);
+};
+
+// Ustawienie statusu tworzenia własnej kategorii
+export const setCreatingCustomCategory = async (gameCode: string, isCreating: boolean = true): Promise<void> => {
+  console.log(`[CUSTOM_CAT] Host ${isCreating ? 'is creating' : 'finished creating'} custom category for game: ${gameCode}`);
+  
+  if (useFirebase) {
+    const gameRef = doc(db, 'games', gameCode);
+    await updateDoc(gameRef, {
+      gamePhase: isCreating ? 'creating-custom-category' : 'category-selection',
+    });
+  } else {
+    await localGameStorage.updateGame(gameCode, {
+      gamePhase: isCreating ? 'creating-custom-category' : 'category-selection',
+    } as any);
+  }
+};
+
+// Zapisanie własnej kategorii i powrót do wyboru
+export const saveCustomCategory = async (gameCode: string, customCategories: any[]): Promise<void> => {
+  console.log(`[CUSTOM_CAT] 💾 Saving custom categories for game: ${gameCode}`, customCategories);
+  
+  if (useFirebase) {
+    const gameRef = doc(db, 'games', gameCode);
+    await updateDoc(gameRef, {
+      hostCustomCategories: customCategories,
+    });
+    console.log(`[CUSTOM_CAT] ✅ Custom categories saved to Firebase`);
+  } else {
+    await localGameStorage.updateGame(gameCode, {
+      hostCustomCategories: customCategories,
+    } as any);
+    console.log(`[CUSTOM_CAT] ✅ Custom categories saved to local storage`);
+  }
 };

@@ -763,6 +763,19 @@
     font-size: 0.85rem;
     white-space: nowrap;
   }
+  
+  .game-custom-categories {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: $c-green;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    
+    svg {
+      flex-shrink: 0;
+    }
+  }
 }
 
 @include mq('md') {
