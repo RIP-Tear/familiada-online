@@ -228,7 +228,7 @@ export default function HostGamePage() {
             question: q.question,
             answers: q.answers.map((a: string, aIdx: number) => ({
               answer: a,
-              points: (q.answers.length - aIdx) * 10 // Punkty od najwyższych do najniższych
+              points: 100 - (aIdx * 10) // 100, 90, 80, 70, 60...
             }))
           }));
           setQuestions(customQuestions);

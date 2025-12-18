@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { useRouter } from "next/navigation";
 import { useAppSelector } from "@/redux/hooks";
 import { getAvailableCategories, getQuestionsByCategory } from "@/utils/questions";
@@ -559,10 +559,20 @@ export default function PlayerGamePage() {
               
               const isUsed = usedCategories.includes(cat.category);
               const isCustom = gameData?.hostCustomCategories?.some((c: any) => c.name === cat.category);
-              const isFirstCustom = index === 0 && isCustom;
+              
+              // Sprawdź czy to pierwsza własna kategoria w całej liście
+              const isFirstCustom = isCustom && !categories.slice(0, index).some(c => 
+                gameData?.hostCustomCategories?.some((custom: any) => custom.name === c.category)
+              );
+              
+              // Sprawdź czy to ostatnia własna kategoria (następna nie jest custom)
+              const isLastCustom = isCustom && (
+                index === categories.length - 1 || 
+                !gameData?.hostCustomCategories?.some((c: any) => c.name === categories[index + 1]?.category)
+              );
               
               return (
-                <>
+                <Fragment key={`${cat.category}-${index}`}>
                   {isFirstCustom && (
                     <div className="category-separator">
                       <div className="separator-line"></div>
@@ -571,7 +581,6 @@ export default function PlayerGamePage() {
                     </div>
                   )}
                   <div
-                    key={index}
                     className={`category-card ${myVote === cat.category ? "voted" : ""} ${votedTeams.length > 0 ? "has-votes" : ""} ${isUsed ? "used" : ""} ${isCustom ? "custom" : ""} votable`}
                     onClick={() => handleVoteCategory(cat.category)}
                   >
@@ -594,14 +603,14 @@ export default function PlayerGamePage() {
                       </div>
                     )}
                   </div>
-                  {isCustom && (
+                  {isLastCustom && (
                     <div className="category-separator">
                       <div className="separator-line"></div>
                       <span className="separator-text">Standardowe kategorie</span>
                       <div className="separator-line"></div>
                     </div>
                   )}
-                </>
+                </Fragment>
               );
             })}
           </div>
