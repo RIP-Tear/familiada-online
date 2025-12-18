@@ -6,6 +6,7 @@ import {
   getAvailableCategories,
   getQuestionsByCategory,
 } from "@/utils/questions";
+import { gameHistoryStorage } from "@/utils/gameHistoryStorage";
 import {
   selectCategory,
   subscribeToGame,
@@ -58,6 +59,7 @@ export default function HostGamePage() {
   const router = useRouter();
   const { gameCode, teams } = useAppSelector((state) => state.game);
   const [categories, setCategories] = useState([]);
+  const [usedCategories, setUsedCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [isSelecting, setIsSelecting] = useState(false);
   const [questions, setQuestions] = useState([]);
@@ -80,6 +82,11 @@ export default function HostGamePage() {
     // Załaduj dostępne kategorie
     const availableCategories = getAvailableCategories();
     setCategories(availableCategories);
+    
+    // Załaduj użyte kategorie z localStorage
+    const used = gameHistoryStorage.getUsedCategories(gameCode);
+    setUsedCategories(used);
+    console.log(`[HOST] Loaded ${used.length} used categories for game ${gameCode}:`, used);
 
     // Nasłuchuj zmian w grze
     const unsubscribe = subscribeToGame(gameCode, (data) => {
@@ -187,6 +194,13 @@ export default function HostGamePage() {
 
     try {
       await selectCategory(gameCode, category, isRandomlySelected);
+      
+      // Zapisz wybraną kategorię lokalnie
+      gameHistoryStorage.addUsedCategory(gameCode, category);
+      
+      // Aktualizuj stan używanych kategorii
+      setUsedCategories(prev => [...prev, category]);
+      
       console.log(`[HOST] Selected category: ${category}`);
     } catch (error) {
       console.error("[HOST] Error selecting category:", error);
@@ -680,11 +694,12 @@ export default function HostGamePage() {
 
                   <div className="categories-grid host-categories">
                     {/* Box dla drużyny 1 */}
-                    <div className={`team-category-box ${team1Vote ? 'filled' : ''}`}>
+                    <div className={`team-category-box ${team1Vote ? 'filled' : ''} ${team1Vote && usedCategories.includes(team1Vote) ? 'used' : ''}`}>
                       {team1Vote ? (
                         <>
                           {(() => {
                             const cat = categories.find(c => c.category === team1Vote);
+                            const isUsed = usedCategories.includes(team1Vote);
                             return (
                               <>
                                 <div className="category-icon">
@@ -694,6 +709,11 @@ export default function HostGamePage() {
                                 <p className="category-difficulty">
                                   {getDifficultyLabel(cat?.difficulty)}
                                 </p>
+                                {isUsed && (
+                                  <div className="used-badge">
+                                    <PiCheckCircleFill /> Użyta
+                                  </div>
+                                )}
                               </>
                             );
                           })()}
@@ -708,11 +728,12 @@ export default function HostGamePage() {
                     </div>
 
                     {/* Box dla drużyny 2 */}
-                    <div className={`team-category-box ${team2Vote ? 'filled' : ''}`}>
+                    <div className={`team-category-box ${team2Vote ? 'filled' : ''} ${team2Vote && usedCategories.includes(team2Vote) ? 'used' : ''}`}>
                       {team2Vote ? (
                         <>
                           {(() => {
                             const cat = categories.find(c => c.category === team2Vote);
+                            const isUsed = usedCategories.includes(team2Vote);
                             return (
                               <>
                                 <div className="category-icon">
@@ -722,6 +743,11 @@ export default function HostGamePage() {
                                 <p className="category-difficulty">
                                   {getDifficultyLabel(cat?.difficulty)}
                                 </p>
+                                {isUsed && (
+                                  <div className="used-badge">
+                                    <PiCheckCircleFill /> Użyta
+                                  </div>
+                                )}
                               </>
                             );
                           })()}

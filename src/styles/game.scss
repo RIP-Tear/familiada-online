@@ -61,6 +61,11 @@
     }
     &.voted { background: $g-bright; border-color: $c-yellow; transform: scale(1.05); animation: voteConfirm .4s ease; }
     &.has-votes { border-color: rgba($c-yellow, .5); }
+    &.used { 
+      opacity: 0.7; 
+      border-color: rgba($c-orange, .5); 
+      background: linear-gradient(135deg, rgba($c-orange, .2), rgba($c-blue, .6)); 
+    }
   }
   &-icon { font-size: 3rem; margin-bottom: $s-sm; }
   &-name { @include txt($fs-4, bold, $c-yellow); margin-bottom: .5rem; }
@@ -71,14 +76,33 @@
 @keyframes voteConfirm { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1.05); } }
 
 .vote {
-  &-badge, &-teams-badge { 
+  &-badge { 
     @include abs(10px, 10px, null, null); background: $c-yellow; color: $c-blue; padding: .4rem .8rem; 
+    border-radius: $r-4; font-size: .85rem; font-weight: bold; @include fx-c; gap: .3rem; box-shadow: 0 2px 10px rgba($c-black, .3); z-index: 10; align-items: center;
+  }
+  &-teams-badge { 
+    @include abs(null, 10px, 10px, null); background: $c-yellow; color: $c-blue; padding: .4rem .8rem; 
     border-radius: $r-4; font-size: .85rem; font-weight: bold; @include fx-c; gap: .3rem; box-shadow: 0 2px 10px rgba($c-black, .3); z-index: 10; align-items: center;
   }
   &-teams-badge.opponent {
     background: rgba($c-orange, .9);
     color: $c-white;
   }
+}
+
+.used-badge {
+  @include abs(10px, null, null, 10px); 
+  background: rgba($c-orange, .9); 
+  color: $c-white; 
+  padding: .4rem .8rem; 
+  border-radius: $r-4; 
+  font-size: .85rem; 
+  font-weight: bold; 
+  @include fx-c; 
+  gap: .3rem; 
+  box-shadow: 0 2px 10px rgba($c-black, .3); 
+  z-index: 10; 
+  align-items: center;
 }
 
 .instruction { @include txt(1.2rem, normal, $c-white); text-align: center; margin-bottom: $s-lg; }
@@ -182,11 +206,18 @@
   align-items: center;
   gap: $s-xs;
   transition: all $t-norm;
+  position: relative;
   
   &.filled {
     background: linear-gradient(135deg, rgba($c-green, .2), rgba($c-blue, .8));
     border: 3px solid $c-yellow;
     cursor: default;
+  }
+  
+  &.used {
+    opacity: 0.7;
+    border-color: rgba($c-orange, .5);
+    background: linear-gradient(135deg, rgba($c-orange, .2), rgba($c-blue, .6));
   }
   
   .team-label {
