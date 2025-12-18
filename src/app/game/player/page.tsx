@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useAppSelector } from "@/redux/hooks";
 import { getAvailableCategories, getQuestionsByCategory } from "@/utils/questions";
 import { subscribeToGame, buzzIn, voteForCategory, teamLeftGame } from "@/utils/firebaseUtils";
+import { gameHistoryStorage } from "@/utils/gameHistoryStorage";
 import { 
   PiGameControllerFill,
   PiLightningFill,
@@ -44,6 +45,7 @@ export default function PlayerGamePage() {
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [myTeamNumber, setMyTeamNumber] = useState(null); // 1 lub 2
   const [myVote, setMyVote] = useState(null); // Głos gracza na kategorię
+  const [usedCategories, setUsedCategories] = useState<string[]>([]); // Kategorie już użyte w tej grze
 
   useEffect(() => {
     if (!gameCode) {
@@ -54,6 +56,11 @@ export default function PlayerGamePage() {
     // Załaduj dostępne kategorie
     const availableCategories = getAvailableCategories();
     setCategories(availableCategories);
+    
+    // Załaduj użyte kategorie dla tej gry
+    const used = gameHistoryStorage.getUsedCategories(gameCode);
+    setUsedCategories(used);
+    console.log('[PLAYER] Loaded used categories:', used);
 
     // Nasłuchuj na wybór kategorii przez hosta
     const unsubscribe = subscribeToGame(gameCode, (data) => {
@@ -82,6 +89,12 @@ export default function PlayerGamePage() {
         if (data.selectedCategory !== selectedCategory) {
           setSelectedCategory(data.selectedCategory);
           console.log(`[PLAYER] Host selected category: ${data.selectedCategory}`);
+          
+          // Zapisz kategorię w localStorage
+          if (!usedCategories.includes(data.selectedCategory)) {
+            gameHistoryStorage.addUsedCategory(gameCode, data.selectedCategory);
+            setUsedCategories(prev => [...prev, data.selectedCategory]);
+          }
           
           // Załaduj pytania
           const categoryQuestions = getQuestionsByCategory(data.selectedCategory);
@@ -444,15 +457,22 @@ export default function PlayerGamePage() {
                 );
               }
               
+              const isUsed = usedCategories.includes(cat.category);
+              
               return (
                 <div
                   key={index}
-                  className={`category-card ${myVote === cat.category ? "voted" : ""} ${votedTeams.length > 0 ? "has-votes" : ""} votable`}
+                  className={`category-card ${myVote === cat.category ? "voted" : ""} ${votedTeams.length > 0 ? "has-votes" : ""} ${isUsed ? "used" : ""} votable`}
                   onClick={() => handleVoteCategory(cat.category)}
                 >
                   <div className="category-icon">{getDifficultyStars(cat.difficulty)}</div>
                   <h3 className="category-name">{cat.category}</h3>
                   <p className="category-difficulty">{getDifficultyLabel(cat.difficulty)}</p>
+                  {isUsed && (
+                    <div className="used-badge">
+                      <PiCheckCircleFill /> Użyta
+                    </div>
+                  )}
                   {myVote === cat.category && (
                     <div className="vote-badge">
                       <PiCheckBold /> Twój głos
@@ -468,7 +488,7 @@ export default function PlayerGamePage() {
             })}
           </div>
 
-          {selectedCategory ? (
+          {/* {selectedCategory ? (
             <div className="selection-info">
               <p><PiCheckBold className="check-icon" /> Prowadzący wybrał: <strong>{selectedCategory}</strong></p>
               <p className="waiting-text">Gra zaraz się rozpocznie...</p>
@@ -477,7 +497,7 @@ export default function PlayerGamePage() {
             <div className="waiting-message">
               <p>Prowadzący wybiera zestaw pytań...</p>
             </div>
-          )}
+          )} */}
         </div>
       ) : gamePhase === "buzz" ? (
         // FAZA 2: Pytanie buzz

@@ -150,6 +150,62 @@ class GameHistoryStorage {
       console.error('Error clearing game history:', error);
     }
   }
+
+  // ===== ZARZĄDZANIE UŻYTYMI KATEGORIAMI =====
+  
+  // Pobranie użytych kategorii dla danej gry
+  getUsedCategories(gameCode: string): string[] {
+    if (typeof window === 'undefined') return [];
+    
+    try {
+      const key = `familiada_used_categories_${gameCode}`;
+      const stored = localStorage.getItem(key);
+      if (!stored) return [];
+      
+      return JSON.parse(stored) as string[];
+    } catch (error) {
+      console.error('Error reading used categories:', error);
+      return [];
+    }
+  }
+
+  // Dodanie kategorii do listy użytych
+  addUsedCategory(gameCode: string, category: string): void {
+    if (typeof window === 'undefined') return;
+    
+    try {
+      const key = `familiada_used_categories_${gameCode}`;
+      const used = this.getUsedCategories(gameCode);
+      
+      // Dodaj tylko jeśli nie istnieje
+      if (!used.includes(category)) {
+        used.push(category);
+        localStorage.setItem(key, JSON.stringify(used));
+        console.log(`[CATEGORIES] Added category "${category}" to game ${gameCode}. Total used: ${used.length}`);
+      }
+    } catch (error) {
+      console.error('Error adding used category:', error);
+    }
+  }
+
+  // Wyczyszczenie użytych kategorii dla danej gry
+  clearUsedCategories(gameCode: string): void {
+    if (typeof window === 'undefined') return;
+    
+    try {
+      const key = `familiada_used_categories_${gameCode}`;
+      localStorage.removeItem(key);
+      console.log(`[CATEGORIES] Cleared used categories for game ${gameCode}`);
+    } catch (error) {
+      console.error('Error clearing used categories:', error);
+    }
+  }
+
+  // Sprawdzenie czy kategoria była już użyta
+  isCategoryUsed(gameCode: string, category: string): boolean {
+    const used = this.getUsedCategories(gameCode);
+    return used.includes(category);
+  }
 }
 
 export const gameHistoryStorage = new GameHistoryStorage();
