@@ -1348,37 +1348,35 @@ export const teamLeftGame = async (gameCode: string, teamName: string): Promise<
 };
 
 // Ustawienie statusu tworzenia własnej kategorii
-export const setCreatingCustomCategory = async (gameCode: string): Promise<void> => {
-  console.log(`[CUSTOM_CAT] Host is creating custom category for game: ${gameCode}`);
+export const setCreatingCustomCategory = async (gameCode: string, isCreating: boolean = true): Promise<void> => {
+  console.log(`[CUSTOM_CAT] Host ${isCreating ? 'is creating' : 'finished creating'} custom category for game: ${gameCode}`);
   
   if (useFirebase) {
     const gameRef = doc(db, 'games', gameCode);
     await updateDoc(gameRef, {
-      gamePhase: 'creating-custom-category',
+      gamePhase: isCreating ? 'creating-custom-category' : 'category-selection',
     });
   } else {
     await localGameStorage.updateGame(gameCode, {
-      gamePhase: 'creating-custom-category',
+      gamePhase: isCreating ? 'creating-custom-category' : 'category-selection',
     } as any);
   }
 };
 
 // Zapisanie własnej kategorii i powrót do wyboru
-export const saveCustomCategory = async (gameCode: string, customCategory: any): Promise<void> => {
-  console.log(`[CUSTOM_CAT] 💾 Saving custom category for game: ${gameCode}`, customCategory);
+export const saveCustomCategory = async (gameCode: string, customCategories: any[]): Promise<void> => {
+  console.log(`[CUSTOM_CAT] 💾 Saving custom categories for game: ${gameCode}`, customCategories);
   
   if (useFirebase) {
     const gameRef = doc(db, 'games', gameCode);
     await updateDoc(gameRef, {
-      customCategory: customCategory,
-      gamePhase: 'category-selection',
+      hostCustomCategories: customCategories,
     });
-    console.log(`[CUSTOM_CAT] ✅ Custom category saved to Firebase`);
+    console.log(`[CUSTOM_CAT] ✅ Custom categories saved to Firebase`);
   } else {
     await localGameStorage.updateGame(gameCode, {
-      customCategory: customCategory,
-      gamePhase: 'category-selection',
+      hostCustomCategories: customCategories,
     } as any);
-    console.log(`[CUSTOM_CAT] ✅ Custom category saved to local storage`);
+    console.log(`[CUSTOM_CAT] ✅ Custom categories saved to local storage`);
   }
 };

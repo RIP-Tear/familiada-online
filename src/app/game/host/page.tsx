@@ -54,6 +54,7 @@ import {
   PiShuffleFill,
   PiPlusCircleFill,
   PiDotsSixVerticalBold,
+  PiPen,
 } from "react-icons/pi";
 import { Navbar, Modal, Button } from "@/components";
 import "@/styles/game.scss";
@@ -176,6 +177,8 @@ export default function HostGamePage() {
     answers: ['', '', '']
   })));
   const [creatorStep, setCreatorStep] = useState(0); // 0 = nazwa i trudność, 1-5 = pytania
+  const [editingCategoryId, setEditingCategoryId] = useState<string | null>(null); // ID edytowanej kategorii
+  const [hostCustomCategories, setHostCustomCategories] = useState<any[]>([]); // Lista wszystkich własnych kategorii
 
   // Stabilny handler dla aktualizacji odpowiedzi
   const handleUpdateAnswer = React.useCallback((questionIdx: number, answerIdx: number, value: string) => {
@@ -205,33 +208,23 @@ export default function HostGamePage() {
     const unsubscribe = subscribeToGame(gameCode, (data) => {
       setGameData(data);
       
-      // Zawsze aktualizuj listę kategorii jeśli jest custom category
-      if (data.customCategory) {
-        console.log('[HOST] 🎯 Custom category detected:', data.customCategory.category);
-        const availableCategories = getAvailableCategories();
-        const customCat = {
-          category: data.customCategory.category,
-          difficulty: data.customCategory.difficulty
-        };
-        
-        // Usuń duplikat jeśli istnieje i dodaj na początek
-        const filteredCategories = availableCategories.filter(c => c.category !== customCat.category);
-        const newCategories = [customCat, ...filteredCategories];
-        console.log('[HOST] 📋 Categories updated - custom at top, total:', newCategories.length);
-        setCategories(newCategories);
-      } else {
-        // Jeśli nie ma custom category, resetuj do normalnych kategorii
-        const availableCategories = getAvailableCategories();
-        setCategories(availableCategories);
+      // Załaduj listę wszystkich własnych kategorii
+      if (data.hostCustomCategories) {
+        setHostCustomCategories(data.hostCustomCategories);
       }
+      
+      // Aktualizuj listę dostępnych kategorii
+      const availableCategories = getAvailableCategories();
+      setCategories(availableCategories);
 
       if (data.selectedCategory && !selectedCategory) {
         setSelectedCategory(data.selectedCategory);
 
         // Sprawdź czy to custom category
-        if (data.customCategory && data.selectedCategory === data.customCategory.category) {
+        const customCat = data.hostCustomCategories?.find((cat: any) => cat.name === data.selectedCategory);
+        if (customCat) {
           // Użyj pytań z custom category
-          const customQuestions = data.customCategory.questions.map((q: any, idx: number) => ({
+          const customQuestions = customCat.questions.map((q: any, idx: number) => ({
             question: q.question,
             answers: q.answers.map((a: string, aIdx: number) => ({
               answer: a,
@@ -365,6 +358,16 @@ export default function HostGamePage() {
 
   const handleCreateCustomCategory = async () => {
     try {
+      // Resetuj formularz dla nowej kategorii
+      setEditingCategoryId(null);
+      setCustomCategoryName('');
+      setCustomDifficulty('medium');
+      setCustomQuestions(Array.from({ length: 5 }, () => ({
+        question: '',
+        answers: ['', '', '']
+      })));
+      setCreatorStep(0);
+      
       // Ustaw status tworzenia własnej kategorii
       await setCreatingCustomCategory(gameCode);
       setIsCreatingCustom(true);
@@ -401,8 +404,9 @@ export default function HostGamePage() {
     
     try {
       // Przygotuj kategorię - tylko wypełnione odpowiedzi
-      const customCategory = {
-        category: customCategoryName.trim(),
+      const newCategory = {
+        id: editingCategoryId || `custom_${Date.now()}`, // Użyj istniejącego ID lub stwórz nowe
+        name: customCategoryName.trim(),
         difficulty: customDifficulty,
         questions: customQuestions.map(q => ({
           question: q.question.trim(),
@@ -410,11 +414,36 @@ export default function HostGamePage() {
         }))
       };
       
-      console.log("[HOST] Saving custom category:", customCategory);
+      console.log("[HOST] Saving custom category:", newCategory);
       
-      // Zapisz kategorię
-      await saveCustomCategory(gameCode, customCategory);
+      // Zaktualizuj listę kategorii
+      let updatedCategories;
+      if (editingCategoryId) {
+        // Edycja istniejącej kategorii
+        updatedCategories = hostCustomCategories.map(cat => 
+          cat.id === editingCategoryId ? newCategory : cat
+        );
+      } else {
+        // Dodanie nowej kategorii
+        updatedCategories = [...hostCustomCategories, newCategory];
+      }
+      
+      // Zapisz do Firebase/localStorage
+      await saveCustomCategory(gameCode, updatedCategories);
+      
+      // Zakończ tryb tworzenia kategorii
+      await setCreatingCustomCategory(gameCode, false);
+      
+      // Resetuj formularz
       setIsCreatingCustom(false);
+      setEditingCategoryId(null);
+      setCreatorStep(0);
+      setCustomCategoryName('');
+      setCustomDifficulty('medium');
+      setCustomQuestions(Array.from({ length: 5 }, () => ({
+        question: '',
+        answers: ['', '', '']
+      })));
       
       console.log("[HOST] ✅ Custom category saved successfully");
     } catch (error) {
@@ -425,6 +454,7 @@ export default function HostGamePage() {
 
   const handleCancelCustomCategory = async () => {
     setIsCreatingCustom(false);
+    setEditingCategoryId(null);
     setCreatorStep(0);
     setCustomCategoryName('');
     setCustomDifficulty('medium');
@@ -432,8 +462,24 @@ export default function HostGamePage() {
       question: '',
       answers: ['', '', '']
     })));
-    // Powrót do wyboru kategorii
-    await saveCustomCategory(gameCode, null);
+    
+    try {
+      await setCreatingCustomCategory(gameCode, false);
+    } catch (error) {
+      console.error("[HOST] Error canceling custom category:", error);
+    }
+  };
+
+  const handleEditCustomCategory = (category: any) => {
+    setEditingCategoryId(category.id);
+    setCustomCategoryName(category.name);
+    setCustomDifficulty(category.difficulty);
+    setCustomQuestions(category.questions.map((q: any) => ({
+      question: q.question,
+      answers: [...q.answers, '', ''].slice(0, Math.max(q.answers.length, 3))
+    })));
+    setCreatorStep(0);
+    setIsCreatingCustom(true);
   };
 
   const handleAddAnswer = (questionIndex: number) => {
@@ -707,6 +753,32 @@ export default function HostGamePage() {
     }
   };
 
+  const isCategoryComplete = (category: any) => {
+    // Sprawdź czy kategoria ma nazwę
+    if (!category.name || !category.name.trim()) {
+      return false;
+    }
+    
+    // Sprawdź czy ma 5 pytań
+    if (!category.questions || category.questions.length !== 5) {
+      return false;
+    }
+    
+    // Sprawdź czy każde pytanie ma treść i co najmniej 3 odpowiedzi
+    for (const question of category.questions) {
+      if (!question.question || !question.question.trim()) {
+        return false;
+      }
+      
+      const validAnswers = question.answers?.filter((a: string) => a && a.trim()) || [];
+      if (validAnswers.length < 3) {
+        return false;
+      }
+    }
+    
+    return true;
+  };
+
   const getDifficultyStars = (difficulty) => {
     switch (difficulty) {
       case "easy":
@@ -954,7 +1026,9 @@ export default function HostGamePage() {
             {creatorStep === 0 ? (
               // KROK 1: Nazwa kategorii i trudność
               <>
-                <h2 className="creator-step-title">Nazwa kategorii i trudność</h2>
+                <h2 className="creator-step-title">
+                  {editingCategoryId ? 'Edytuj kategorię' : 'Nazwa kategorii i trudność'}
+                </h2>
                 
                 <div className="creator-name-input">
                   <input
@@ -1093,7 +1167,7 @@ export default function HostGamePage() {
                           disabled={!isQuestionValid}
                         >
                           <PiCheckBold />
-                          Zapisz kategorię
+                          {editingCategoryId ? 'Zaktualizuj kategorię' : 'Zapisz kategorię'}
                         </button>
                       );
                     })()}
@@ -1249,6 +1323,39 @@ export default function HostGamePage() {
             <PiPlusCircleFill className="btn-icon" />
             Stwórz własną kategorię pytań
           </button>
+
+          {/* Lista stworzonych własnych kategorii */}
+          {hostCustomCategories.length > 0 && (
+            <div className="host-custom-categories-list">
+              <h3 className="custom-categories-title">Twoje kategorie:</h3>
+              <div className="custom-categories-grid">
+                {hostCustomCategories.map((category) => {
+                  const isComplete = isCategoryComplete(category);
+                  return (
+                    <div 
+                      key={category.id} 
+                      className={`custom-category-card ${isComplete ? 'complete' : 'incomplete'}`}
+                      onClick={() => handleEditCustomCategory(category)}
+                    >
+                      <div className="custom-category-content">
+                        <h4 className="custom-category-name">
+                          {category.name || 'Bez nazwy'}
+                        </h4>
+                        <div className="custom-category-difficulty">
+                          {Array.from({ length: category.difficulty === 'easy' ? 1 : category.difficulty === 'medium' ? 2 : 3 }).map((_, i) => (
+                            <PiStarFill key={i} />
+                          ))}
+                        </div>
+                      </div>
+                      <div className="custom-category-edit">
+                        <PiPen />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
           </>
         ) : gamePhase === "buzz" ? (
           // FAZA 2: Pytanie buzz

@@ -69,7 +69,6 @@ export default function PlayerGamePage() {
         hostLeftAlert: data.hostLeftAlert,
         teamLeftAlert: data.teamLeftAlert,
         teamLeftName: data.teamLeftName,
-        customCategory: data.customCategory ? data.customCategory.category : 'BRAK',
         gamePhase: data.gamePhase
       });
       setGameData(data);
@@ -77,23 +76,35 @@ export default function PlayerGamePage() {
       // Zawsze sprawdzaj i aktualizuj listę kategorii
       const availableCategories = getAvailableCategories();
       
-      if (data.customCategory) {
-        console.log('[PLAYER] 🎯 Custom category present:', data.customCategory.category);
-        const customCat = {
-          category: data.customCategory.category,
-          difficulty: data.customCategory.difficulty
-        };
+      // Dodaj własne kategorie prowadzącego do listy (tylko uzupełnione)
+      if (data.hostCustomCategories && data.hostCustomCategories.length > 0) {
+        console.log('[PLAYER] 🎯 Custom categories present:', data.hostCustomCategories.length);
         
-        // Sprawdź czy custom kategoria już jest na liście
-        const hasCustom = categories.length > 0 && categories[0].category === customCat.category;
+        // Filtruj tylko uzupełnione kategorie
+        const completeCategories = data.hostCustomCategories.filter((cat: any) => {
+          // Sprawdź czy kategoria ma nazwę i 5 pytań z co najmniej 3 odpowiedziami każde
+          if (!cat.name || !cat.name.trim()) return false;
+          if (!cat.questions || cat.questions.length !== 5) return false;
+          
+          return cat.questions.every((q: any) => {
+            if (!q.question || !q.question.trim()) return false;
+            const validAnswers = q.answers?.filter((a: string) => a && a.trim()) || [];
+            return validAnswers.length >= 3;
+          });
+        });
         
-        if (!hasCustom) {
-          // Dodaj custom na początek
-          const filteredCategories = availableCategories.filter(c => c.category !== customCat.category);
-          const newCategories = [customCat, ...filteredCategories];
-          console.log('[PLAYER] 📋 Adding custom category to list (total:', newCategories.length, ')');
-          setCategories(newCategories);
-        }
+        const customCats = completeCategories.map((cat: any) => ({
+          category: cat.name,
+          difficulty: cat.difficulty
+        }));
+        
+        // Dodaj custom kategorie na początek
+        const filteredCategories = availableCategories.filter(c => 
+          !customCats.some((cc: any) => cc.category === c.category)
+        );
+        const newCategories = [...customCats, ...filteredCategories];
+        console.log('[PLAYER] 📋 Adding custom categories to list (complete:', completeCategories.length, 'total:', newCategories.length, ')');
+        setCategories(newCategories);
       } else if (categories.length === 0) {
         // Jeśli brak kategorii, załaduj domyślne
         console.log('[PLAYER] 📋 Loading default categories');
@@ -126,9 +137,10 @@ export default function PlayerGamePage() {
           }
           
           // Sprawdź czy to custom category
-          if (data.customCategory && data.selectedCategory === data.customCategory.category) {
+          const customCat = data.hostCustomCategories?.find((cat: any) => cat.name === data.selectedCategory);
+          if (customCat) {
             // Użyj pytań z custom category
-            const customQuestions = data.customCategory.questions.map((q: any, idx: number) => ({
+            const customQuestions = customCat.questions.map((q: any, idx: number) => ({
               question: q.question,
               answers: q.answers.map((a: string, aIdx: number) => ({
                 answer: a,
@@ -168,15 +180,29 @@ export default function PlayerGamePage() {
         // Gdy wracamy do wyboru kategorii, odśwież listę kategorii
         if (data.gamePhase === 'category-selection' && previousPhase !== 'category-selection') {
           console.log('[PLAYER] 🔄 Returning to category selection - refreshing categories');
-          if (data.customCategory) {
+          if (data.hostCustomCategories && data.hostCustomCategories.length > 0) {
             const availableCategories = getAvailableCategories();
-            const customCat = {
-              category: data.customCategory.category,
-              difficulty: data.customCategory.difficulty
-            };
-            const filteredCategories = availableCategories.filter(c => c.category !== customCat.category);
-            setCategories([customCat, ...filteredCategories]);
-            console.log('[PLAYER] ✅ Custom category added to list:', customCat.category);
+            
+            // Filtruj tylko uzupełnione kategorie
+            const completeCategories = data.hostCustomCategories.filter((cat: any) => {
+              if (!cat.name || !cat.name.trim()) return false;
+              if (!cat.questions || cat.questions.length !== 5) return false;
+              return cat.questions.every((q: any) => {
+                if (!q.question || !q.question.trim()) return false;
+                const validAnswers = q.answers?.filter((a: string) => a && a.trim()) || [];
+                return validAnswers.length >= 3;
+              });
+            });
+            
+            const customCats = completeCategories.map((cat: any) => ({
+              category: cat.name,
+              difficulty: cat.difficulty
+            }));
+            const filteredCategories = availableCategories.filter(c => 
+              !customCats.some((cc: any) => cc.category === c.category)
+            );
+            setCategories([...customCats, ...filteredCategories]);
+            console.log('[PLAYER] ✅ Custom categories added to list (complete):', customCats.length);
           }
         }
       }
@@ -532,14 +558,15 @@ export default function PlayerGamePage() {
               }
               
               const isUsed = usedCategories.includes(cat.category);
-              const isCustom = index === 0 && gameData?.customCategory && cat.category === gameData.customCategory.category;
+              const isCustom = gameData?.hostCustomCategories?.some((c: any) => c.name === cat.category);
+              const isFirstCustom = index === 0 && isCustom;
               
               return (
                 <>
-                  {isCustom && (
+                  {isFirstCustom && (
                     <div className="category-separator">
                       <div className="separator-line"></div>
-                      <span className="separator-text">Własna kategoria</span>
+                      <span className="separator-text">Własne kategorie</span>
                       <div className="separator-line"></div>
                     </div>
                   )}

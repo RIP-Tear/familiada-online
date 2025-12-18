@@ -57,6 +57,7 @@ export interface GameData {
   categorySelectedAt?: string;
   gamePhase?: 'category-selection' | 'creating-custom-category' | 'buzz' | 'playing' | 'finished';
   customCategory?: QuestionSet;
+  hostCustomCategories?: QuestionSet[];
   buzzedTeam?: string | null;
   buzzedTeamName?: string | null;
   buzzTimestamp?: number | null;

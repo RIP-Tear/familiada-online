@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { createGame as createGameAction } from "@/redux/reducer/gameSlice";
-import { createGame, generateUserId, startGame, subscribeToGame, resetGameToWaiting, resetGameStatus } from "@/utils/firebaseUtils";
+import { createGame, generateUserId, startGame, subscribeToGame, resetGameToWaiting, resetGameStatus, getGame } from "@/utils/firebaseUtils";
 import { gameHistoryStorage, type GameHistoryEntry } from "@/utils/gameHistoryStorage";
 import { Navbar } from "@/components";
 import { PiUsers, PiUsersThree, PiBookOpenFill, PiPlus, PiClock } from "react-icons/pi";
@@ -34,8 +34,35 @@ export default function HostPage() {
 
   // Wczytanie historii gier przy starcie
   useEffect(() => {
-    const history = gameHistoryStorage.getHistory();
-    setGameHistory(history);
+    const loadHistoryWithCategories = async () => {
+      const history = gameHistoryStorage.getHistory();
+      
+      // Dla każdej gry w historii pobierz liczbę własnych kategorii
+      const historyWithCategories = await Promise.all(
+        history.map(async (game) => {
+          try {
+            const gameData = await getGame(game.gameCode);
+            const customCategoriesCount = gameData?.hostCustomCategories?.length || 0;
+            
+            // Jeśli liczba się zmieniła, zaktualizuj w storage
+            if (customCategoriesCount !== game.customCategoriesCount) {
+              gameHistoryStorage.updateGame(game.gameCode, { 
+                customCategoriesCount 
+              });
+            }
+            
+            return { ...game, customCategoriesCount };
+          } catch (error) {
+            console.error(`Error loading categories for game ${game.gameCode}:`, error);
+            return game;
+          }
+        })
+      );
+      
+      setGameHistory(historyWithCategories);
+    };
+    
+    loadHistoryWithCategories();
   }, []);
 
   useEffect(() => {
@@ -250,6 +277,12 @@ export default function HostPage() {
                           {game.teams && game.teams.length > 0 && (
                             <span className="game-teams">
                               {game.teams.join(' vs ')}
+                            </span>
+                          )}
+                          {game.customCategoriesCount !== undefined && game.customCategoriesCount > 0 && (
+                            <span className="game-custom-categories">
+                              <PiBookOpenFill size={14} />
+                              {game.customCategoriesCount} {game.customCategoriesCount === 1 ? 'własna kategoria' : 'własne kategorie'}
                             </span>
                           )}
                         </div>
