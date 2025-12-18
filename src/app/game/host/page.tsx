@@ -27,6 +27,8 @@ import {
   restartGame,
   hostLeftGame,
   showNewGameAlert,
+  setCreatingCustomCategory,
+  saveCustomCategory,
 } from "@/utils/firebaseUtils";
 import {
   PiGameControllerFill,
@@ -50,8 +52,9 @@ import {
   PiUsersFill,
   PiCheckCircleFill,
   PiShuffleFill,
+  PiPlusCircleFill,
 } from "react-icons/pi";
-import { Navbar, Modal } from "@/components";
+import { Navbar, Modal, Button } from "@/components";
 import "@/styles/game.scss";
 import "@/styles/board.scss";
 
@@ -72,6 +75,15 @@ export default function HostGamePage() {
   const [selectedTeamForTransfer, setSelectedTeamForTransfer] = useState(null);
   const [buzzProcessing, setBuzzProcessing] = useState(false);
   const buzzDelayTimeoutRef = useRef(null);
+  
+  // Stan dla tworzenia własnej kategorii
+  const [isCreatingCustom, setIsCreatingCustom] = useState(false);
+  const [customCategoryName, setCustomCategoryName] = useState('');
+  const [customDifficulty, setCustomDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium');
+  const [customQuestions, setCustomQuestions] = useState(Array.from({ length: 5 }, () => ({
+    question: '',
+    answers: ['', '', '']
+  })));
 
   useEffect(() => {
     if (!gameCode) {
@@ -91,23 +103,65 @@ export default function HostGamePage() {
     // Nasłuchuj zmian w grze
     const unsubscribe = subscribeToGame(gameCode, (data) => {
       setGameData(data);
+      
+      // Zawsze aktualizuj listę kategorii jeśli jest custom category
+      if (data.customCategory) {
+        console.log('[HOST] 🎯 Custom category detected:', data.customCategory.category);
+        const availableCategories = getAvailableCategories();
+        const customCat = {
+          category: data.customCategory.category,
+          difficulty: data.customCategory.difficulty
+        };
+        
+        // Usuń duplikat jeśli istnieje i dodaj na początek
+        const filteredCategories = availableCategories.filter(c => c.category !== customCat.category);
+        const newCategories = [customCat, ...filteredCategories];
+        console.log('[HOST] 📋 Categories updated - custom at top, total:', newCategories.length);
+        setCategories(newCategories);
+      } else {
+        // Jeśli nie ma custom category, resetuj do normalnych kategorii
+        const availableCategories = getAvailableCategories();
+        setCategories(availableCategories);
+      }
 
       if (data.selectedCategory && !selectedCategory) {
         setSelectedCategory(data.selectedCategory);
 
-        // Załaduj pytania dla wybranej kategorii
-        const categoryQuestions = getQuestionsByCategory(data.selectedCategory);
-        setQuestions(categoryQuestions);
+        // Sprawdź czy to custom category
+        if (data.customCategory && data.selectedCategory === data.customCategory.category) {
+          // Użyj pytań z custom category
+          const customQuestions = data.customCategory.questions.map((q: any, idx: number) => ({
+            question: q.question,
+            answers: q.answers.map((a: string, aIdx: number) => ({
+              answer: a,
+              points: (q.answers.length - aIdx) * 10 // Punkty od najwyższych do najniższych
+            }))
+          }));
+          setQuestions(customQuestions);
+          
+          if (customQuestions.length > 0) {
+            setCurrentQuestion(customQuestions[0]);
+          }
+        } else {
+          // Załaduj pytania z normalnej kategorii
+          const categoryQuestions = getQuestionsByCategory(data.selectedCategory);
+          setQuestions(categoryQuestions);
 
-        if (categoryQuestions.length > 0) {
-          const questionIndex = data.currentQuestionIndex || 0;
-          setCurrentQuestion(categoryQuestions[questionIndex]);
+          if (categoryQuestions.length > 0) {
+            const questionIndex = data.currentQuestionIndex || 0;
+            setCurrentQuestion(categoryQuestions[questionIndex]);
+          }
         }
       }
 
       // Aktualizuj fazę gry
       if (data.gamePhase) {
         setGamePhase(data.gamePhase);
+        
+        // Jeśli wróciliśmy do wyboru kategorii, resetuj stan tworzenia
+        if (data.gamePhase === 'category-selection') {
+          setIsCreatingCustom(false);
+        }
       }
 
       // Aktualizuj obecne pytanie przy zmianie indeksu
@@ -206,6 +260,107 @@ export default function HostGamePage() {
       console.error("[HOST] Error selecting category:", error);
       setIsSelecting(false);
     }
+  };
+
+  const handleCreateCustomCategory = async () => {
+    try {
+      // Ustaw status tworzenia własnej kategorii
+      await setCreatingCustomCategory(gameCode);
+      setIsCreatingCustom(true);
+      console.log("[HOST] Starting custom category creation");
+    } catch (error) {
+      console.error("[HOST] Error starting custom category:", error);
+    }
+  };
+
+  const handleSaveCustomCategory = async () => {
+    // Walidacja - nazwa kategorii
+    if (!customCategoryName.trim()) {
+      alert('Wprowadź nazwę kategorii');
+      return;
+    }
+    
+    // Walidacja - wszystkie pytania i odpowiedzi
+    for (let i = 0; i < customQuestions.length; i++) {
+      const q = customQuestions[i];
+      
+      // Sprawdź czy pytanie jest wypełnione
+      if (!q.question.trim()) {
+        alert(`Pytanie ${i + 1}: Wprowadź treść pytania`);
+        return;
+      }
+      
+      // Sprawdź ilość wypełnionych odpowiedzi
+      const validAnswers = q.answers.filter(a => a.trim() !== '');
+      if (validAnswers.length < 3) {
+        alert(`Pytanie ${i + 1}: Minimum 3 wypełnione odpowiedzi (obecnie: ${validAnswers.length})`);
+        return;
+      }
+    }
+    
+    try {
+      // Przygotuj kategorię - tylko wypełnione odpowiedzi
+      const customCategory = {
+        category: customCategoryName.trim(),
+        difficulty: customDifficulty,
+        questions: customQuestions.map(q => ({
+          question: q.question.trim(),
+          answers: q.answers.filter(a => a.trim() !== '').map(a => a.trim())
+        }))
+      };
+      
+      console.log("[HOST] Saving custom category:", customCategory);
+      
+      // Zapisz kategorię
+      await saveCustomCategory(gameCode, customCategory);
+      setIsCreatingCustom(false);
+      
+      console.log("[HOST] ✅ Custom category saved successfully");
+    } catch (error) {
+      console.error("[HOST] ❌ Error saving custom category:", error);
+      alert('Błąd podczas zapisywania kategorii');
+    }
+  };
+
+  const handleCancelCustomCategory = async () => {
+    setIsCreatingCustom(false);
+    // Powrót do wyboru kategorii
+    await saveCustomCategory(gameCode, null);
+  };
+
+  const handleAddAnswer = (questionIndex: number) => {
+    if (customQuestions[questionIndex].answers.length >= 10) {
+      alert('Maksymalnie 10 odpowiedzi na pytanie');
+      return;
+    }
+    
+    const newQuestions = [...customQuestions];
+    newQuestions[questionIndex].answers.push('');
+    setCustomQuestions(newQuestions);
+  };
+
+  const handleRemoveAnswer = (questionIndex: number, answerIndex: number) => {
+    if (customQuestions[questionIndex].answers.length <= 3) {
+      alert('Minimum 3 odpowiedzi na pytanie');
+      return;
+    }
+    
+    const newQuestions = [...customQuestions];
+    newQuestions[questionIndex].answers.splice(answerIndex, 1);
+    setCustomQuestions(newQuestions);
+  };
+
+  const handleMoveAnswer = (questionIndex: number, answerIndex: number, direction: 'up' | 'down') => {
+    const newQuestions = [...customQuestions];
+    const answers = newQuestions[questionIndex].answers;
+    
+    if (direction === 'up' && answerIndex > 0) {
+      [answers[answerIndex], answers[answerIndex - 1]] = [answers[answerIndex - 1], answers[answerIndex]];
+    } else if (direction === 'down' && answerIndex < answers.length - 1) {
+      [answers[answerIndex], answers[answerIndex + 1]] = [answers[answerIndex + 1], answers[answerIndex]];
+    }
+    
+    setCustomQuestions(newQuestions);
   };
 
   const handleCategoryAction = async () => {
@@ -667,8 +822,138 @@ export default function HostGamePage() {
           <div className="header-team">Prowadzący</div>
         </div>
 
-        {gamePhase === "category-selection" ? (
+        {isCreatingCustom ? (
+          // FAZA: Tworzenie własnej kategorii
+          <div className="custom-category-creator">
+            <h2 className="creator-title">Stwórz własną kategorię</h2>
+            
+            <div className="creator-form">
+              <div className="form-group">
+                <label>Nazwa kategorii:</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={customCategoryName}
+                  onChange={(e) => setCustomCategoryName(e.target.value)}
+                  placeholder="np. Zwierzęta domowe"
+                  maxLength={50}
+                />
+              </div>
+              
+              <div className="form-group">
+                <label>Trudność:</label>
+                <div className="difficulty-buttons">
+                  <button
+                    className={`btn-difficulty ${customDifficulty === 'easy' ? 'active' : ''}`}
+                    onClick={() => setCustomDifficulty('easy')}
+                  >
+                    ⭐ Łatwa
+                  </button>
+                  <button
+                    className={`btn-difficulty ${customDifficulty === 'medium' ? 'active' : ''}`}
+                    onClick={() => setCustomDifficulty('medium')}
+                  >
+                    ⭐⭐ Średnia
+                  </button>
+                  <button
+                    className={`btn-difficulty ${customDifficulty === 'hard' ? 'active' : ''}`}
+                    onClick={() => setCustomDifficulty('hard')}
+                  >
+                    ⭐⭐⭐ Trudna
+                  </button>
+                </div>
+              </div>
+              
+              <div className="questions-list">
+                {customQuestions.map((q, qIdx) => (
+                  <div key={qIdx} className="question-block">
+                    <h3 className="question-number">Pytanie {qIdx + 1}</h3>
+                    <input
+                      type="text"
+                      className="form-input question-input"
+                      value={q.question}
+                      onChange={(e) => {
+                        const newQuestions = [...customQuestions];
+                        newQuestions[qIdx].question = e.target.value;
+                        setCustomQuestions(newQuestions);
+                      }}
+                      placeholder="Wpisz pytanie..."
+                      maxLength={200}
+                    />
+                    
+                    <div className="answers-list">
+                      <label className="answers-label">Odpowiedzi (kolejność ważna - od najczęstszej do najrzadszej):</label>
+                      {q.answers.map((ans, aIdx) => (
+                        <div key={aIdx} className="answer-item">
+                          <span className="answer-number">{aIdx + 1}.</span>
+                          <input
+                            type="text"
+                            className="form-input answer-input"
+                            value={ans}
+                            onChange={(e) => {
+                              const newQuestions = [...customQuestions];
+                              newQuestions[qIdx].answers[aIdx] = e.target.value;
+                              setCustomQuestions(newQuestions);
+                            }}
+                            placeholder="Wpisz odpowiedź..."
+                            maxLength={100}
+                          />
+                          <div className="answer-controls">
+                            <button
+                              className="btn-answer-control"
+                              onClick={() => handleMoveAnswer(qIdx, aIdx, 'up')}
+                              disabled={aIdx === 0}
+                              title="Przesuń w górę"
+                            >
+                              ↑
+                            </button>
+                            <button
+                              className="btn-answer-control"
+                              onClick={() => handleMoveAnswer(qIdx, aIdx, 'down')}
+                              disabled={aIdx === q.answers.length - 1}
+                              title="Przesuń w dół"
+                            >
+                              ↓
+                            </button>
+                            {q.answers.length > 3 && (
+                              <button
+                                className="btn-answer-control btn-remove"
+                                onClick={() => handleRemoveAnswer(qIdx, aIdx)}
+                                title="Usuń odpowiedź"
+                              >
+                                ✕
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                      {q.answers.length < 10 && (
+                        <button
+                          className="btn-add-answer"
+                          onClick={() => handleAddAnswer(qIdx)}
+                        >
+                          + Dodaj odpowiedź
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="creator-actions">
+                <button className="btn-cancel" onClick={handleCancelCustomCategory}>
+                  Anuluj
+                </button>
+                <button className="btn-save" onClick={handleSaveCustomCategory}>
+                  <PiCheckBold className="btn-icon" />
+                  Zapisz i użyj kategorii
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : gamePhase === "category-selection" ? (
           // FAZA 1: Wybór kategorii
+          <>
           <div className="category-selection">
             {(() => {
               // Zbierz kategorie od każdej drużyny
@@ -793,6 +1078,15 @@ export default function HostGamePage() {
               </div>
             )}
           </div>
+          
+          <button
+            className="btn-create-custom-outside"
+            onClick={handleCreateCustomCategory}
+          >
+            <PiPlusCircleFill className="btn-icon" />
+            Stwórz własną kategorię pytań
+          </button>
+          </>
         ) : gamePhase === "buzz" ? (
           // FAZA 2: Pytanie buzz
           <div className="buzz-round">

@@ -55,7 +55,8 @@ export interface GameData {
   // Dodatkowe pola używane w aplikacji
   selectedCategory?: string;
   categorySelectedAt?: string;
-  gamePhase?: 'category-selection' | 'buzz' | 'playing' | 'finished';
+  gamePhase?: 'category-selection' | 'creating-custom-category' | 'buzz' | 'playing' | 'finished';
+  customCategory?: QuestionSet;
   buzzedTeam?: string | null;
   buzzedTeamName?: string | null;
   buzzTimestamp?: number | null;

@@ -25,7 +25,8 @@ import {
   PiChartBarFill,
   PiNumberCircleOneFill,
   PiFlagCheckeredFill,
-  PiArrowClockwiseBold
+  PiArrowClockwiseBold,
+  PiQuestionFill
 } from "react-icons/pi";
 import { Navbar } from "@/components";
 import "@/styles/game.scss";
@@ -67,9 +68,37 @@ export default function PlayerGamePage() {
       console.log('[PLAYER] Game data updated:', {
         hostLeftAlert: data.hostLeftAlert,
         teamLeftAlert: data.teamLeftAlert,
-        teamLeftName: data.teamLeftName
+        teamLeftName: data.teamLeftName,
+        customCategory: data.customCategory ? data.customCategory.category : 'BRAK',
+        gamePhase: data.gamePhase
       });
       setGameData(data);
+      
+      // Zawsze sprawdzaj i aktualizuj listę kategorii
+      const availableCategories = getAvailableCategories();
+      
+      if (data.customCategory) {
+        console.log('[PLAYER] 🎯 Custom category present:', data.customCategory.category);
+        const customCat = {
+          category: data.customCategory.category,
+          difficulty: data.customCategory.difficulty
+        };
+        
+        // Sprawdź czy custom kategoria już jest na liście
+        const hasCustom = categories.length > 0 && categories[0].category === customCat.category;
+        
+        if (!hasCustom) {
+          // Dodaj custom na początek
+          const filteredCategories = availableCategories.filter(c => c.category !== customCat.category);
+          const newCategories = [customCat, ...filteredCategories];
+          console.log('[PLAYER] 📋 Adding custom category to list (total:', newCategories.length, ')');
+          setCategories(newCategories);
+        }
+      } else if (categories.length === 0) {
+        // Jeśli brak kategorii, załaduj domyślne
+        console.log('[PLAYER] 📋 Loading default categories');
+        setCategories(availableCategories);
+      }
       
       // Jeśli gra została zakończona, przekieruj do gra
       if (data.status === 'ended') {
@@ -96,13 +125,30 @@ export default function PlayerGamePage() {
             setUsedCategories(prev => [...prev, data.selectedCategory]);
           }
           
-          // Załaduj pytania
-          const categoryQuestions = getQuestionsByCategory(data.selectedCategory);
-          setQuestions(categoryQuestions);
-          
-          if (categoryQuestions.length > 0) {
-            const questionIndex = data.currentQuestionIndex || 0;
-            setCurrentQuestion(categoryQuestions[questionIndex]);
+          // Sprawdź czy to custom category
+          if (data.customCategory && data.selectedCategory === data.customCategory.category) {
+            // Użyj pytań z custom category
+            const customQuestions = data.customCategory.questions.map((q: any, idx: number) => ({
+              question: q.question,
+              answers: q.answers.map((a: string, aIdx: number) => ({
+                answer: a,
+                points: (q.answers.length - aIdx) * 10 // Punkty od najwyższych do najniższych
+              }))
+            }));
+            setQuestions(customQuestions);
+            
+            if (customQuestions.length > 0) {
+              setCurrentQuestion(customQuestions[0]);
+            }
+          } else {
+            // Załaduj pytania z normalnej kategorii
+            const categoryQuestions = getQuestionsByCategory(data.selectedCategory);
+            setQuestions(categoryQuestions);
+            
+            if (categoryQuestions.length > 0) {
+              const questionIndex = data.currentQuestionIndex || 0;
+              setCurrentQuestion(categoryQuestions[questionIndex]);
+            }
           }
         }
       } else {
@@ -116,7 +162,23 @@ export default function PlayerGamePage() {
 
       // Aktualizuj fazę gry
       if (data.gamePhase) {
+        const previousPhase = gamePhase;
         setGamePhase(data.gamePhase);
+        
+        // Gdy wracamy do wyboru kategorii, odśwież listę kategorii
+        if (data.gamePhase === 'category-selection' && previousPhase !== 'category-selection') {
+          console.log('[PLAYER] 🔄 Returning to category selection - refreshing categories');
+          if (data.customCategory) {
+            const availableCategories = getAvailableCategories();
+            const customCat = {
+              category: data.customCategory.category,
+              difficulty: data.customCategory.difficulty
+            };
+            const filteredCategories = availableCategories.filter(c => c.category !== customCat.category);
+            setCategories([customCat, ...filteredCategories]);
+            console.log('[PLAYER] ✅ Custom category added to list:', customCat.category);
+          }
+        }
       }
 
       // Aktualizuj obecne pytanie przy zmianie indeksu
@@ -419,7 +481,8 @@ export default function PlayerGamePage() {
 
       <div className="game-header">
         <h1 className="header-title">
-          {gamePhase === "category-selection" ? "Wybieranie kategorii" :
+          {gamePhase === "creating-custom-category" ? "Tworzenie kategorii" :
+          gamePhase === "category-selection" ? "Wybieranie kategorii" :
           gamePhase === "buzz" ? (
             (gameData?.currentQuestionIndex || 0) === 4 
               ? "Ostatnie pytanie" 
@@ -435,7 +498,17 @@ export default function PlayerGamePage() {
         <div className="header-team">{userName}</div>
       </div>
 
-      {gamePhase === "category-selection" ? (
+      {gamePhase === "creating-custom-category" ? (
+        // FAZA: Prowadzący tworzy własną kategorię
+        <div className="custom-category-waiting">
+          <div className="waiting-content">
+            <PiQuestionFill className="waiting-icon rotating" size={80} />
+            <h2 className="waiting-title">Prowadzący tworzy własną kategorię</h2>
+            <p className="waiting-subtitle">Czekaj, aż prowadzący przygotuje pytania...</p>
+            <div className="loading-spinner"></div>
+          </div>
+        </div>
+      ) : gamePhase === "category-selection" ? (
         // FAZA 1: Wybór kategorii
         <div className="category-selection">
           <p className="instruction">Głosuj na kategorię pytań!</p>
@@ -458,32 +531,49 @@ export default function PlayerGamePage() {
               }
               
               const isUsed = usedCategories.includes(cat.category);
+              const isCustom = index === 0 && gameData?.customCategory && cat.category === gameData.customCategory.category;
               
               return (
-                <div
-                  key={index}
-                  className={`category-card ${myVote === cat.category ? "voted" : ""} ${votedTeams.length > 0 ? "has-votes" : ""} ${isUsed ? "used" : ""} votable`}
-                  onClick={() => handleVoteCategory(cat.category)}
-                >
-                  <div className="category-icon">{getDifficultyStars(cat.difficulty)}</div>
-                  <h3 className="category-name">{cat.category}</h3>
-                  <p className="category-difficulty">{getDifficultyLabel(cat.difficulty)}</p>
-                  {isUsed && (
-                    <div className="used-badge">
-                      <PiCheckCircleFill /> Użyta
+                <>
+                  {isCustom && (
+                    <div className="category-separator">
+                      <div className="separator-line"></div>
+                      <span className="separator-text">Własna kategoria</span>
+                      <div className="separator-line"></div>
                     </div>
                   )}
-                  {myVote === cat.category && (
-                    <div className="vote-badge">
-                      <PiCheckBold /> Twój głos
+                  <div
+                    key={index}
+                    className={`category-card ${myVote === cat.category ? "voted" : ""} ${votedTeams.length > 0 ? "has-votes" : ""} ${isUsed ? "used" : ""} ${isCustom ? "custom" : ""} votable`}
+                    onClick={() => handleVoteCategory(cat.category)}
+                  >
+                    <div className="category-icon">{getDifficultyStars(cat.difficulty)}</div>
+                    <h3 className="category-name">{cat.category}</h3>
+                    <p className="category-difficulty">{getDifficultyLabel(cat.difficulty)}</p>
+                    {isUsed && (
+                      <div className="used-badge">
+                        <PiCheckCircleFill /> Użyta
+                      </div>
+                    )}
+                    {myVote === cat.category && (
+                      <div className="vote-badge">
+                        <PiCheckBold /> Twój głos
+                      </div>
+                    )}
+                    {votedTeams.length > 0 && votedTeams.some(vt => vt.teamId !== userId) && (
+                      <div className="vote-teams-badge opponent">
+                        <PiCheckBold /> {votedTeams.filter(vt => vt.teamId !== userId).map(vt => vt.teamName).join(", ")}
+                      </div>
+                    )}
+                  </div>
+                  {isCustom && (
+                    <div className="category-separator">
+                      <div className="separator-line"></div>
+                      <span className="separator-text">Standardowe kategorie</span>
+                      <div className="separator-line"></div>
                     </div>
                   )}
-                  {votedTeams.length > 0 && votedTeams.some(vt => vt.teamId !== userId) && (
-                    <div className="vote-teams-badge opponent">
-                      <PiCheckBold /> {votedTeams.filter(vt => vt.teamId !== userId).map(vt => vt.teamName).join(", ")}
-                    </div>
-                  )}
-                </div>
+                </>
               );
             })}
           </div>

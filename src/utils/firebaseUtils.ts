@@ -1338,3 +1338,39 @@ export const teamLeftGame = async (gameCode: string, teamName: string): Promise<
   
   console.log(`[TEAM_LEFT] Team left alert set for game ${gameCode}`);
 };
+
+// Ustawienie statusu tworzenia własnej kategorii
+export const setCreatingCustomCategory = async (gameCode: string): Promise<void> => {
+  console.log(`[CUSTOM_CAT] Host is creating custom category for game: ${gameCode}`);
+  
+  if (useFirebase) {
+    const gameRef = doc(db, 'games', gameCode);
+    await updateDoc(gameRef, {
+      gamePhase: 'creating-custom-category',
+    });
+  } else {
+    await localGameStorage.updateGame(gameCode, {
+      gamePhase: 'creating-custom-category',
+    } as any);
+  }
+};
+
+// Zapisanie własnej kategorii i powrót do wyboru
+export const saveCustomCategory = async (gameCode: string, customCategory: any): Promise<void> => {
+  console.log(`[CUSTOM_CAT] 💾 Saving custom category for game: ${gameCode}`, customCategory);
+  
+  if (useFirebase) {
+    const gameRef = doc(db, 'games', gameCode);
+    await updateDoc(gameRef, {
+      customCategory: customCategory,
+      gamePhase: 'category-selection',
+    });
+    console.log(`[CUSTOM_CAT] ✅ Custom category saved to Firebase`);
+  } else {
+    await localGameStorage.updateGame(gameCode, {
+      customCategory: customCategory,
+      gamePhase: 'category-selection',
+    } as any);
+    console.log(`[CUSTOM_CAT] ✅ Custom category saved to local storage`);
+  }
+};
