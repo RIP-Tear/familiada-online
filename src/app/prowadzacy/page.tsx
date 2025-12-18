@@ -247,6 +247,11 @@ export default function HostPage() {
                         <div className="game-code-display">{game.gameCode}</div>
                         <div className="game-details">
                           <span className="game-date">{formatDate(game.lastAccessedAt)}</span>
+                          {game.teams && game.teams.length > 0 && (
+                            <span className="game-teams">
+                              {game.teams.join(' vs ')}
+                            </span>
+                          )}
                         </div>
                       </div>
                     </div>

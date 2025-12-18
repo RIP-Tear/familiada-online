@@ -746,8 +746,9 @@
   
   .game-details {
     display: flex;
-    align-items: center;
-    gap: $s-sm;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.3rem;
     font-size: 0.9rem;
   }
   
@@ -757,8 +758,10 @@
   }
   
   .game-teams {
-    color: rgba($c-white, .85);
+    color: $c-yellow;
     font-style: italic;
+    font-size: 0.85rem;
+    white-space: nowrap;
   }
 }
 

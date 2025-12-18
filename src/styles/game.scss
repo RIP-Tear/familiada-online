@@ -76,8 +76,12 @@
 @keyframes voteConfirm { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1.05); } }
 
 .vote {
-  &-badge, &-teams-badge { 
+  &-badge { 
     @include abs(10px, 10px, null, null); background: $c-yellow; color: $c-blue; padding: .4rem .8rem; 
+    border-radius: $r-4; font-size: .85rem; font-weight: bold; @include fx-c; gap: .3rem; box-shadow: 0 2px 10px rgba($c-black, .3); z-index: 10; align-items: center;
+  }
+  &-teams-badge { 
+    @include abs(null, 10px, 10px, null); background: $c-yellow; color: $c-blue; padding: .4rem .8rem; 
     border-radius: $r-4; font-size: .85rem; font-weight: bold; @include fx-c; gap: .3rem; box-shadow: 0 2px 10px rgba($c-black, .3); z-index: 10; align-items: center;
   }
   &-teams-badge.opponent {
