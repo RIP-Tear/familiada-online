@@ -222,6 +222,114 @@ export const leaveGame = async (gameCode: string, teamId: string): Promise<void>
   }
 };
 
+// Pobranie gry z Firebase/localStorage
+export const getGame = async (gameCode: string): Promise<GameData | null> => {
+  try {
+    const cleanGameCode = gameCode.toUpperCase().trim();
+    console.log(`[GET] Fetching game: ${cleanGameCode}`);
+    
+    if (useFirebase) {
+      const gameRef = doc(db, 'games', cleanGameCode);
+      const gameSnap = await getDoc(gameRef);
+      
+      if (!gameSnap.exists()) {
+        console.log(`[GET] Game ${cleanGameCode} not found in Firestore`);
+        return null;
+      }
+      
+      const gameData = gameSnap.data() as GameData;
+      console.log(`[GET] Game found in Firestore`);
+      return gameData;
+    } else {
+      // Demo mode
+      const gameData = await localGameStorage.getGame(cleanGameCode);
+      console.log(`[GET] Game ${gameData ? 'found' : 'not found'} in local storage`);
+      return gameData;
+    }
+  } catch (error) {
+    console.error('[GET] Error fetching game:', error);
+    return null;
+  }
+};
+
+// Resetowanie tylko statusu gry (bez usuwania drużyn)
+export const resetGameStatus = async (gameCode: string): Promise<void> => {
+  try {
+    const cleanGameCode = gameCode.toUpperCase().trim();
+    console.log(`[RESET STATUS] Resetting game ${cleanGameCode} status to waiting`);
+    
+    if (useFirebase) {
+      const gameRef = doc(db, 'games', cleanGameCode);
+      await updateDoc(gameRef, {
+        status: 'waiting',
+      });
+      console.log(`[RESET STATUS] Game ${cleanGameCode} status reset successfully`);
+    } else {
+      // Demo mode
+      await localGameStorage.updateGame(cleanGameCode, {
+        status: 'waiting',
+      } as any);
+      console.log(`[RESET STATUS] Game ${cleanGameCode} status reset in local storage`);
+    }
+  } catch (error) {
+    console.error('[RESET STATUS] Error resetting game status:', error);
+    throw error;
+  }
+};
+
+// Resetowanie gry do stanu początkowego (czyści wszystko włącznie z drużynami)
+export const resetGameToWaiting = async (gameCode: string, newHostId?: string): Promise<void> => {
+  try {
+    const cleanGameCode = gameCode.toUpperCase().trim();
+    console.log(`[RESET FULL] Resetting game ${cleanGameCode} to initial state`);
+    
+    const resetData: any = {
+      status: 'waiting',
+      teams: [],
+      team1Name: null,
+      team2Name: null,
+      team1Score: 0,
+      team2Score: 0,
+      currentQuestionIndex: 0,
+      totalPoints: 0,
+      correctAnswers: [],
+      wrongAnswers: [],
+      selectedTeam: null,
+      categoryVotes: {},
+      selectedCategory: null,
+      categorySelectedAt: null,
+      gamePhase: null,
+      buzzedTeam: null,
+      buzzTimestamp: null,
+      teamVsAlert: false,
+      categorySelectedAlert: false,
+      hostLeftAlert: false,
+      hostLeftAt: null,
+      teamLeftAlert: false,
+      teamLeftName: null,
+      gameResultAlert: false,
+    };
+    
+    // Jeśli podano nowy hostId, zaktualizuj go
+    if (newHostId) {
+      resetData.hostId = newHostId;
+    }
+    
+    if (useFirebase) {
+      const gameRef = doc(db, 'games', cleanGameCode);
+      await updateDoc(gameRef, resetData);
+      console.log(`[RESET FULL] Game ${cleanGameCode} reset successfully`);
+    } else {
+      // Demo mode
+      await localGameStorage.updateGame(cleanGameCode, resetData);
+      console.log(`[RESET FULL] Game ${cleanGameCode} reset in local storage`);
+    }
+  } catch (error) {
+    console.error('[RESET FULL] Error resetting game:', error);
+    throw error;
+  }
+};
+
 // Rozpoczęcie gry (tylko host)
 export const startGame = async (gameCode: string): Promise<void> => {
   if (useFirebase) {

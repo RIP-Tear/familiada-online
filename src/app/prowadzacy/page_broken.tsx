@@ -3,10 +3,10 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { createGame as createGameAction } from "@/redux/reducer/gameSlice";
-import { createGame, generateUserId, startGame, subscribeToGame, resetGameToWaiting, resetGameStatus } from "@/utils/firebaseUtils";
+import { createGame, generateUserId, startGame, subscribeToGame, getGame } from "@/utils/firebaseUtils";
 import { gameHistoryStorage, type GameHistoryEntry } from "@/utils/gameHistoryStorage";
 import { Navbar } from "@/components";
-import { PiUsers, PiUsersThree, PiBookOpenFill, PiPlus, PiClock } from "react-icons/pi";
+import { PiUsers, PiUsersThree, PiBookOpenFill, PiPlus, PiClock, PiTrash } from "react-icons/pi";
 import "@/styles/multiplayer.scss";
 
 export default function HostPage() {
@@ -53,16 +53,7 @@ export default function HostPage() {
         
         // Jeśli status zmienił się na 'playing', przekieruj do gry
         if (gameData.status === 'playing') {
-          gameHistoryStorage.updateStatus(gameState.gameCode, 'playing');
-          router.push('/game/host/');
-        }
-      });
-
-      return () => unsubscribe();
-    }
-  }, [gameState.gameCode, gameSelected]);
-
-  const handleCreateNewGame = async () => {
+          gameHistorNewGame = async () => {
     setIsCreating(true);
     setError(null);
     
@@ -98,34 +89,49 @@ export default function HostPage() {
     setError(null);
     
     try {
-      // Wygeneruj nowy hostId
+      // Sprawdź czy gra nadal istnieje w Firebase
+      const gameData = await getGame(gameCode);
+      
+      if (!gameData) {
+        // Gra nie istnieje już w Firebase
+        gameHistoryStorage.markAsInactive(gameCode);
+        setError(`Gra ${gameCode} już nie istnieje. Wybierz inną lub stwórz nową.`);
+        setGameHistory(gameHistoryStorage.getHistory());
+        return;
+      }
+      
+      // Gra istnieje - wczytaj ją
       const userId = generateUserId();
       
-      // Zresetuj całą grę (usuń poprzednie drużyny i wyniki) i ustaw nowy hostId
-      await resetGameToWaiting(gameCode, userId);
-      
-      // Wczytaj kod i przejdź do poczekalni
       dispatch(createGameAction({
         gameCode,
         gameId: gameCode,
         userId,
       }));
       
-      // Aktualizuj czas ostatniego dostępu w historii
+      // Aktualizuj historię
       gameHistoryStorage.updateGame(gameCode, { 
-        lastAccessedAt: new Date().toISOString()
+        lastAccessedAt: new Date().toISOString(),
+        isActive: true 
       });
       
       console.log(`✅ Loaded existing game: ${gameCode}`);
       
       // Przejdź do poczekalni
       setGameSelected(true);
+      
     } catch (err) {
       console.error("Error loading game:", err);
-      setError("Nie udało się wczytać gry. Gra może już nie istnieć.");
+      setError("Nie udało się wczytać gry.");
     } finally {
       setIsCreating(false);
     }
+  };
+
+  const handleDeleteFromHistory = (gameCode: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    gameHistoryStorage.removeGame(gameCode);
+    setGameHistory(gameHistoryStorage.getHistory());
   };
 
   const handleStartGame = async () => {
@@ -142,16 +148,8 @@ export default function HostPage() {
     }
   };
 
-  const handleCancel = async () => {
-    if (gameSelected && gameState.gameCode) {
-      // Resetuj grę przed wyjściem z poczekalni (bez zmiany hostId)
-      try {
-        await resetGameToWaiting(gameState.gameCode);
-        console.log(`🔄 Game ${gameState.gameCode} reset on cancel`);
-      } catch (err) {
-        console.error("Error resetting game on cancel:", err);
-      }
-      
+  const handleCancel = () => {
+    if (gameSelected) {
       // Powrót do wyboru gry
       setGameSelected(false);
       setError(null);
@@ -240,15 +238,30 @@ export default function HostPage() {
                   {gameHistory.map((game) => (
                     <div 
                       key={game.gameCode}
-                      className="game-history-item"
-                      onClick={() => handleSelectExistingGame(game.gameCode)}
+                      className={`game-history-item ${!game.isActive ? 'inactive' : ''}`}
+                      onClick={() => game.isActive && handleSelectExistingGame(game.gameCode)}
                     >
                       <div className="game-info">
                         <div className="game-code-display">{game.gameCode}</div>
                         <div className="game-details">
                           <span className="game-date">{formatDate(game.lastAccessedAt)}</span>
+                          {game.teams.length > 0 && (
+                            <span className="game-teams">
+                              {game.teams.join(' vs ')}
+                            </span>
+                          )}
+                          {!game.isActive && (
+                            <span className="game-status-badge inactive">Nieaktywna</span>
+                          )}
                         </div>
                       </div>
+                      <button 
+                        className="btn-delete-game"
+                        onClick={(e) => handleDeleteFromHistory(game.gameCode, e)}
+                        title="Usuń z historii"
+                      >
+                        <PiTrash size={18} />
+                      </button>
                     </div>
                   ))}
                 </div>
@@ -270,6 +283,7 @@ export default function HostPage() {
   }
 
   // Ekran poczekalni (gdy gra jest wybrana)
+  // Ten kod wykona się gdy gameSelected === true
   return (
     <>
       <Navbar />

@@ -627,6 +627,141 @@
 }
 
 /* === RESPONSIVE === */
+/* === GAME SELECTION (NEW/OLD GAME) === */
+.game-selection-section {
+  margin-bottom: $s-xl;
+}
+
+.btn-new-game {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $s-md;
+  padding: $s-lg $s-xl;
+  background: $g-bright;
+  border: none;
+  border-radius: $r-4;
+  cursor: pointer;
+  transition: all $t-norm;
+  box-shadow: 0 8px 20px rgba($c-green, .4);
+  
+  .btn-icon {
+    color: $c-white;
+    font-size: 2rem;
+  }
+  
+  .btn-text {
+    font-family: $f;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: $c-white;
+  }
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba($c-green, .6);
+    background: linear-gradient(135deg, #45a049, #3d8b40);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.game-history-section {
+  margin-bottom: $s-lg;
+  
+  .history-title {
+    display: flex;
+    align-items: center;
+    gap: $s-sm;
+    color: $c-yellow;
+    font-size: $fs-3;
+    font-weight: 600;
+    margin-bottom: $s-md;
+  }
+  
+  .game-history-list {
+    display: flex;
+    flex-direction: column;
+    gap: $s-sm;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: $s-xs;
+    
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: rgba($c-black, .2);
+      border-radius: $r-round;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: rgba($c-yellow, .4);
+      border-radius: $r-round;
+      
+      &:hover {
+        background: rgba($c-yellow, .6);
+      }
+    }
+  }
+}
+
+.game-history-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $s-md;
+  background: rgba($c-black, .3);
+  border: 2px solid rgba($c-yellow, .3);
+  border-radius: $r-3;
+  cursor: pointer;
+  transition: all $t-fast;
+  
+  &:hover {
+    background: rgba($c-green, .15);
+    border-color: $c-green;
+    transform: translateX(5px);
+    box-shadow: 0 0 15px rgba($c-green, .3);
+  }
+  
+  .game-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: $s-md;
+  }
+  
+  .game-code-display {
+    font-family: $f;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: $c-yellow;
+    letter-spacing: 0.3rem;
+  }
+  
+  .game-details {
+    display: flex;
+    align-items: center;
+    gap: $s-sm;
+    font-size: 0.9rem;
+  }
+  
+  .game-date {
+    color: rgba($c-white, .7);
+    white-space: nowrap;
+  }
+  
+  .game-teams {
+    color: rgba($c-white, .85);
+    font-style: italic;
+  }
+}
+
 @include mq('md') {
   .home-title {
     font-size: 1.8rem;
@@ -652,5 +787,22 @@
     font-size: 1.5rem;
     letter-spacing: 0.5rem;
     padding: $s-sm;
+  }
+  
+  .btn-new-game {
+    padding: $s-md $s-lg;
+    
+    .btn-icon {
+      font-size: 1.5rem;
+    }
+    
+    .btn-text {
+      font-size: $fs-3;
+    }
+  }
+  
+  .game-code-display {
+    font-size: 1.2rem !important;
+    letter-spacing: 0.2rem !important;
   }
 }
