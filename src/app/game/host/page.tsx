@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useAppSelector } from "@/redux/hooks";
 import {
@@ -53,10 +53,101 @@ import {
   PiCheckCircleFill,
   PiShuffleFill,
   PiPlusCircleFill,
+  PiDotsSixVerticalBold,
 } from "react-icons/pi";
 import { Navbar, Modal, Button } from "@/components";
 import "@/styles/game.scss";
 import "@/styles/board.scss";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+  useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+
+// Komponent SortableAnswer musi być poza HostGamePage, aby uniknąć utraty focusu
+const SortableAnswer = React.memo(({ 
+  id, 
+  answer, 
+  index, 
+  questionIndex, 
+  totalAnswers,
+  onUpdateAnswer,
+  onRemoveAnswer 
+}: { 
+  id: string; 
+  answer: string; 
+  index: number; 
+  questionIndex: number;
+  totalAnswers: number;
+  onUpdateAnswer: (questionIdx: number, answerIdx: number, value: string) => void;
+  onRemoveAnswer: (questionIdx: number, answerIdx: number) => void;
+}) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  const handleChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    onUpdateAnswer(questionIndex, index, e.target.value);
+  }, [onUpdateAnswer, questionIndex, index]);
+
+  const handleRemove = React.useCallback(() => {
+    onRemoveAnswer(questionIndex, index);
+  }, [onRemoveAnswer, questionIndex, index]);
+
+  const isMinimumAnswers = totalAnswers <= 3;
+
+  return (
+    <div ref={setNodeRef} style={style} className="answer-row">
+      <span className="answer-num">{index + 1}.</span>
+      <div className="answer-input-wrapper">
+        <input
+          type="text"
+          className="answer-input-board"
+          value={answer}
+          onChange={handleChange}
+          placeholder="Wpisz odpowiedź..."
+          maxLength={100}
+        />
+        <button
+          className={`btn-control-board btn-remove-board ${isMinimumAnswers ? 'disabled' : ''}`}
+          onClick={handleRemove}
+          type="button"
+          disabled={isMinimumAnswers}
+        >
+          <PiXBold />
+        </button>
+        <div className="drag-handle" {...attributes} {...listeners}>
+          <PiDotsSixVerticalBold />
+        </div>
+      </div>
+    </div>
+  );
+});
+
+SortableAnswer.displayName = 'SortableAnswer';
 
 export default function HostGamePage() {
   const router = useRouter();
@@ -85,6 +176,15 @@ export default function HostGamePage() {
     answers: ['', '', '']
   })));
   const [creatorStep, setCreatorStep] = useState(0); // 0 = nazwa i trudność, 1-5 = pytania
+
+  // Stabilny handler dla aktualizacji odpowiedzi
+  const handleUpdateAnswer = React.useCallback((questionIdx: number, answerIdx: number, value: string) => {
+    setCustomQuestions(prev => {
+      const newQuestions = [...prev];
+      newQuestions[questionIdx].answers[answerIdx] = value;
+      return newQuestions;
+    });
+  }, []);
 
   useEffect(() => {
     if (!gameCode) {
@@ -358,18 +458,36 @@ export default function HostGamePage() {
     setCustomQuestions(newQuestions);
   };
 
-  const handleMoveAnswer = (questionIndex: number, answerIndex: number, direction: 'up' | 'down') => {
-    const newQuestions = [...customQuestions];
-    const answers = newQuestions[questionIndex].answers;
+  const handleDragEnd = (event: DragEndEvent, questionIndex: number) => {
+    const { active, over } = event;
     
-    if (direction === 'up' && answerIndex > 0) {
-      [answers[answerIndex], answers[answerIndex - 1]] = [answers[answerIndex - 1], answers[answerIndex]];
-    } else if (direction === 'down' && answerIndex < answers.length - 1) {
-      [answers[answerIndex], answers[answerIndex + 1]] = [answers[answerIndex + 1], answers[answerIndex]];
+    if (!over || active.id === over.id) {
+      return;
     }
     
+    const newQuestions = [...customQuestions];
+    const answers = newQuestions[questionIndex].answers;
+    const oldIndex = answers.findIndex((_, idx) => `answer-${questionIndex}-${idx}` === active.id);
+    const newIndex = answers.findIndex((_, idx) => `answer-${questionIndex}-${idx}` === over.id);
+    
+    newQuestions[questionIndex].answers = arrayMove(answers, oldIndex, newIndex);
     setCustomQuestions(newQuestions);
   };
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  // Przygotuj items dla sortowania odpowiedzi
+  const sortableAnswerItems = React.useMemo(() => {
+    if (creatorStep === 0 || !customQuestions[creatorStep - 1]) {
+      return [];
+    }
+    return customQuestions[creatorStep - 1].answers.map((_, i) => `answer-${creatorStep - 1}-${i}`);
+  }, [customQuestions, creatorStep]);
 
   const handleCategoryAction = async () => {
     // Zbierz kategorie zagłosowane przez drużyny
@@ -899,7 +1017,9 @@ export default function HostGamePage() {
             ) : (
               // KROKI 2-6: Pytania
               <>
-                <h2 className="creator-step-title">Pytanie {creatorStep}</h2>
+                <h2 className="creator-step-title">
+                  {creatorStep === 5 ? 'Ostatnie pytanie' : `Pytanie ${creatorStep}`}
+                </h2>
                 
                 <div className="question-creator-board">
                   <input
@@ -916,53 +1036,35 @@ export default function HostGamePage() {
                   />
                   
                   <div className="answers-board">
-                    {customQuestions[creatorStep - 1].answers.map((ans, aIdx) => (
-                      <div key={aIdx} className="answer-row">
-                        <span className="answer-num">{aIdx + 1}</span>
-                        <input
-                          type="text"
-                          className="answer-input-board"
-                          value={ans}
-                          onChange={(e) => {
-                            const newQuestions = [...customQuestions];
-                            newQuestions[creatorStep - 1].answers[aIdx] = e.target.value;
-                            setCustomQuestions(newQuestions);
-                          }}
-                          placeholder="Wpisz odpowiedź..."
-                          maxLength={100}
-                        />
-                        <div className="answer-controls-board">
-                          <button
-                            className="btn-control-board"
-                            onClick={() => handleMoveAnswer(creatorStep - 1, aIdx, 'up')}
-                            disabled={aIdx === 0}
-                          >
-                            ↑
-                          </button>
-                          <button
-                            className="btn-control-board"
-                            onClick={() => handleMoveAnswer(creatorStep - 1, aIdx, 'down')}
-                            disabled={aIdx === customQuestions[creatorStep - 1].answers.length - 1}
-                          >
-                            ↓
-                          </button>
-                          {customQuestions[creatorStep - 1].answers.length > 3 && (
-                            <button
-                              className="btn-control-board btn-remove-board"
-                              onClick={() => handleRemoveAnswer(creatorStep - 1, aIdx)}
-                            >
-                              ✕
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    ))}
+                    <DndContext 
+                      sensors={sensors}
+                      collisionDetection={closestCenter}
+                      onDragEnd={(event) => handleDragEnd(event, creatorStep - 1)}
+                    >
+                      <SortableContext 
+                        items={sortableAnswerItems}
+                        strategy={verticalListSortingStrategy}
+                      >
+                        {customQuestions[creatorStep - 1].answers.map((ans, aIdx) => (
+                          <SortableAnswer
+                            key={`answer-${creatorStep - 1}-${aIdx}`}
+                            id={`answer-${creatorStep - 1}-${aIdx}`}
+                            answer={ans}
+                            index={aIdx}
+                            questionIndex={creatorStep - 1}
+                            totalAnswers={customQuestions[creatorStep - 1].answers.length}
+                            onUpdateAnswer={handleUpdateAnswer}
+                            onRemoveAnswer={handleRemoveAnswer}
+                          />
+                        ))}
+                      </SortableContext>
+                    </DndContext>
                     {customQuestions[creatorStep - 1].answers.length < 10 && (
                       <button
                         className="btn-add-answer-board"
                         onClick={() => handleAddAnswer(creatorStep - 1)}
                       >
-                        + Dodaj odpowiedź
+                        + Dodaj pole
                       </button>
                     )}
                   </div>
@@ -981,7 +1083,7 @@ export default function HostGamePage() {
                           onClick={() => setCreatorStep(creatorStep + 1)}
                           disabled={!isQuestionValid}
                         >
-                          Pytanie {creatorStep + 1}
+                          {creatorStep + 1 === 5 ? 'Ostatnie pytanie' : `Pytanie ${creatorStep + 1}`}
                           <PiArrowRightBold />
                         </button>
                       ) : (

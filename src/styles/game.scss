@@ -935,6 +935,7 @@
     display: flex;
     align-items: center;
     gap: $s-sm;
+    transition: opacity $t-fast;
 
     .answer-num {
       @include txt(1.2rem, bold, $c-yellow);
@@ -942,9 +943,18 @@
       text-align: center;
     }
 
+    .answer-input-wrapper {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: $s-xs;
+    }
+
     .answer-input-board {
       flex: 1;
       padding: $s-sm $s-md;
+      padding-right: 80px; // Space for buttons
       border-radius: $r-3;
       border: 3px solid rgba($c-yellow, .3);
       background: rgba($c-blue, .8);
@@ -964,26 +974,25 @@
       }
     }
 
-    .answer-controls-board {
-      display: flex;
-      gap: .3rem;
-    }
-
     .btn-control-board {
-      width: 32px;
-      height: 32px;
+      position: absolute;
+      right: 40px; // Position inside input
+      width: 28px;
+      height: 28px;
       border-radius: $r-2;
-      border: 2px solid rgba($c-yellow, .3);
-      background: rgba($c-blue, .6);
+      border: none;
+      background: transparent;
       color: $c-white;
       font-family: $f;
       cursor: pointer;
       transition: all $t-fast;
       font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
       &:hover:not(:disabled) {
-        background: rgba($c-yellow, .2);
-        border-color: $c-yellow;
+        background: rgba($c-red, .2);
         transform: scale(1.1);
       }
 
@@ -994,12 +1003,38 @@
 
       &.btn-remove-board {
         color: $c-red;
-        border-color: rgba($c-red, .5);
 
-        &:hover {
-          background: rgba($c-red, .2);
-          border-color: $c-red;
+        &.disabled {
+          opacity: .3;
+          color: rgba($c-red, .4);
         }
+
+        &:hover:not(:disabled) {
+          background: rgba($c-red, .2);
+        }
+      }
+    }
+
+    .drag-handle {
+      position: absolute;
+      right: 8px; // Position inside input
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      color: rgba($c-yellow, .6);
+      cursor: grab;
+      transition: all $t-fast;
+      font-size: 1.4rem;
+
+      &:hover {
+        color: $c-yellow;
+        transform: scale(1.1);
+      }
+
+      &:active {
+        cursor: grabbing;
       }
     }
   }
