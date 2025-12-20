@@ -778,6 +778,50 @@
   }
 }
 
+// Sekcja przygotowania kategorii przed grą
+.pre-game-categories-section {
+  background: rgba($c-blue, .95);
+  padding: $s-lg;
+  border-radius: $r-4;
+  max-width: 600px;
+  width: 100%;
+  box-shadow: $s-3;
+  border: 2px solid rgba($c-yellow, .2);
+  margin-top: $s-md;
+  margin-bottom: $s-sm;
+  
+  .btn-create-categories {
+    width: 100%;
+    padding: $s-md $s-lg;
+    background: linear-gradient(135deg, $c-blue 0%, $c-green 100%);
+    color: $c-white;
+    border: none;
+    border-radius: $r-3;
+    font-family: $f;
+    font-size: $fs-3;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all $t-norm;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $s-sm;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba($c-blue, .4);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+    
+    .btn-icon {
+      flex-shrink: 0;
+    }
+  }
+}
+
 @include mq('md') {
   .home-title {
     font-size: 1.8rem;

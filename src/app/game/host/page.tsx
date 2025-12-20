@@ -356,25 +356,9 @@ export default function HostGamePage() {
     }
   };
 
-  const handleCreateCustomCategory = async () => {
-    try {
-      // Resetuj formularz dla nowej kategorii
-      setEditingCategoryId(null);
-      setCustomCategoryName('');
-      setCustomDifficulty('medium');
-      setCustomQuestions(Array.from({ length: 5 }, () => ({
-        question: '',
-        answers: ['', '', '']
-      })));
-      setCreatorStep(0);
-      
-      // Ustaw status tworzenia własnej kategorii
-      await setCreatingCustomCategory(gameCode);
-      setIsCreatingCustom(true);
-      console.log("[HOST] Starting custom category creation");
-    } catch (error) {
-      console.error("[HOST] Error starting custom category:", error);
-    }
+  const handleCreateCustomCategory = () => {
+    // Przekieruj do dedykowanego edytora kategorii
+    router.push('/prowadzacy/kategorie/edytor');
   };
 
   const handleSaveCustomCategory = async () => {
@@ -471,15 +455,8 @@ export default function HostGamePage() {
   };
 
   const handleEditCustomCategory = (category: any) => {
-    setEditingCategoryId(category.id);
-    setCustomCategoryName(category.name);
-    setCustomDifficulty(category.difficulty);
-    setCustomQuestions(category.questions.map((q: any) => ({
-      question: q.question,
-      answers: [...q.answers, '', ''].slice(0, Math.max(q.answers.length, 3))
-    })));
-    setCreatorStep(0);
-    setIsCreatingCustom(true);
+    // Przekieruj do dedykowanego edytora kategorii z ID kategorii
+    router.push(`/prowadzacy/kategorie/edytor?editCategory=${category.id}`);
   };
 
   const handleAddAnswer = (questionIndex: number) => {
