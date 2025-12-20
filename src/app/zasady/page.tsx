@@ -221,6 +221,85 @@ export default function RulesPage() {
           </div>
         </section>
 
+        {/* INSTRUKCJA TWORZENIA KATEGORII */}
+        <section className="rules-section">
+          <h2 className="section-title"><PiGameControllerFill /> Tworzenie własnych kategorii</h2>
+          <div className="rules-text">
+            <div className="info-box">
+              <PiCheckCircleFill />
+              <p><strong>Tylko prowadzący może tworzyć własne kategorie pytań!</strong> Stworzone kategorie będą dostępne do głosowania dla drużyn podczas wyboru kategorii.</p>
+            </div>
+
+            <h3>Kiedy można stworzyć kategorię?</h3>
+            <p>Kategorię możesz stworzyć w dwóch momentach:</p>
+            <ul>
+              <li><strong>W poczekalni</strong> - przed dołączeniem drużyn do gry</li>
+              <li><strong>Podczas głosowania</strong> - gdy drużyny wybierają kategorię (przed rozpoczęciem rundy)</li>
+            </ul>
+
+            <h3>Przechowywanie kategorii</h3>
+            <div className="warning-box">
+              <PiXCircleFill />
+              <div>
+                <p><strong>Ważne informacje o zapisywaniu:</strong></p>
+                <ul>
+                  <li>Stworzone kategorie są <strong>przechowywane lokalnie</strong> w pamięci przeglądarki</li>
+                  <li>Kategorie utworzone w trybie incognito, innej przeglądarce lub na innym urządzeniu <strong>nie będą dostępne</strong></li>
+                  <li>Nie można przenosić stworzonych kategorii między różnymi grami lokalnymi</li>
+                  <li>Kategorie są dostępne <strong>tylko w tej konkretnej grze</strong>, w której zostały stworzone</li>
+                  <li>Stworzone kategorie <strong>nie są dostępne publicznie</strong> - widzą je tylko uczestnicy Twojej gry</li>
+                </ul>
+              </div>
+            </div>
+
+            <h3>Zasady tworzenia kategorii</h3>
+            <ol>
+              <li><strong>Nazwa i trudność:</strong>
+                <ul>
+                  <li>Podaj nazwę kategorii</li>
+                  <li>Wybierz poziom trudności: łatwy (⭐), średni (⭐⭐) lub trudny (⭐⭐⭐)</li>
+                </ul>
+              </li>
+              <li><strong>Tworzenie pytań:</strong>
+                <ul>
+                  <li>Musisz stworzyć <strong>dokładnie 5 pytań</strong></li>
+                  <li>Każde pytanie wymaga treści pytania oraz odpowiedzi</li>
+                </ul>
+              </li>
+              <li><strong>Odpowiedzi:</strong>
+                <ul>
+                  <li>Każde pytanie musi mieć <strong>minimum 3 odpowiedzi</strong></li>
+                  <li>Możesz dodać <strong>maksymalnie 10 odpowiedzi</strong> na pytanie</li>
+                  <li>Możesz usuwać odpowiedzi podczas tworzenia (minimalnie 3 muszą pozostać)</li>
+                  <li>Możesz zmieniać kolejność odpowiedzi - <strong>przytrzymaj i przeciągnij</strong> odpowiedź</li>
+                  <li><strong>Ważne:</strong> Kolejność odpowiedzi określa ich punktację (pierwsza = 100 pkt, druga = 90 pkt, itd.)</li>
+                </ul>
+              </li>
+              <li><strong>Nawigacja:</strong>
+                <ul>
+                  <li>Możesz cofać się do poprzednich pytań lub do ustawień nazwy kategorii</li>
+                  <li>Zmiany są zapisywane tylko po kliknięciu <strong>"Zapisz kategorię"</strong> przy ostatnim pytaniu</li>
+                  <li>Jeśli anulujesz tworzenie lub nie zapiszesz kategorii - zmiany nie zostaną zachowane</li>
+                </ul>
+              </li>
+            </ol>
+
+            <h3>Zarządzanie kategoriami</h3>
+            <ul>
+              <li>Po zapisaniu kategoria pojawi się na liście pod przyciskiem "Stwórz kategorię"</li>
+              <li>Możesz <strong>edytować kategorię</strong> klikając na nią - obowiązują te same zasady co przy tworzeniu</li>
+              <li>Kategorie stworzone w poczekalni pojawią się w głosowaniu gdy drużyny dołączą</li>
+              <li>Możesz edytować kategorię nawet gdy drużyny już są w grze (przed rozpoczęciem rundy)</li>
+              <li><strong>Nie można usunąć</strong> stworzonych kategorii - upewnij się przed zapisaniem!</li>
+            </ul>
+
+            <div className="success-box">
+              <PiCheckCircleFill />
+              <p><strong>Wskazówka:</strong> Twórz kategorie dopasowane do zainteresowań Twoich graczy! Im bardziej spersonalizowane pytania, tym więcej zabawy. Pamiętaj o ustawieniu odpowiedzi w kolejności od najbardziej do najmniej oczywistej.</p>
+            </div>
+          </div>
+        </section>
+
 
         <div className="rules-footer">
           <button className="btn-start-game" onClick={() => router.push('/gra/')}>
