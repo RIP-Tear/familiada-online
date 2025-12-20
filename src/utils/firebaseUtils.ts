@@ -106,8 +106,7 @@ export const joinGame = async (gameCode: string, teamName: string): Promise<Join
       const gameSnap = await getDoc(gameRef);
       
       if (!gameSnap.exists()) {
-        console.error(`[JOIN] Game ${cleanGameCode} not found in Firestore`);
-        throw new Error('Gra nie istnieje');
+        return { success: false, error: 'Gra nie istnieje' } as any;
       }
       
       gameData = gameSnap.data() as GameData;
@@ -116,7 +115,7 @@ export const joinGame = async (gameCode: string, teamName: string): Promise<Join
       // Demo mode
       gameData = await localGameStorage.getGame(cleanGameCode);
       if (!gameData) {
-        throw new Error('Gra nie istnieje');
+        return { success: false, error: 'Gra nie istnieje' } as any;
       }
     }
     

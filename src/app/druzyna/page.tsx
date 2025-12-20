@@ -15,7 +15,8 @@ export default function JoinPage() {
   const [gameCode, setGameCode] = useState("");
   const [teamName, setTeamName] = useState("");
   const [isJoining, setIsJoining] = useState(false);
-  const [error, setError] = useState(null);
+  const [gameCodeError, setGameCodeError] = useState("");
+  const [teamNameError, setTeamNameError] = useState("");
   const [gameId, setGameId] = useState(null);
   const [teamId, setTeamId] = useState(null);
 
@@ -44,19 +45,45 @@ export default function JoinPage() {
   const handleJoinGame = async (e) => {
     e.preventDefault();
     
-    if (!gameCode.trim() || !teamName.trim()) {
-      setError("Wypełnij wszystkie pola!");
+    // Resetuj błędy
+    setGameCodeError("");
+    setTeamNameError("");
+    
+    // Walidacja
+    let hasError = false;
+    
+    if (!gameCode.trim() || gameCode.trim().length < 4) {
+      setGameCodeError("Nie poprawny kod");
+      hasError = true;
+    }
+    
+    if (!teamName.trim()) {
+      setTeamNameError("Uzupełnij nazwę");
+      hasError = true;
+    }
+    
+    if (hasError) {
       return;
     }
     
     setIsJoining(true);
-    setError(null);
     
     try {
       const result = await joinGame(
         gameCode.toUpperCase().trim(), 
         teamName.trim()
       );
+      
+      // Sprawdź czy zwrócono błąd
+      if (result.error) {
+        if (result.error === 'Gra nie istnieje') {
+          setGameCodeError("Kod do gry nie istnieje");
+        } else {
+          setGameCodeError(result.error);
+        }
+        setIsJoining(false);
+        return;
+      }
       
       dispatch(joinGameAction({
         gameCode: result.gameCode,
@@ -70,8 +97,7 @@ export default function JoinPage() {
       setTeamId(result.teamId);
       
     } catch (err) {
-      console.error("Error joining game:", err);
-      setError(err.message || "Nie udało się dołączyć do gry.");
+      setGameCodeError("Nie udało się dołączyć do gry");
       setIsJoining(false);
     }
   };
@@ -134,13 +160,20 @@ export default function JoinPage() {
         <div className="join-content">
         <form onSubmit={handleJoinGame} className="join-form">
           <div className="form-group">
-            <label htmlFor="gameCode">Wpisz kod gry który poda prowadzący</label>
+            <label htmlFor="gameCode">
+              Wpisz kod gry
+              {gameCodeError && <span style={{ color: 'red', marginLeft: '8px' }}>({gameCodeError})</span>}
+            </label>
             <input
               id="gameCode"
               type="text"
               className="form-input code-input"
+              style={gameCodeError ? { borderColor: 'red', borderWidth: '2px' } : {}}
               value={gameCode}
-              onChange={(e) => setGameCode(e.target.value.toUpperCase())}
+              onChange={(e) => {
+                setGameCode(e.target.value.toUpperCase());
+                setGameCodeError("");
+              }}
               placeholder="np. A7K2"
               maxLength={4}
               disabled={isJoining}
@@ -148,20 +181,25 @@ export default function JoinPage() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="teamName">Nazwa drużyny</label>
+            <label htmlFor="teamName">
+              Nazwa drużyny
+              {teamNameError && <span style={{ color: 'red', marginLeft: '8px' }}>({teamNameError})</span>}
+            </label>
             <input
               id="teamName"
               type="text"
               className="form-input"
+              style={teamNameError ? { borderColor: 'red', borderWidth: '2px' } : {}}
               value={teamName}
-              onChange={(e) => setTeamName(e.target.value)}
+              onChange={(e) => {
+                setTeamName(e.target.value);
+                setTeamNameError("");
+              }}
               placeholder="np. Czerwone Smoki"
               maxLength={30}
               disabled={isJoining}
             />
           </div>
-
-          {error && <div className="error-message">{error}</div>}
 
           <div className="form-actions">
             <button 

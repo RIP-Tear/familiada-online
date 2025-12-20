@@ -92,6 +92,7 @@ export interface JoinGameResult {
   gameCode: string;
   gameId: string;
   teamId: string;
+  error?: string;
 }
 
 export interface CreateGameResult {
