@@ -17,6 +17,7 @@ export default function HostPage() {
   // Stany dla wyboru gry
   const [gameSelected, setGameSelected] = useState(false);
   const [gameHistory, setGameHistory] = useState<GameHistoryEntry[]>([]);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(true);
   
   // Stany dla poczekalni
   const [isCreating, setIsCreating] = useState(false);
@@ -42,6 +43,7 @@ export default function HostPage() {
   // Wczytanie historii gier przy starcie
   useEffect(() => {
     const loadHistoryWithCategories = async () => {
+      setIsLoadingHistory(true);
       const history = gameHistoryStorage.getHistory();
       
       // Dla każdej gry w historii pobierz liczbę własnych kategorii
@@ -67,6 +69,7 @@ export default function HostPage() {
       );
       
       setGameHistory(historyWithCategories);
+      setIsLoadingHistory(false);
     };
     
     loadHistoryWithCategories();
@@ -263,8 +266,15 @@ export default function HostPage() {
               </button>
             </div>
 
-            {/* Lista poprzednich gier */}
-            {gameHistory.length > 0 && (
+            {/* Loader podczas ładowania historii */}
+            {isLoadingHistory ? (
+              <div className="game-history-loading">
+                <div className="loading-spinner"></div>
+                <p className="loading-text">Ładowanie historii gier...</p>
+              </div>
+            ) : (
+              /* Lista poprzednich gier */
+              gameHistory.length > 0 && (
               <div className="game-history-section">
                 <h3 className="history-title">
                   <PiClock size={20} />
@@ -298,6 +308,7 @@ export default function HostPage() {
                   ))}
                 </div>
               </div>
+              )
             )}
 
             <div className="host-actions">

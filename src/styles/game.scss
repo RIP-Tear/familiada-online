@@ -1117,11 +1117,12 @@
 
   .step-navigation {
     display: flex;
+    flex-direction: row;
     gap: $s-md;
     width: 100%;
 
     @media (max-width: 600px) {
-      flex-direction: column;
+      flex-direction: column-reverse;
       
       button {
         width: 100%;
@@ -1372,6 +1373,19 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+// === WIDOK KATEGORII BEZ DRUŻYN ===
+.categories-view {
+  .categories-content {
+    width: 100%;
+    max-width: 800px;
+    
+    .game-header {
+      background: none;
+      padding: $s-md 0;
+    }
   }
 }
 

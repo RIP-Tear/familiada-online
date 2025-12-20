@@ -410,6 +410,14 @@ function CategoryEditorContent() {
               
               <div className="actions-container">
                 <div className="step-navigation">
+                  <button 
+                    className="btn-nav-prev" 
+                    onClick={() => setCreatorStep(creatorStep - 1)}
+                  >
+                    <PiArrowRightBold style={{ transform: 'rotate(180deg)' }} />
+                    {creatorStep === 1 ? 'Nazwa kategorii' : `Pytanie ${creatorStep - 1}`}
+                  </button>
+                  
                   {(() => {
                     const currentQ = customQuestions[creatorStep - 1];
                     const isQuestionValid = currentQ.question.trim() && 
@@ -435,14 +443,6 @@ function CategoryEditorContent() {
                       </button>
                     );
                   })()}
-                  
-                  <button 
-                    className="btn-nav-prev" 
-                    onClick={() => setCreatorStep(creatorStep - 1)}
-                  >
-                    <PiArrowRightBold style={{ transform: 'rotate(180deg)' }} />
-                    {creatorStep === 1 ? 'Nazwa kategorii' : `Pytanie ${creatorStep - 1}`}
-                  </button>
                 </div>
                 
                 <button className="btn-nav-cancel" onClick={handleCancel}>

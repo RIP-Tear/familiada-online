@@ -61,12 +61,13 @@ export default function HostCategoriesPage() {
   return (
     <>
       <Navbar />
-      <div className="game-container" style={{ maxWidth: '800px' }}>
-        <div className="game-header">
-          <h1 className="header-title">Tworzenie kategorii</h1>
-          <div className="header-team">Prowadzący</div>
-        </div>
-        <div className="category-actions-section">
+      <div className="game-container categories-view">
+        <div className="categories-content">
+          <div className="game-header">
+            <h1 className="header-title">Tworzenie kategorii</h1>
+            <div className="header-team">Prowadzący</div>
+          </div>
+          <div className="category-actions-section">
           <button
             className="btn-create-custom-outside"
             onClick={handleCreateCustomCategory}
@@ -122,6 +123,7 @@ export default function HostCategoriesPage() {
             </div>
           )}
         </div>
+      </div>
     </>
   );
 }

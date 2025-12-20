@@ -822,6 +822,32 @@
   }
 }
 
+.host-actions {
+  display: flex;
+  width: 100%;
+  margin-top: $s-md;
+  
+  .btn-cancel {
+    flex: 1;
+  }
+}
+
+.game-history-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $s-xl;
+  gap: $s-md;
+  min-height: 200px;
+  
+  .loading-text {
+    color: rgba($c-white, .7);
+    font-size: $fs-2;
+    font-style: italic;
+  }
+}
+
 @include mq('md') {
   .home-title {
     font-size: 1.8rem;
