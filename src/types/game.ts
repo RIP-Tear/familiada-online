@@ -15,7 +15,9 @@ export interface SimpleQuestion {
 }
 
 export interface QuestionSet {
+  id?: string;
   category: string;
+  name?: string;
   difficulty: 'easy' | 'medium' | 'hard';
   questions: SimpleQuestion[];
 }

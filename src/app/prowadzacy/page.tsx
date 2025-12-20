@@ -6,7 +6,7 @@ import { createGame as createGameAction } from "@/redux/reducer/gameSlice";
 import { createGame, generateUserId, startGame, subscribeToGame, resetGameToWaiting, resetGameStatus, getGame } from "@/utils/firebaseUtils";
 import { gameHistoryStorage, type GameHistoryEntry } from "@/utils/gameHistoryStorage";
 import { Navbar } from "@/components";
-import { PiUsers, PiUsersThree, PiBookOpenFill, PiPlus, PiClock } from "react-icons/pi";
+import { PiUsers, PiUsersThree, PiBookOpenFill, PiPlus, PiClock, PiPlusCircleFill } from "react-icons/pi";
 import "@/styles/multiplayer.scss";
 
 export default function HostPage() {
@@ -31,6 +31,13 @@ export default function HostPage() {
       metaDescription.setAttribute('content', 'Załóż nową rozgrywkę w Familiadę online. Generuj kod gry, zarządzaj drużynami i prowadź teleturniej jako host.');
     }
   }, []);
+
+  // Jeśli mamy gameCode w Redux, automatycznie przejdź do widoku poczekalni
+  useEffect(() => {
+    if (gameState.gameCode) {
+      setGameSelected(true);
+    }
+  }, [gameState.gameCode]);
 
   // Wczytanie historii gier przy starcie
   useEffect(() => {
@@ -372,6 +379,17 @@ export default function HostPage() {
               Anuluj
             </button>
           </div>
+        </div>
+        
+        {/* Przycisk do tworzenia kategorii przed grą */}
+        <div className="pre-game-categories-section">
+          <button 
+            className="btn-create-categories"
+            onClick={() => router.push('/prowadzacy/kategorie/')}
+          >
+            <PiPlusCircleFill className="btn-icon" size={20} />
+            Stwórz własne kategorie w tej grze
+          </button>
         </div>
         
         <div className="rules-link-section">
