@@ -33,12 +33,12 @@ export default function HostCategoriesPage() {
 
   const handleCreateCustomCategory = () => {
     // Przekieruj do dedykowanego edytora kategorii
-    router.push('/prowadzacy/kategorie/edytor');
+    router.push('/prowadzacy/kategorie/edytor?returnTo=list');
   };
 
   const handleEditCustomCategory = (category: QuestionSet) => {
     // Przekieruj do dedykowanego edytora kategorii z ID kategorii
-    router.push(`/prowadzacy/kategorie/edytor?editCategory=${category.id}`);
+    router.push(`/prowadzacy/kategorie/edytor?editCategory=${category.id}&returnTo=list`);
   };
 
   const handleBackToWaiting = () => {

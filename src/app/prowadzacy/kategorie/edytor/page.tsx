@@ -111,6 +111,7 @@ export default function CategoryEditorPage() {
   const gameState = useAppSelector((state) => state.game);
   
   const editCategoryId = searchParams.get('editCategory');
+  const returnTo = searchParams.get('returnTo') || 'list'; // 'list' lub 'game'
   
   const [customCategoryName, setCustomCategoryName] = useState('');
   const [customDifficulty, setCustomDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium');
@@ -254,8 +255,12 @@ export default function CategoryEditorPage() {
       
       await saveCustomCategory(gameState.gameCode, updatedCategories);
       
-      // Wróć do listy kategorii
-      router.push('/prowadzacy/kategorie');
+      // Wróć do odpowiedniego widoku
+      if (returnTo === 'game') {
+        router.push('/game/host/');
+      } else {
+        router.push('/prowadzacy/kategorie');
+      }
     } catch (error) {
       console.error("Error saving category:", error);
       alert('Błąd podczas zapisywania kategorii');
@@ -263,7 +268,11 @@ export default function CategoryEditorPage() {
   };
 
   const handleCancel = () => {
-    router.push('/prowadzacy/kategorie');
+    if (returnTo === 'game') {
+      router.push('/game/host/');
+    } else {
+      router.push('/prowadzacy/kategorie');
+    }
   };
 
   return (
