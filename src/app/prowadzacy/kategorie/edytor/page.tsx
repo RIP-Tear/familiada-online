@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAppSelector } from "@/redux/hooks";
 import { subscribeToGame, saveCustomCategory } from "@/utils/firebaseUtils";
@@ -105,7 +105,7 @@ const SortableAnswer = React.memo(({
 
 SortableAnswer.displayName = 'SortableAnswer';
 
-export default function CategoryEditorPage() {
+function CategoryEditorContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const gameState = useAppSelector((state) => state.game);
@@ -454,5 +454,23 @@ export default function CategoryEditorPage() {
         </div>
       </div>
     </>
+  );
+}
+
+export default function CategoryEditorPage() {
+  return (
+    <Suspense fallback={
+      <>
+        <Navbar />
+        <div className="game-container">
+          <div className="game-header">
+            <h1 className="header-title">Ładowanie...</h1>
+            <div className="header-team">Prowadzący</div>
+          </div>
+        </div>
+      </>
+    }>
+      <CategoryEditorContent />
+    </Suspense>
   );
 }
