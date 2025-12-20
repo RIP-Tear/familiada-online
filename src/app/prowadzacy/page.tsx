@@ -32,6 +32,13 @@ export default function HostPage() {
     }
   }, []);
 
+  // Jeśli mamy gameCode w Redux, automatycznie przejdź do widoku poczekalni
+  useEffect(() => {
+    if (gameState.gameCode) {
+      setGameSelected(true);
+    }
+  }, [gameState.gameCode]);
+
   // Wczytanie historii gier przy starcie
   useEffect(() => {
     const loadHistoryWithCategories = async () => {

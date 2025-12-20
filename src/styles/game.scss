@@ -1238,8 +1238,10 @@
   
   .custom-categories-title {
     @include txt(1.2rem, bold, $c-white);
-    margin: 0 0 $s-md 0;
+    margin: $s-lg 0 $s-md 0;
     text-align: left;
+    font-style: normal !important;
+    color: $c-white !important;
   }
 }
 
@@ -1261,11 +1263,11 @@
   align-items: center;
   
   &.incomplete {
-    background: rgba($c-blue, .4);
+    background: rgba($c-blue, .8);
     
     .custom-category-name {
-      color: rgba($c-white, .6);
-      font-style: italic;
+      color: $c-white;
+      font-style: normal;
     }
   }
   
