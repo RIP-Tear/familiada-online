@@ -273,42 +273,46 @@ export default function HostPage() {
                 <p className="loading-text">Ładowanie historii gier...</p>
               </div>
             ) : (
-              /* Lista poprzednich gier */
-              gameHistory.length > 0 && (
+              /* Lista poprzednich gier - zawsze widoczna sekcja */
               <div className="game-history-section">
                 <h3 className="history-title">
                   <PiClock size={20} />
                   Poprzednie gry
                 </h3>
-                <div className="game-history-list">
-                  {gameHistory.map((game) => (
-                    <div 
-                      key={game.gameCode}
-                      className="game-history-item"
-                      onClick={() => handleSelectExistingGame(game.gameCode)}
-                    >
-                      <div className="game-info">
-                        <div className="game-code-display">{game.gameCode}</div>
-                        <div className="game-details">
-                          <span className="game-date">{formatDate(game.lastAccessedAt)}</span>
-                          {game.teams && game.teams.length > 0 && (
-                            <span className="game-teams">
-                              {game.teams.join(' vs ')}
-                            </span>
-                          )}
-                          {game.customCategoriesCount !== undefined && game.customCategoriesCount > 0 && (
-                            <span className="game-custom-categories">
-                              <PiBookOpenFill size={14} />
-                              {game.customCategoriesCount} {game.customCategoriesCount === 1 ? 'własna kategoria' : 'własne kategorie'}
-                            </span>
-                          )}
+                {gameHistory.length > 0 ? (
+                  <div className="game-history-list">
+                    {gameHistory.map((game) => (
+                      <div 
+                        key={game.gameCode}
+                        className="game-history-item"
+                        onClick={() => handleSelectExistingGame(game.gameCode)}
+                      >
+                        <div className="game-info">
+                          <div className="game-code-display">{game.gameCode}</div>
+                          <div className="game-details">
+                            <span className="game-date">{formatDate(game.lastAccessedAt)}</span>
+                            {game.teams && game.teams.length > 0 && (
+                              <span className="game-teams">
+                                {game.teams.join(' vs ')}
+                              </span>
+                            )}
+                            {game.customCategoriesCount !== undefined && game.customCategoriesCount > 0 && (
+                              <span className="game-custom-categories">
+                                <PiBookOpenFill size={14} />
+                                {game.customCategoriesCount} {game.customCategoriesCount === 1 ? 'własna kategoria' : 'własne kategorie'}
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="game-history-placeholder">
+                    <p>Tutaj pojawią się poprzednie gry</p>
+                  </div>
+                )}
               </div>
-              )
             )}
 
             <div className="host-actions">
@@ -319,6 +323,17 @@ export default function HostPage() {
                 Powrót
               </button>
             </div>
+          </div>
+          
+          <div className="rules-link-section">
+            <button className="btn-rules-link" onClick={() => router.push('/zasady/')}>
+              <div className="button-icon">
+                <PiBookOpenFill size={24} />
+              </div>
+              <div className="button-text">
+                <h2>Instrukcja gry</h2>
+              </div>
+            </button>
           </div>
         </div>
       </>

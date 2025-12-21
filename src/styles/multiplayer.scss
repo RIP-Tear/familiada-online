@@ -708,6 +708,25 @@
       }
     }
   }
+  
+  .game-history-placeholder {
+    padding: $s-xl $s-md;
+    text-align: center;
+    background: rgba($c-black, .2);
+    border: 2px dashed rgba($c-yellow, .2);
+    border-radius: $r-3;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    p {
+      color: rgba($c-white, .4);
+      font-size: $fs-2;
+      font-style: italic;
+      margin: 0;
+    }
+  }
 }
 
 .game-history-item {
