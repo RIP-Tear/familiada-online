@@ -836,11 +836,23 @@
     display: flex;
     gap: $s-md;
     justify-content: center;
+
+    @include mq(md) {
+      flex-direction: column;
+      align-items: center;
+    }
   }
 
   .difficulty-card {
     flex: 1;
     max-width: 200px;
+
+    @include mq(md) {
+      width: 100%;
+      max-width: 100%;
+      padding: $s-sm $s-md;
+      gap: $s-xs;
+    }
     background: rgba($c-blue, .8);
     border: 3px solid rgba($c-yellow, .3);
     border-radius: $r-3;
