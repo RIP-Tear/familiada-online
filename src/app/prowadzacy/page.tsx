@@ -320,7 +320,7 @@ export default function HostPage() {
                 className="btn-cancel"
                 onClick={handleCancel}
               >
-                Powrót
+                Anuluj
               </button>
             </div>
           </div>
