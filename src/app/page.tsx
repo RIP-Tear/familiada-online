@@ -437,6 +437,77 @@ const Page = () => {
         </div>
       </section>
 
+      {/* Security & Privacy Section */}
+      <section className="security-section">
+        <div className={`section-header animate-on-scroll ${isVisible['security-header'] ? 'visible' : ''}`} id="security-header">
+          <span className="section-badge">
+            🔒 Bezpieczeństwo i Prywatność
+          </span>
+          <h2 className="section-title-landing">Twoje dane są bezpieczne</h2>
+          <p className="section-subtitle">
+            Zapewniamy pełne bezpieczeństwo i ochronę prywatności podczas rozgrywki
+          </p>
+        </div>
+
+        <div className="security-features">
+          <div className={`security-card animate-on-scroll ${isVisible['security-1'] ? 'visible' : ''}`} id="security-1">
+            <div className="security-icon ssl">
+              <span className="icon-emoji">🔒</span>
+            </div>
+            <h3 className="security-title">Szyfrowane połączenie</h3>
+            <p className="security-description">
+              Cała komunikacja jest chroniona certyfikatem SSL/HTTPS. 
+              Twoje dane są bezpiecznie przesyłane w zaszyfrowanej formie.
+            </p>
+            <div className="security-badge">
+              <span className="badge-text">SSL Secured</span>
+            </div>
+          </div>
+
+          <div className={`security-card animate-on-scroll ${isVisible['security-2'] ? 'visible' : ''}`} id="security-2">
+            <div className="security-icon privacy">
+              <span className="icon-emoji">🛡️</span>
+            </div>
+            <h3 className="security-title">Zero danych osobowych</h3>
+            <p className="security-description">
+              Nie zbieramy żadnych danych osobowych. Nie wymagamy rejestracji, 
+              adresu email ani numerów telefonu. Grasz anonimowo!
+            </p>
+            <div className="security-badge">
+              <span className="badge-text">Privacy First</span>
+            </div>
+          </div>
+
+          <div className={`security-card animate-on-scroll ${isVisible['security-3'] ? 'visible' : ''}`} id="security-3">
+            <div className="security-icon cloud">
+              <span className="icon-emoji">☁️</span>
+            </div>
+            <h3 className="security-title">Google Cloud Platform</h3>
+            <p className="security-description">
+              Dane gier przechowywane są w Firebase (Google Cloud), 
+              na infrastrukturze o najwyższych standardach bezpieczeństwa.
+            </p>
+            <div className="security-badge">
+              <span className="badge-text">Firebase Secure</span>
+            </div>
+          </div>
+
+          <div className={`security-card animate-on-scroll ${isVisible['security-4'] ? 'visible' : ''}`} id="security-4">
+            <div className="security-icon ads">
+              <span className="icon-emoji">🚫</span>
+            </div>
+            <h3 className="security-title">Bez reklam i śledzenia</h3>
+            <p className="security-description">
+              Nie wyświetlamy reklam i nie śledzimy Twojej aktywności. 
+              Żadnych trackerów, cookies reklamowych czy analityki firm trzecich.
+            </p>
+            <div className="security-badge">
+              <span className="badge-text">Ad-Free</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Extra Features Section */}
       <section className="extra-section">
         <div className="extra-content" id="extra">
@@ -456,22 +527,52 @@ const Page = () => {
 
       {/* Footer */}
       <footer className="landing-footer">
-        <p>
-          © 2025 Familiada. Gra stworzona przez{" "}
-          <a 
-            href="https://www.rip-tear.com/" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="footer-link"
-          >
-            <img 
-              src="https://www.rip-tear.com/favicon.ico" 
-              alt="RIP & Tear" 
-              className="footer-icon"
-            />
-            RIP & Tear
-          </a>
-        </p>
+        <div className="footer-content">
+          <div className="footer-main">
+            <p className="footer-copyright">
+              © 2025 Familiada. Gra stworzona przez{" "}
+              <a 
+                href="https://www.rip-tear.com/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="footer-link"
+              >
+                <img 
+                  src="https://www.rip-tear.com/favicon.ico" 
+                  alt="RIP & Tear" 
+                  className="footer-icon"
+                />
+                RIP & Tear
+              </a>
+            </p>
+          </div>
+          
+          <div className="footer-links">
+            <a href="/polityka-prywatnosci/" className="footer-nav-link">
+              Polityka Prywatności
+            </a>
+            <span className="footer-separator">•</span>
+            <a href="/zasady/" className="footer-nav-link">
+              Zasady Gry
+            </a>
+            <span className="footer-separator">•</span>
+            <a href="mailto:service@rip-tear.com" className="footer-nav-link">
+              Kontakt
+            </a>
+          </div>
+          
+          <div className="footer-security-badges">
+            <div className="footer-badge">
+              <span>🔒 SSL Secured</span>
+            </div>
+            <div className="footer-badge">
+              <span>🛡️ Privacy Protected</span>
+            </div>
+            <div className="footer-badge">
+              <span>🚫 No Ads</span>
+            </div>
+          </div>
+        </div>
       </footer>
     </div>
   );
