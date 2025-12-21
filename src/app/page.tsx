@@ -346,6 +346,97 @@ const Page = () => {
         </div>
       </section>
 
+      {/* Custom Categories Section */}
+      <section className="custom-categories-section">
+        <div className={`section-header animate-on-scroll ${isVisible['custom-header'] ? 'visible' : ''}`} id="custom-header">
+          <span className="section-badge">
+            <PiSparkle /> Twoja gra, Twoje pytania <PiSparkle />
+          </span>
+          <h2 className="section-title-landing">Twórz własne kategorie</h2>
+          <p className="section-subtitle">
+            Spersonalizuj swoją rozgrywkę! Jako prowadzący możesz stworzyć unikalne kategorie 
+            pytań dostosowane do zainteresowań Twoich graczy.
+          </p>
+        </div>
+
+        <div className="custom-categories-content">
+          <div className={`custom-feature animate-on-scroll ${isVisible['custom-1'] ? 'visible' : ''}`} id="custom-1">
+            <div className="custom-icon">
+              <div className="icon-wrapper create">
+                <PiGameControllerFill />
+              </div>
+            </div>
+            <div className="custom-text">
+              <h3 className="custom-title">Pełna kontrola nad pytaniami</h3>
+              <p className="custom-description">
+                Twórz własne pytania z odpowiedziami dopasowanymi do Twojej grupy. 
+                Każda kategoria zawiera 5 pytań, a każde pytanie może mieć od 3 do 10 odpowiedzi.
+                Określasz kolejność odpowiedzi, która wpływa na punktację!
+              </p>
+            </div>
+          </div>
+
+          <div className={`custom-feature animate-on-scroll ${isVisible['custom-2'] ? 'visible' : ''}`} id="custom-2">
+            <div className="custom-icon">
+              <div className="icon-wrapper difficulty">
+                <PiStarFill />
+              </div>
+            </div>
+            <div className="custom-text">
+              <h3 className="custom-title">Wybierz poziom trudności</h3>
+              <p className="custom-description">
+                Oznacz swoją kategorię jako łatwą (⭐), średnią (⭐⭐) lub trudną (⭐⭐⭐). 
+                To pomaga graczom wybrać odpowiedni poziom wyzwania i dodaje strategiczny element 
+                do głosowania na kategorie.
+              </p>
+            </div>
+          </div>
+
+          <div className={`custom-feature animate-on-scroll ${isVisible['custom-3'] ? 'visible' : ''}`} id="custom-3">
+            <div className="custom-icon">
+              <div className="icon-wrapper timing">
+                <PiLightningFill />
+              </div>
+            </div>
+            <div className="custom-text">
+              <h3 className="custom-title">Twórz w dowolnym momencie</h3>
+              <p className="custom-description">
+                Kategorie możesz tworzyć w poczekalni przed rozpoczęciem gry lub nawet podczas 
+                głosowania drużyn. Edytuj swoje kategorie w każdej chwili, aby dostosować 
+                pytania do sytuacji lub poprawić szczegóły.
+              </p>
+            </div>
+          </div>
+
+          <div className={`custom-feature animate-on-scroll ${isVisible['custom-4'] ? 'visible' : ''}`} id="custom-4">
+            <div className="custom-icon">
+              <div className="icon-wrapper drag">
+                <PiUsersThreeFill />
+              </div>
+            </div>
+            <div className="custom-text">
+              <h3 className="custom-title">Unikalne dla Twojej grupy</h3>
+              <p className="custom-description">
+                Stworzone kategorie są dostępne tylko w Twojej grze - nie są publikowane publicznie. 
+                To idealne rozwiązanie do tworzenia pytań nawiązujących do wspólnych wspomnień, 
+                wewnętrznych żartów czy specyficznych zainteresowań Twojej grupy!
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className={`custom-note animate-on-scroll ${isVisible['custom-note'] ? 'visible' : ''}`} id="custom-note">
+          <div className="note-box">
+            <PiSparkle className="note-icon" />
+            <p className="note-text">
+              <strong>Wskazówka:</strong> Najlepsze kategorie to te, które znają wszyscy gracze! 
+              Twórz pytania dopasowane do zainteresowań Twojej grupy - od memów po wspólne 
+              doświadczenia. Pamiętaj, że kolejność odpowiedzi określa punktację (pierwsza = 100 pkt).
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Extra Features Section */}
       <section className="extra-section">
         <div className="extra-content" id="extra">
