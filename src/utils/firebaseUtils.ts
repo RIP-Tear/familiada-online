@@ -668,6 +668,7 @@ export const showRoundEndAlert = async (gameCode: string): Promise<void> => {
     const gameRef = doc(db, 'games', gameCode);
     await updateDoc(gameRef, {
       roundEndAlert: true,
+      roundEnded: true,
     });
     
     // Automatycznie ukryj alert po 2 sekundach
@@ -679,6 +680,7 @@ export const showRoundEndAlert = async (gameCode: string): Promise<void> => {
   } else {
     await localGameStorage.updateGame(gameCode, {
       roundEndAlert: true,
+      roundEnded: true,
     } as any);
     
     setTimeout(async () => {
@@ -970,6 +972,7 @@ export const nextQuestion = async (gameCode: string): Promise<void> => {
       wrongAnswersCount: 0,
       totalPoints: 0,
       pointsTransferred: false,
+      roundEnded: false,
       lastPointsRecipient: null,
       lastPointsAmount: 0,
       questionRevealed: false,
@@ -990,6 +993,7 @@ export const nextQuestion = async (gameCode: string): Promise<void> => {
       wrongAnswersCount: 0,
       totalPoints: 0,
       pointsTransferred: false,
+      roundEnded: false,
       lastPointsRecipient: null,
       lastPointsAmount: 0,
       questionRevealed: false,
@@ -1049,6 +1053,7 @@ export const restartGame = async (gameCode: string): Promise<void> => {
       revealedAnswers: [],
       wrongAnswersCount: 0,
       pointsTransferred: false,
+      roundEnded: false,
       lastPointsRecipient: null,
       lastPointsAmount: 0,
       warningActive: false,
@@ -1078,6 +1083,7 @@ export const restartGame = async (gameCode: string): Promise<void> => {
       revealedAnswers: [],
       wrongAnswersCount: 0,
       pointsTransferred: false,
+      roundEnded: false,
       lastPointsRecipient: null,
       lastPointsAmount: 0,
       warningActive: false,

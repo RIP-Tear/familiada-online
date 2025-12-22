@@ -1540,7 +1540,7 @@ export default function HostGamePage() {
                 <button
                   className="control-btn btn-wrong"
                   onClick={handleWrongAnswer}
-                  disabled={gameData?.pointsTransferred}
+                  disabled={gameData?.pointsTransferred || gameData?.roundEnded}
                 >
                   <PiXCircleFill /> Błędna odpowiedź
                 </button>
@@ -1548,7 +1548,7 @@ export default function HostGamePage() {
                   <button
                     className={`control-btn btn-warning ${gameData?.warningActive ? 'warning-active' : ''}`}
                     onClick={handleToggleWarning}
-                    disabled={gameData?.pointsTransferred}
+                    disabled={gameData?.pointsTransferred || gameData?.roundEnded}
                   >
                     <PiWarningFill /> {gameData?.warningActive ? 'Zatrzymaj ostrzeżenie' : 'Ostrzeżenie'}
                   </button>
@@ -1565,7 +1565,7 @@ export default function HostGamePage() {
                 <button
                   className="control-btn btn-reset-wrong"
                   onClick={handleResetWrong}
-                  disabled={gameData?.pointsTransferred}
+                  disabled={gameData?.pointsTransferred || gameData?.roundEnded}
                 >
                   <PiArrowClockwiseBold /> Reset błędnych
                 </button>
@@ -1575,7 +1575,7 @@ export default function HostGamePage() {
                 <button
                   className="control-btn btn-transfer"
                   onClick={() => handleTransferPoints(1)}
-                  disabled={gameData?.pointsTransferred}
+                  disabled={gameData?.pointsTransferred || !gameData?.roundEnded}
                 >
                   <PiTrophyFill /> Przekaż punkty -{" "}
                   {gameData?.team1Name || "Drużyna 1"}
@@ -1583,7 +1583,7 @@ export default function HostGamePage() {
                 <button
                   className="control-btn btn-transfer"
                   onClick={() => handleTransferPoints(2)}
-                  disabled={gameData?.pointsTransferred}
+                  disabled={gameData?.pointsTransferred || !gameData?.roundEnded}
                 >
                   <PiTrophyFill /> Przekaż punkty -{" "}
                   {gameData?.team2Name || "Drużyna 2"}
