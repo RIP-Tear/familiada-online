@@ -779,14 +779,14 @@ export default function PlayerGamePage() {
           </div>
 
           {/* Informacja o przekazanych punktach */}
-          {gameData?.pointsTransferred && gameData?.lastPointsRecipient && (
+          {/* {gameData?.pointsTransferred && gameData?.lastPointsRecipient && (
             <div className="points-transfer-info">
               <div className="transfer-card">
                 <h3><PiTrophyFill className="trophy-icon" /> Punkty przekazane!</h3>
                 <p><strong>{gameData.lastPointsRecipient}</strong> otrzymują <strong>{gameData.lastPointsAmount}</strong> punktów</p>
               </div>
             </div>
-          )}
+          )} */}
 
           {/* Pasek statusu */}
           <div className="status-bar">

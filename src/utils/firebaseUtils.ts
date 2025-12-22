@@ -16,6 +16,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import questions from './questions';
+import { getQuestionsByCategory } from './questions';
 import { localGameStorage } from './localGameStorage';
 import type { GameData, Team, JoinGameResult, CreateGameResult } from '../types/game';
 
@@ -408,61 +409,136 @@ export const selectCategory = async (gameCode: string, category: string, isRando
   console.log(`[SELECT] Setting category for game ${gameCode}: ${category}`);
   
   const showCategorySelectedAlert = async (gameCode: string, category: string, isRandomlySelected: boolean) => {
-    console.log(`[GAME] Showing category selected alert: ${category}`);
+    console.log(`[GAME] Showing category selected alert: ${category}, isRandomlySelected: ${isRandomlySelected}`);
     
     if (useFirebase) {
       const gameRef = doc(db, 'games', gameCode);
       
-      // Najpierw pokaż overlay losowania przez 3 sekundy
-      await updateDoc(gameRef, {
-        categoryDrawingAlert: true,
-      });
-      
-      setTimeout(async () => {
-        // Ukryj overlay losowania i pokaż wybraną kategorię
+      if (isRandomlySelected) {
+        // Losowanie - najpierw pokaż overlay losowania przez 3 sekundy
         await updateDoc(gameRef, {
-          categoryDrawingAlert: false,
+          categoryDrawingAlert: true,
+        });
+        
+        setTimeout(async () => {
+          // Rozpocznij fade-out overlay'a losowania
+          await updateDoc(gameRef, {
+            categoryDrawingFadeOut: true,
+          });
+          
+          // Po 300ms ukryj overlay losowania i pokaż wybraną kategorię
+          setTimeout(async () => {
+            await updateDoc(gameRef, {
+              categoryDrawingAlert: false,
+              categoryDrawingFadeOut: false,
+              categorySelectedAlert: true,
+              selectedCategoryName: category,
+              isCategoryRandomlySelected: isRandomlySelected,
+            });
+          }, 300);
+        }, 2700);
+          
+          // Po kolejnych 3 sekundach ukryj overlay i przejdź do fazy buzzerów
+          setTimeout(async () => {
+            await updateDoc(gameRef, {
+              categorySelectedAlert: false,
+              gamePhase: 'buzz',
+            });
+          }, 6000);
+      } else {
+        // Obie drużyny wybrały to samo - pokaż od razu overlay wybrano kategorię
+        await updateDoc(gameRef, {
           categorySelectedAlert: true,
           selectedCategoryName: category,
           isCategoryRandomlySelected: isRandomlySelected,
         });
         
-        // Po kolejnych 3 sekundach ukryj overlay i przejdź do fazy buzzerów
+        // Po 3 sekundach ukryj overlay i przejdź do fazy buzzerów
         setTimeout(async () => {
           await updateDoc(gameRef, {
             categorySelectedAlert: false,
             gamePhase: 'buzz',
           });
         }, 3000);
-      }, 3000);
+      }
     } else {
-      // Najpierw pokaż overlay losowania przez 3 sekundy
-      await localGameStorage.updateGame(gameCode, {
-        categoryDrawingAlert: true,
-      });
-      
-      setTimeout(async () => {
-        // Ukryj overlay losowania i pokaż wybraną kategorię
+      if (isRandomlySelected) {
+        // Losowanie - najpierw pokaż overlay losowania przez 3 sekundy
         await localGameStorage.updateGame(gameCode, {
-          categoryDrawingAlert: false,
+          categoryDrawingAlert: true,
+        });
+        
+        setTimeout(async () => {
+          // Rozpocznij fade-out overlay'a losowania
+          await localGameStorage.updateGame(gameCode, {
+            categoryDrawingFadeOut: true,
+          });
+          
+          // Po 300ms ukryj overlay losowania i pokaż wybraną kategorię
+          setTimeout(async () => {
+            await localGameStorage.updateGame(gameCode, {
+              categoryDrawingAlert: false,
+              categoryDrawingFadeOut: false,
+              categorySelectedAlert: true,
+              selectedCategoryName: category,
+              isCategoryRandomlySelected: isRandomlySelected,
+            });
+          }, 300);
+        }, 2700);
+          
+          // Po kolejnych 3 sekundach ukryj overlay i przejdź do fazy buzzerów
+          setTimeout(async () => {
+            await localGameStorage.updateGame(gameCode, {
+              categorySelectedAlert: false,
+              gamePhase: 'buzz',
+            });
+          }, 6000);
+      } else {
+        // Obie drużyny wybrały to samo - pokaż od razu overlay wybrano kategorię
+        await localGameStorage.updateGame(gameCode, {
           categorySelectedAlert: true,
           selectedCategoryName: category,
           isCategoryRandomlySelected: isRandomlySelected,
         });
         
-        // Po kolejnych 3 sekundach ukryj overlay i przejdź do fazy buzzerów
+        // Po 3 sekundach ukryj overlay i przejdź do fazy buzzerów
         setTimeout(async () => {
           await localGameStorage.updateGame(gameCode, {
             categorySelectedAlert: false,
             gamePhase: 'buzz',
           });
         }, 3000);
-      }, 3000);
+      }
     }
   };
   
   if (useFirebase) {
     const gameRef = doc(db, 'games', gameCode);
+    const gameSnap = await getDoc(gameRef);
+    const gameData = gameSnap.data() as any;
+    
+    // Sprawdź czy to własna kategoria
+    const customCat = gameData?.hostCustomCategories?.find((cat: any) => cat.name === category);
+    let categoryQuestions;
+    
+    if (customCat) {
+      // Użyj pytań z własnej kategorii
+      categoryQuestions = customCat.questions.map((q: any, idx: number) => ({
+        question: q.question,
+        answers: q.answers
+          .filter((a: string) => a && a.trim()) // Filtruj puste odpowiedzi
+          .map((a: string, aIdx: number) => ({
+            answer: a,
+            points: 100 - (aIdx * 10) // 100, 90, 80, 70, 60...
+          }))
+      }));
+      console.log(`[SELECT] Using custom category with ${categoryQuestions.length} questions`);
+    } else {
+      // Pobierz pytania dla wybranej kategorii ze standardowych
+      categoryQuestions = getQuestionsByCategory(category);
+      console.log(`[SELECT] Using standard category with ${categoryQuestions.length} questions`);
+    }
+    
     await updateDoc(gameRef, {
       selectedCategory: category,
       categorySelectedAt: new Date().toISOString(),
@@ -470,12 +546,37 @@ export const selectCategory = async (gameCode: string, category: string, isRando
       buzzedTeam: null,
       buzzTimestamp: null,
       categoryVotes: {},
+      currentRound: categoryQuestions, // Zapisz pytania z wybranej kategorii
     });
     console.log(`[SELECT] Category ${category} saved to Firestore`);
     
     await showCategorySelectedAlert(gameCode, category, isRandomlySelected);
   } else {
     // Demo mode
+    const gameData = await localGameStorage.getGame(gameCode);
+    
+    // Sprawdź czy to własna kategoria
+    const customCat = gameData?.hostCustomCategories?.find((cat: any) => cat.name === category);
+    let categoryQuestions;
+    
+    if (customCat) {
+      // Użyj pytań z własnej kategorii
+      categoryQuestions = customCat.questions.map((q: any, idx: number) => ({
+        question: q.question,
+        answers: q.answers
+          .filter((a: string) => a && a.trim()) // Filtruj puste odpowiedzi
+          .map((a: string, aIdx: number) => ({
+            answer: a,
+            points: 100 - (aIdx * 10)
+          }))
+      }));
+      console.log(`[SELECT] Using custom category with ${categoryQuestions.length} questions`);
+    } else {
+      // Pobierz pytania dla wybranej kategorii ze standardowych
+      categoryQuestions = getQuestionsByCategory(category);
+      console.log(`[SELECT] Using standard category with ${categoryQuestions.length} questions`);
+    }
+    
     await localGameStorage.updateGame(gameCode, {
       selectedCategory: category,
       categorySelectedAt: new Date().toISOString(),
@@ -483,6 +584,7 @@ export const selectCategory = async (gameCode: string, category: string, isRando
       buzzedTeam: null,
       buzzTimestamp: null,
       categoryVotes: {},
+      currentRound: categoryQuestions, // Zapisz pytania z wybranej kategorii
     });
     console.log(`[SELECT] Category ${category} saved to local storage`);
     
@@ -726,11 +828,17 @@ export const revealAnswer = async (gameCode: string, answer: string, points: num
       
       // WAŻNE: używaj aktualnego indeksu pytania z bazy danych, nie z parametru!
       const actualQuestionIndex = gameData.currentQuestionIndex;
-      const totalAnswers = gameData.currentRound[actualQuestionIndex]?.answers.length || 0;
+      const currentQuestion = gameData.currentRound?.[actualQuestionIndex];
+      const totalAnswers = currentQuestion?.answers?.length || 0;
       const newRevealedAnswers = [...currentRevealed, { answer, points: finalPoints }];
       const newRevealedCount = newRevealedAnswers.length;
       const currentWrongAnswers = (gameData as any).wrongAnswersCount || 0;
       
+      console.log(`[GAME] 🔍 DEBUG: currentRound exists? ${!!gameData.currentRound}, actualQuestionIndex: ${actualQuestionIndex}`);
+      console.log(`[GAME] 🔍 DEBUG: currentQuestion exists? ${!!currentQuestion}, has answers? ${!!currentQuestion?.answers}`);
+      if (currentQuestion?.answers) {
+        console.log(`[GAME] 🔍 DEBUG: Question answers list:`, currentQuestion.answers.map((a: any) => a.answer));
+      }
       console.log(`[GAME] 📊 Question ${actualQuestionIndex}: Revealed ${newRevealedCount}/${totalAnswers} answers`);
       console.log(`[GAME] 📝 Previously revealed: [${currentRevealed.map((r: any) => r.answer).join(', ')}]`);
       console.log(`[GAME] 🆕 Adding: "${answer}" (${finalPoints} pts)`);
@@ -750,25 +858,32 @@ export const revealAnswer = async (gameCode: string, answer: string, points: num
     
     // Jeśli to najwyżej punktowana odpowiedź, pokaż overlay
     if (isTopAnswer) {
-      console.log('[GAME] Top answer revealed! Showing alert in 1.5s...');
+      console.log('[GAME] Top answer revealed! Showing alert in 500ms...');
       setTimeout(async () => {
         await showTopAnswerAlert(gameCode);
-      }, 1500);
+      }, 500);
     }
     
+    console.log(`[GAME] 🔍 Checking end conditions: newCount=${result.newCount}, totalAnswers=${result.totalAnswers}, wrongAnswers=${result.wrongAnswersCount}`);
+    
+    // Opóźnienie dla overlay końca rundy - dodatkowe 2s jeśli pokazujemy top answer
+    const roundEndDelay = isTopAnswer ? 2500 : 1500;
+    
     // Sprawdź czy wszystkie odpowiedzi zostały odkryte
-    if (result.newCount === result.totalAnswers) {
-      console.log(`[GAME] ✅ ALL ANSWERS REVEALED! ${result.newCount}/${result.totalAnswers} - Showing round end alert in 1.5s...`);
-      // Poczekaj 1.5 sekundy przed pokazaniem overlay
+    if (result.newCount === result.totalAnswers && result.totalAnswers > 0) {
+      console.log(`[GAME] ✅ ALL ANSWERS REVEALED! ${result.newCount}/${result.totalAnswers} - Showing round end alert in ${roundEndDelay}ms...`);
+      // Poczekaj przed pokazaniem overlay (dłużej jeśli pokazujemy top answer)
       setTimeout(async () => {
         await showRoundEndAlert(gameCode);
-      }, 1500);
-    } else if (result.wrongAnswersCount === 3) {
+      }, roundEndDelay);
+    } else if (result.wrongAnswersCount === 3 && result.revealed) {
       // Jeśli mamy 3 błędy i odkryliśmy odpowiedź, koniec rundy
-      console.log(`[GAME] ⚠️ 3 WRONG ANSWERS + answer revealed - Showing round end alert in 1.5s...`);
+      console.log(`[GAME] ⚠️ 3 WRONG ANSWERS + answer revealed - Showing round end alert in ${roundEndDelay}ms...`);
       setTimeout(async () => {
         await showRoundEndAlert(gameCode);
-      }, 1500);
+      }, roundEndDelay);
+    } else {
+      console.log(`[GAME] 📝 Round continues: ${result.newCount}/${result.totalAnswers} answers, ${result.wrongAnswersCount} wrong`);
     }
   } else {
     const gameData = await localGameStorage.getGame(gameCode);
@@ -787,10 +902,16 @@ export const revealAnswer = async (gameCode: string, answer: string, points: num
     
     // WAŻNE: używaj aktualnego indeksu pytania z bazy danych, nie z parametru!
     const actualQuestionIndex = gameData.currentQuestionIndex;
-    const totalAnswers = gameData.currentRound[actualQuestionIndex]?.answers.length || 0;
+    const currentQuestion = gameData.currentRound?.[actualQuestionIndex];
+    const totalAnswers = currentQuestion?.answers?.length || 0;
     const newRevealedAnswers = [...currentRevealed, { answer, points: finalPoints }];
     const newRevealedCount = newRevealedAnswers.length;
     
+    console.log(`[GAME] 🔍 DEBUG (local): currentRound exists? ${!!gameData.currentRound}, actualQuestionIndex: ${actualQuestionIndex}`);
+    console.log(`[GAME] 🔍 DEBUG (local): currentQuestion exists? ${!!currentQuestion}, has answers? ${!!currentQuestion?.answers}`);
+    if (currentQuestion?.answers) {
+      console.log(`[GAME] 🔍 DEBUG (local): Question answers list:`, currentQuestion.answers.map((a: any) => a.answer));
+    }
     console.log(`[GAME] 📊 Question ${actualQuestionIndex}: Revealed ${newRevealedCount}/${totalAnswers} answers`);
     console.log(`[GAME] 📝 Previously revealed: [${currentRevealed.map((r: any) => r.answer).join(', ')}]`);
     console.log(`[GAME] 🆕 Adding: "${answer}" (${finalPoints} pts)`);
@@ -803,25 +924,32 @@ export const revealAnswer = async (gameCode: string, answer: string, points: num
     
     // Jeśli to najwyżej punktowana odpowiedź, pokaż overlay
     if (isTopAnswer) {
-      console.log('[GAME] Top answer revealed! Showing alert in 1.5s...');
+      console.log('[GAME] Top answer revealed! Showing alert in 500ms...');
       setTimeout(async () => {
         await showTopAnswerAlert(gameCode);
-      }, 1500);
+      }, 500);
     }
     
+    console.log(`[GAME] 🔍 Checking end conditions (local): newCount=${newRevealedCount}, totalAnswers=${totalAnswers}, wrongAnswers=${currentWrongAnswers}`);
+    
+    // Opóźnienie dla overlay końca rundy - dodatkowe 2s jeśli pokazujemy top answer
+    const roundEndDelay = isTopAnswer ? 2500 : 1500;
+    
     // Sprawdź czy wszystkie odpowiedzi zostały odkryte
-    if (newRevealedCount === totalAnswers) {
-      console.log(`[GAME] ✅ ALL ANSWERS REVEALED! ${newRevealedCount}/${totalAnswers} - Showing round end alert in 1.5s...`);
-      // Poczekaj 1.5 sekundy przed pokazaniem overlay
+    if (newRevealedCount === totalAnswers && totalAnswers > 0) {
+      console.log(`[GAME] ✅ ALL ANSWERS REVEALED! ${newRevealedCount}/${totalAnswers} - Showing round end alert in ${roundEndDelay}ms...`);
+      // Poczekaj przed pokazaniem overlay (dłużej jeśli pokazujemy top answer)
       setTimeout(async () => {
         await showRoundEndAlert(gameCode);
-      }, 1500);
+      }, roundEndDelay);
     } else if (currentWrongAnswers === 3) {
       // Jeśli mamy 3 błędy i odkryliśmy odpowiedź, koniec rundy
-      console.log(`[GAME] ⚠️ 3 WRONG ANSWERS + answer revealed - Showing round end alert in 1.5s...`);
+      console.log(`[GAME] ⚠️ 3 WRONG ANSWERS + answer revealed - Showing round end alert in ${roundEndDelay}ms...`);
       setTimeout(async () => {
         await showRoundEndAlert(gameCode);
-      }, 1500);
+      }, roundEndDelay);
+    } else {
+      console.log(`[GAME] 📝 Round continues: ${newRevealedCount}/${totalAnswers} answers, ${currentWrongAnswers} wrong`);
     }
   }
 };

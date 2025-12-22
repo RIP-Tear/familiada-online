@@ -173,7 +173,7 @@
   }
   &-overlay.category-drawing { 
     background: rgba(233, 196, 106, .95);
-    animation: overlayFadeIn .3s ease-in-out !important;
+    animation: overlayFadeIn .3s ease-in-out, overlayFadeOut .3s ease-in-out 2.7s forwards;
   }
   &-overlay.category-selected { background: rgba(233, 196, 106, .95); }
   &-overlay.next-question { background: rgba($c-green, .95); }
