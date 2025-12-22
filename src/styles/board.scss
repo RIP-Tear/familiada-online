@@ -171,6 +171,10 @@
     background: linear-gradient(135deg, rgba(52, 152, 219, .95), rgba(41, 128, 185, .95)); 
     .wrong-answer-icon { animation: transferPulse 0.8s ease-in-out infinite; }
   }
+  &-overlay.category-drawing { 
+    background: rgba(233, 196, 106, .95);
+    animation: overlayFadeIn .3s ease-in-out !important;
+  }
   &-overlay.category-selected { background: rgba(233, 196, 106, .95); }
   &-overlay.next-question { background: rgba($c-green, .95); }
   &-overlay.round-winner { background: rgba($c-green, .95); }
@@ -243,6 +247,19 @@
 @keyframes newGamePulse {
   0%, 100% { transform: scale(1) rotate(0deg); }
   50% { transform: scale(1.1) rotate(180deg); }
+}
+
+@keyframes categoryDrawingSpin {
+  to { transform: rotate(360deg); }
+}
+
+.category-drawing-spinner {
+  width: 120px;
+  height: 120px;
+  border: 8px solid rgba($c-white, .2);
+  border-top-color: $c-white;
+  border-radius: 50%;
+  animation: categoryDrawingSpin 1s linear infinite;
 }
 
 .round-winner-name { 

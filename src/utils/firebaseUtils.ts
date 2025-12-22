@@ -412,28 +412,51 @@ export const selectCategory = async (gameCode: string, category: string, isRando
     
     if (useFirebase) {
       const gameRef = doc(db, 'games', gameCode);
+      
+      // Najpierw pokaż overlay losowania przez 3 sekundy
       await updateDoc(gameRef, {
-        categorySelectedAlert: true,
-        selectedCategoryName: category,
-        isCategoryRandomlySelected: isRandomlySelected,
+        categoryDrawingAlert: true,
       });
       
       setTimeout(async () => {
+        // Ukryj overlay losowania i pokaż wybraną kategorię
         await updateDoc(gameRef, {
-          categorySelectedAlert: false,
+          categoryDrawingAlert: false,
+          categorySelectedAlert: true,
+          selectedCategoryName: category,
+          isCategoryRandomlySelected: isRandomlySelected,
         });
+        
+        // Po kolejnych 3 sekundach ukryj overlay i przejdź do fazy buzzerów
+        setTimeout(async () => {
+          await updateDoc(gameRef, {
+            categorySelectedAlert: false,
+            gamePhase: 'buzz',
+          });
+        }, 3000);
       }, 3000);
     } else {
+      // Najpierw pokaż overlay losowania przez 3 sekundy
       await localGameStorage.updateGame(gameCode, {
-        categorySelectedAlert: true,
-        selectedCategoryName: category,
-        isCategoryRandomlySelected: isRandomlySelected,
+        categoryDrawingAlert: true,
       });
       
       setTimeout(async () => {
+        // Ukryj overlay losowania i pokaż wybraną kategorię
         await localGameStorage.updateGame(gameCode, {
-          categorySelectedAlert: false,
+          categoryDrawingAlert: false,
+          categorySelectedAlert: true,
+          selectedCategoryName: category,
+          isCategoryRandomlySelected: isRandomlySelected,
         });
+        
+        // Po kolejnych 3 sekundach ukryj overlay i przejdź do fazy buzzerów
+        setTimeout(async () => {
+          await localGameStorage.updateGame(gameCode, {
+            categorySelectedAlert: false,
+            gamePhase: 'buzz',
+          });
+        }, 3000);
       }, 3000);
     }
   };
@@ -446,7 +469,6 @@ export const selectCategory = async (gameCode: string, category: string, isRando
       currentQuestionIndex: 0,
       buzzedTeam: null,
       buzzTimestamp: null,
-      gamePhase: 'buzz',
       categoryVotes: {},
     });
     console.log(`[SELECT] Category ${category} saved to Firestore`);
@@ -460,7 +482,6 @@ export const selectCategory = async (gameCode: string, category: string, isRando
       currentQuestionIndex: 0,
       buzzedTeam: null,
       buzzTimestamp: null,
-      gamePhase: 'buzz',
       categoryVotes: {},
     });
     console.log(`[SELECT] Category ${category} saved to local storage`);

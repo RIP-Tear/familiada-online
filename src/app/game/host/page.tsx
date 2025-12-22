@@ -938,6 +938,16 @@ export default function HostGamePage() {
           </div>
         )}
 
+        {/* Overlay losowania kategorii */}
+        {gameData?.categoryDrawingAlert && (
+          <div className="wrong-answer-overlay category-drawing">
+            <div className="wrong-answer-content">
+              <div className="category-drawing-spinner"></div>
+              <h2 className="wrong-answer-text">Losowanie kategorii...</h2>
+            </div>
+          </div>
+        )}
+
         {/* Overlay wybranej kategorii */}
         {gameData?.categorySelectedAlert && (
           <div className="wrong-answer-overlay category-selected">
@@ -1281,16 +1291,6 @@ export default function HostGamePage() {
                 </>
               );
             })()}
-
-            {selectedCategory && (
-              <div className="selection-info">
-                <p>
-                  <PiCheckBold className="check-icon" /> Wybrano:{" "}
-                  <strong>{selectedCategory}</strong>
-                </p>
-                <p className="waiting-text">Ładowanie gry...</p>
-              </div>
-            )}
           </div>
           
           <button
