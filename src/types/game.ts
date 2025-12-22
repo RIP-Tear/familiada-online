@@ -78,6 +78,8 @@ export interface GameData {
   roundWinnerAlert?: boolean;
   roundWinnerName?: string | null;
   gameResultAlert?: boolean;
+  categoryDrawingAlert?: boolean;
+  categoryDrawingFadeOut?: boolean;
   categorySelectedAlert?: boolean;
   selectedCategoryName?: string;
   isCategoryRandomlySelected?: boolean;
@@ -85,9 +87,13 @@ export interface GameData {
   buzzAlert?: boolean;
   buzzAlertTeamName?: string;
   roundEndAlert?: boolean;
+  roundEnded?: boolean;
   questionRevealed?: boolean;
   teamVsAlert?: boolean;
   newGameAlert?: boolean;
+  hostLeftAlert?: boolean;
+  teamLeftAlert?: boolean;
+  teamLeftName?: string;
 }
 
 export interface JoinGameResult {
