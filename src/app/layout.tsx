@@ -1,9 +1,8 @@
-"use client";
 import "../styles/index.scss";
-import { Provider } from "react-redux";
-import { store } from "../redux/store";
 import { ReactNode } from "react";
 import Script from "next/script";
+import ClientLayout from "../components/ClientLayout";
+import type { Metadata, Viewport } from "next";
 
 interface RootLayoutProps {
   children: ReactNode;
@@ -12,12 +11,124 @@ interface RootLayoutProps {
 // Metadata base URL
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.familiada-online.pl';
 
+// Metadata Configuration (Next.js 14+)
+export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "Familiada Online - Gra Familijna Online | Rozgrywka Multiplayer",
+    template: "%s | Familiada Online"
+  },
+  description: "Przenieś legendarny teleturniej do swojego domu! Rywalizuj z przyjaciółmi w Familiadzie online. Zgaduj najpopularniejsze odpowiedzi i zdobywaj punkty!",
+  keywords: [
+    "familiada", 
+    "familiada online", 
+    "gra online", 
+    "multiplayer", 
+    "gra rodzinna", 
+    "teleturniej", 
+    "quiz online",
+    "gra grupowa", 
+    "gra w familiadę", 
+    "teleturniej online",
+    "gry towarzyskie",
+    "gry imprezowe",
+    "gry rodzinne online"
+  ],
+  authors: [{ name: "Familiada Online" }],
+  creator: "Familiada Online",
+  publisher: "Familiada Online",
+  applicationName: "Familiada Online",
+  generator: "Next.js",
+  referrer: "origin-when-cross-origin",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  
+  // Open Graph
+  openGraph: {
+    type: "website",
+    locale: "pl_PL",
+    url: siteUrl,
+    siteName: "Familiada Online",
+    title: "Familiada Online - Gra Familijna Online | Rozgrywka Multiplayer",
+    description: "Przenieś legendarny teleturniej do swojego domu! Rywalizuj z przyjaciółmi w Familiadzie online. Zgaduj najpopularniejsze odpowiedzi i zdobywaj punkty!",
+    images: [
+      {
+        url: `${siteUrl}/og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: "Familiada Online - Klasyczna gra teleturniejna",
+      },
+    ],
+  },
+  
+  // Twitter
+  twitter: {
+    card: "summary_large_image",
+    title: "Familiada Online - Gra Familijna Online | Rozgrywka Multiplayer",
+    description: "Przenieś legendarny teleturniej do swojego domu! Rywalizuj z przyjaciółmi w Familiadzie online. Zgaduj najpopularniejsze odpowiedzi i zdobywaj punkty!",
+    images: [`${siteUrl}/og-image.png`],
+  },
+  
+  // Icons & Manifest
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icon.svg", type: "image/svg+xml" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
+  manifest: "/site.webmanifest",
+  
+  // Robots
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  
+  // Verification
+  verification: {
+    google: "BFOu5J4qV2n1ircNWrqUuqCxtZxx75czOqBrke8_GSE",
+  },
+  
+  // Alternates
+  alternates: {
+    canonical: siteUrl,
+  },
+  
+  // Additional metadata
+  category: "Games",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  themeColor: "#264653",
+};
+
 export default function RootLayout({ children }: RootLayoutProps) {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "Familiada Online",
-    "description": "Zagraj w Familiadę online! Klasyczna teleturniejna gra rodzinna z trybem multiplayer. Zgaduj najpopularniejsze odpowiedzi i rywalizuj z przyjaciółmi!",
+    "alternateName": "Familiada - Gra Familijna",
+    "url": siteUrl,
+    "description": "Przenieś legendarny teleturniej do swojego domu! Rywalizuj z przyjaciółmi w Familiadzie online. Zgaduj najpopularniejsze odpowiedzi i zdobywaj punkty!",
     "applicationCategory": "Game",
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript. Requires HTML5.",
@@ -29,86 +140,58 @@ export default function RootLayout({ children }: RootLayoutProps) {
     "aggregateRating": {
       "@type": "AggregateRating",
       "ratingValue": "4.8",
-      "ratingCount": "150"
+      "ratingCount": "150",
+      "bestRating": "5",
+      "worstRating": "1"
     },
     "inLanguage": "pl-PL",
     "author": {
       "@type": "Organization",
-      "name": "Familiada Game"
-    }
+      "name": "Familiada Online",
+      "url": siteUrl
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Familiada Online",
+      "url": siteUrl
+    },
+    "keywords": "familiada, gra online, multiplayer, teleturniej, quiz, gra rodzinna",
+    "image": `${siteUrl}/og-image.png`,
+    "screenshot": `${siteUrl}/og-image.png`
   };
 
   return (
     <html lang="pl">
-      <head>
-        <meta charSet="utf-8" />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
-        />
-
-        {/* Google Search Console Verification */}
-        <meta
-          name="google-site-verification"
-          content="BFOu5J4qV2n1ircNWrqUuqCxtZxx75czOqBrke8_GSE"
-        />
-
-        {/* Podstawowe SEO */}
-        <title>Familiada - Gra Familijna Online | Rozgrywka Multiplayer</title>
-        <meta
-          name="description"
-          content="Zagraj w Familiadę online! Klasyczna teleturniejna gra rodzinna z trybem multiplayer. Zgaduj najpopularniejsze odpowiedzi i rywalizuj z przyjaciółmi!"
-        />
-        <meta
-          name="keywords"
-          content="familiada, gra online, multiplayer, gra rodzinna, teleturniej, quiz, gra grupowa, familiada online, gra w familiadę, teleturniej online"
-        />
-        <meta name="author" content="Familiada Game" />
-        <link rel="canonical" href={siteUrl} />
-
-        {/* Favicon */}
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/favicon.ico" />
-        <link rel="manifest" href="/site.webmanifest" />
-
-        {/* Open Graph / Facebook */}
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={siteUrl} />
-        <meta property="og:title" content="Familiada - Gra Familijna Online | Rozgrywka Multiplayer" />
-        <meta
-          property="og:description"
-          content="Zagraj w Familiadę online! Klasyczna teleturniejna gra rodzinna z trybem multiplayer. Zgaduj najpopularniejsze odpowiedzi i rywalizuj z przyjaciółmi!"
-        />
-        <meta property="og:image" content={`${siteUrl}/og-image.png`} />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:site_name" content="Familiada" />
-        <meta property="og:locale" content="pl_PL" />
-
-        {/* Twitter Card */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Familiada - Gra Familijna Online | Rozgrywka Multiplayer" />
-        <meta
-          name="twitter:description"
-          content="Zagraj w Familiadę online! Klasyczna teleturniejna gra rodzinna z trybem multiplayer. Zgaduj najpopularniejsze odpowiedzi i rywalizuj z przyjaciółmi!"
-        />
-        <meta name="twitter:image" content={`${siteUrl}/og-image.png`} />
-
-        {/* Dodatkowo */}
-        <meta name="theme-color" content="#264653" />
-        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-        <meta name="googlebot" content="index, follow" />
-        <meta name="language" content="Polish" />
-        <meta name="revisit-after" content="7 days" />
-      </head>
       <body>
         {/* Structured Data */}
         <Script
           id="structured-data"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+          strategy="beforeInteractive"
         />
-        <Provider store={store}>{children}</Provider>
+        
+        {/* Google Analytics - opcjonalnie */}
+        <Script
+          strategy="afterInteractive"
+          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+        />
+        <Script
+          id="google-analytics"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', {
+                page_path: window.location.pathname,
+              });
+            `,
+          }}
+        />
+        
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );
