@@ -1562,6 +1562,656 @@ const questionSets: QuestionSet[] = [
       },
     ],
   },
+
+  // ZESTAW NOWY 1: Kosmos - Średni
+  {
+    category: "Kosmos",
+    difficulty: "medium",
+    questions: [
+      {
+        question: "Planety w Układzie Słonecznym",
+        answers: [
+          "Ziemia",
+          "Mars",
+          "Jowisz",
+          "Saturn",
+          "Wenus",
+          "Merkury",
+          "Neptun",
+          "Uran",
+        ],
+      },
+      {
+        question: "Co można zobaczyć na nocnym niebie?",
+        answers: [
+          "Gwiazdy",
+          "Księżyc",
+          "Planety",
+          "Konstelacje",
+          "Meteory",
+          "Satelity",
+        ],
+      },
+      {
+        question: "Słynni astronauci",
+        answers: [
+          "Neil Armstrong",
+          "Jurij Gagarin",
+          "Buzz Aldrin",
+          "Mirosław Hermaszewski",
+        ],
+      },
+      {
+        question: "Co astronauci robią w kosmosie?",
+        answers: [
+          "Prowadzą eksperymenty",
+          "Naprawiają satelity",
+          "Badają planety",
+          "Obserwują Ziemię",
+          "Ćwiczą",
+          "Jedzą",
+          "Śpią",
+        ],
+      },
+      {
+        question: "Elementy związane z podróżami kosmicznymi",
+        answers: [
+          "Rakieta",
+          "Wahadłowiec",
+          "Skafander",
+          "Stacja kosmiczna",
+          "Kapsuła",
+          "Teleskop",
+          "Satelita",
+          "Rover",
+          "Sonda",
+        ],
+      },
+    ],
+  },
+
+  // ZESTAW NOWY 2: Zwierzęta egzotyczne - Trudny
+  {
+    category: "Zwierzęta egzotyczne",
+    difficulty: "hard",
+    questions: [
+      {
+        question: "Zwierzęta żyjące w Australii",
+        answers: [
+          "Kangur",
+          "Koala",
+          "Emu",
+          "Wombat",
+          "Diabeł tasmański",
+          "Krokodyl słonowodny",
+          "Dziobak",
+        ],
+      },
+      {
+        question: "Zwierzęta Afryki",
+        answers: [
+          "Lew",
+          "Słoń",
+          "Żyrafa",
+          "Zebra",
+          "Nosorożec",
+          "Hipopotam",
+        ],
+      },
+      {
+        question: "Ptaki nielotne",
+        answers: [
+          "Pingwin",
+          "Struś",
+          "Emu",
+          "Kiwi",
+          "Kazuar",
+        ],
+      },
+      {
+        question: "Najniebezpieczniejsze zwierzęta świata",
+        answers: [
+          "Komary",
+          "Wąż",
+          "Krokodyl",
+          "Lew",
+          "Słoń",
+          "Hipopotam",
+          "Niedźwiedź polarny",
+          "Skorpion",
+        ],
+      },
+      {
+        question: "Zwierzęta żyjące w wodzie i na lądzie",
+        answers: [
+          "Żaba",
+          "Krokodyl",
+          "Hipopotam",
+          "Wydra",
+          "Żółw",
+          "Foka",
+        ],
+      },
+    ],
+  },
+
+  // ZESTAW NOWY 3: Wynalazki - Średni
+  {
+    category: "Wynalazki",
+    difficulty: "medium",
+    questions: [
+      {
+        question: "Wynalazki które zmieniły świat",
+        answers: [
+          "Internet",
+          "Telefon",
+          "Samochód",
+          "Komputer",
+          "Żarówka",
+          "Koło",
+          "Druk",
+        ],
+      },
+      {
+        question: "Polscy wynalazcy i ich wynalazki",
+        answers: [
+          "Ignacy Łukasiewicz - lampa naftowa",
+          "Jan Szczepanik - kamizelka kuloodporna",
+          "Stefan Bryła - mina przeciwpancerna",
+          "Rudolf Weigl - szczepionka przeciw tyfusowi",
+        ],
+      },
+      {
+        question: "Co zostało wynalezione w XX wieku?",
+        answers: [
+          "Komputer",
+          "Internet",
+          "Telefon komórkowy",
+          "Telewizja",
+          "Samolot",
+          "Penicylina",
+          "Plastik",
+          "Laser",
+        ],
+      },
+      {
+        question: "Urządzenia domowe ułatwiające życie",
+        answers: [
+          "Pralka",
+          "Lodówka",
+          "Zmywarka",
+          "Odkurzacz",
+          "Mikrofalówka",
+          "Robot kuchenny",
+        ],
+      },
+      {
+        question: "Środki komunikacji",
+        answers: [
+          "Telefon",
+          "Internet",
+          "Radio",
+          "Telewizja",
+          "Poczta",
+        ],
+      },
+    ],
+  },
+
+  // ZESTAW NOWY 4: Instrumenty muzyczne - Łatwy
+  {
+    category: "Instrumenty muzyczne",
+    difficulty: "easy",
+    questions: [
+      {
+        question: "Popularne instrumenty muzyczne",
+        answers: [
+          "Gitara",
+          "Fortepian",
+          "Skrzypce",
+          "Bębny",
+          "Flet",
+          "Trąbka",
+          "Saksofon",
+        ],
+      },
+      {
+        question: "Instrumenty strunowe",
+        answers: [
+          "Gitara",
+          "Skrzypce",
+          "Harfa",
+          "Wiolonczela",
+          "Kontrabas",
+          "Altówka",
+        ],
+      },
+      {
+        question: "Instrumenty dęte",
+        answers: [
+          "Flet",
+          "Trąbka",
+          "Saksofon",
+          "Klarnet",
+          "Tuba",
+        ],
+      },
+      {
+        question: "Części zestawu perkusyjnego",
+        answers: [
+          "Werbel",
+          "Bęben basowy",
+          "Talerze",
+          "Tom-tomy",
+          "Hi-hat",
+          "Pałeczki",
+          "Stopa",
+          "Talerz crash",
+          "Talerz ride",
+        ],
+      },
+      {
+        question: "Co robi muzyk?",
+        answers: [
+          "Gra",
+          "Śpiewa",
+          "Komponuje",
+          "Ćwiczy",
+          "Występuje",
+          "Nagrywa",
+        ],
+      },
+    ],
+  },
+
+  // ZESTAW NOWY 5: Zawody - Łatwy
+  {
+    category: "Zawody",
+    difficulty: "easy",
+    questions: [
+      {
+        question: "Zawody medyczne",
+        answers: [
+          "Lekarz",
+          "Pielęgniarka",
+          "Dentysta",
+          "Ratownik medyczny",
+          "Farmaceuta",
+          "Fizjoterapeuta",
+        ],
+      },
+      {
+        question: "Zawody związane z nauczaniem",
+        answers: [
+          "Nauczyciel",
+          "Profesor",
+          "Wychowawca",
+          "Trener",
+          "Instruktor",
+        ],
+      },
+      {
+        question: "Zawody twórcze",
+        answers: [
+          "Artysta",
+          "Muzyk",
+          "Pisarz",
+          "Aktor",
+          "Reżyser",
+          "Malarz",
+          "Rzeźbiarz",
+        ],
+      },
+      {
+        question: "Zawody techniczne",
+        answers: [
+          "Mechanik",
+          "Elektryk",
+          "Informatyk",
+          "Inżynier",
+          "Programista",
+          "Architekt",
+          "Hydraulik",
+          "Spawacz",
+        ],
+      },
+      {
+        question: "Co robi strażak?",
+        answers: [
+          "Gasi pożary",
+          "Ratuje ludzi",
+          "Pomaga w wypadkach",
+        ],
+      },
+    ],
+  },
+
+  // ZESTAW NOWY 6: Pogoda - Średni
+  {
+    category: "Pogoda",
+    difficulty: "medium",
+    questions: [
+      {
+        question: "Zjawiska pogodowe",
+        answers: [
+          "Deszcz",
+          "Śnieg",
+          "Burza",
+          "Mgła",
+          "Tęcza",
+          "Grad",
+          "Wiatr",
+          "Błyskawica",
+        ],
+      },
+      {
+        question: "Pory roku",
+        answers: [
+          "Wiosna",
+          "Lato",
+          "Jesień",
+          "Zima",
+        ],
+      },
+      {
+        question: "Co zabierasz gdy pada deszcz?",
+        answers: [
+          "Parasol",
+          "Płaszcz przeciwdeszczowy",
+          "Kalosze",
+          "Kaptur",
+          "Kurtkę",
+        ],
+      },
+      {
+        question: "Ekstremalne zjawiska pogodowe",
+        answers: [
+          "Tornado",
+          "Huragan",
+          "Powódź",
+          "Susza",
+          "Burza śnieżna",
+          "Lawina",
+          "Grad",
+        ],
+      },
+      {
+        question: "Co ludzie mówią o pogodzie?",
+        answers: [
+          "Zimno",
+          "Gorąco",
+          "Ciepło",
+          "Pada",
+          "Słonecznie",
+          "Pochmurno",
+          "Wietrznie",
+          "Parno",
+          "Mroźno",
+        ],
+      },
+    ],
+  },
+
+  // ZESTAW NOWY 7: Transport - Łatwy
+  {
+    category: "Transport",
+    difficulty: "easy",
+    questions: [
+      {
+        question: "Środki transportu miejskiego",
+        answers: [
+          "Autobus",
+          "Tramwaj",
+          "Metro",
+          "Taksówka",
+          "Rower",
+          "Hulajnoga",
+        ],
+      },
+      {
+        question: "Pojazdy",
+        answers: [
+          "Samochód",
+          "Motocykl",
+          "Rower",
+          "Ciężarówka",
+          "Autobus",
+          "Traktor",
+          "Skuter",
+        ],
+      },
+      {
+        question: "Co jest w samochodzie?",
+        answers: [
+          "Kierownica",
+          "Silnik",
+          "Koła",
+          "Siedzenia",
+          "Bagażnik",
+          "Reflektory",
+          "Drzwi",
+          "Pas bezpieczeństwa",
+        ],
+      },
+      {
+        question: "Transport wodny",
+        answers: [
+          "Statek",
+          "Łódź",
+          "Prom",
+          "Jacht",
+          "Kajak",
+        ],
+      },
+      {
+        question: "Transport powietrzny",
+        answers: [
+          "Samolot",
+          "Helikopter",
+          "Balon",
+          "Szybowiec",
+        ],
+      },
+    ],
+  },
+
+  // ZESTAW NOWY 8: Święta i uroczystości - Średni
+  {
+    category: "Święta i uroczystości",
+    difficulty: "medium",
+    questions: [
+      {
+        question: "Popularne święta w Polsce",
+        answers: [
+          "Boże Narodzenie",
+          "Wielkanoc",
+          "Nowy Rok",
+          "Wszystkich Świętych",
+          "Święto Niepodległości",
+          "Konstytucji 3 Maja",
+        ],
+      },
+      {
+        question: "Co robisz na Boże Narodzenie?",
+        answers: [
+          "Spotykam się z rodziną",
+          "Jem wigilijną kolację",
+          "Rozpakowuję prezenty",
+          "Chodzę na pasterkę",
+          "Śpiewam kolędy",
+          "Ubieramy choinkę",
+          "Dzielę się opłatkiem",
+        ],
+      },
+      {
+        question: "Tradycyjne potrawy wigilijne",
+        answers: [
+          "Karp",
+          "Barszcz z uszkami",
+          "Pierogi",
+          "Kutia",
+          "Śledź",
+          "Kompot",
+          "Kapusta z grzybami",
+          "Makowiec",
+        ],
+      },
+      {
+        question: "Co dostajesz na urodziny?",
+        answers: [
+          "Prezenty",
+          "Tort",
+          "Życzenia",
+          "Kwiaty",
+          "Pieniądze",
+        ],
+      },
+      {
+        question: "Symbole Wielkanocy",
+        answers: [
+          "Jajka",
+          "Baranek",
+          "Zajączek",
+          "Koszyk",
+          "Pisanki",
+          "Mazurek",
+        ],
+      },
+    ],
+  },
+
+  // ZESTAW NOWY 9: Emocje - Trudny
+  {
+    category: "Emocje",
+    difficulty: "hard",
+    questions: [
+      {
+        question: "Pozytywne emocje",
+        answers: [
+          "Radość",
+          "Szczęście",
+          "Miłość",
+          "Podekscytowanie",
+          "Zadowolenie",
+          "Spokój",
+          "Duma",
+        ],
+      },
+      {
+        question: "Negatywne emocje",
+        answers: [
+          "Smutek",
+          "Złość",
+          "Strach",
+          "Frustracja",
+          "Zazdrość",
+          "Wstyd",
+        ],
+      },
+      {
+        question: "Co powoduje stres?",
+        answers: [
+          "Praca",
+          "Egzaminy",
+          "Problemy finansowe",
+          "Konflikty",
+          "Choroba",
+          "Zmiany",
+          "Niepewność",
+          "Brak czasu",
+        ],
+      },
+      {
+        question: "Jak wyrażasz miłość?",
+        answers: [
+          "Mówisz 'kocham cię'",
+          "Przytulasz",
+          "Dajesz prezenty",
+          "Spędzasz czas razem",
+          "Pomagasz",
+        ],
+      },
+      {
+        question: "Reakcje na złość",
+        answers: [
+          "Krzyczysz",
+          "Płaczesz",
+          "Milczysz",
+          "Odchodzisz",
+          "Trzaskasz drzwiami",
+          "Rozmawiasz",
+        ],
+      },
+    ],
+  },
+
+  // ZESTAW NOWY 10: Technologia - Trudny
+  {
+    category: "Technologia",
+    difficulty: "hard",
+    questions: [
+      {
+        question: "Najpopularniejsze media społecznościowe",
+        answers: [
+          "Facebook",
+          "Instagram",
+          "TikTok",
+          "YouTube",
+          "Twitter/X",
+          "LinkedIn",
+          "Snapchat",
+        ],
+      },
+      {
+        question: "Części komputera",
+        answers: [
+          "Procesor",
+          "Karta graficzna",
+          "Pamięć RAM",
+          "Dysk twardy",
+          "Płyta główna",
+          "Zasilacz",
+          "Klawiatura",
+          "Mysz",
+          "Monitor",
+        ],
+      },
+      {
+        question: "Popularne systemy operacyjne",
+        answers: [
+          "Windows",
+          "macOS",
+          "Linux",
+          "Android",
+          "iOS",
+        ],
+      },
+      {
+        question: "Aplikacje używane codziennie",
+        answers: [
+          "WhatsApp",
+          "Messenger",
+          "Gmail",
+          "YouTube",
+          "Spotify",
+          "Netflix",
+          "Google Maps",
+          "Instagram",
+        ],
+      },
+      {
+        question: "Zagrożenia w internecie",
+        answers: [
+          "Wirusy",
+          "Hackerzy",
+          "Spam",
+          "Phishing",
+          "Kradzież danych",
+          "Cyberbullying",
+        ],
+      },
+    ],
+  },
 ];
 
 // Funkcja zwracająca listę dostępnych kategorii (dla UI wyboru)
