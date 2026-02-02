@@ -1,0 +1,21 @@
+/* TEAM */
+Developer: RIP & Tear
+Site: https://www.rip-tear.com/
+Location: Poland
+
+/* SITE */
+Last update: 2025/02/02
+Standards: HTML5, CSS3, JavaScript
+Components: Next.js, React, Firebase
+Software: VS Code
+
+/* KEYWORDS */
+Familiada online, familiada gra online, familiada gra, gra familiada online,
+familiada online gra, familiada gra online za darmo, familiada gra za darmo,
+familiada gra na telefon, familiada tablica online, familiada online multiplayer,
+gra familijna online, familiada online własne pytania, gry familiada,
+familiada gra online po polsku, familiada w domu, multiplayer, za darmo,
+po polsku, bez pobierania, teleturniej online
+
+/* THANKS */
+Do all the players who enjoy playing Familiada online!

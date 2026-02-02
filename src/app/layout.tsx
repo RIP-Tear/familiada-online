@@ -15,24 +15,39 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.familiada-onlin
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Familiada Online - Gra Familijna Online | Rozgrywka Multiplayer",
+    default: "Familiada Online - Gra Familijna Za Darmo | Multiplayer Po Polsku",
     template: "%s | Familiada Online"
   },
-  description: "Przenieś legendarny teleturniej do swojego domu! Rywalizuj z przyjaciółmi w Familiadzie online. Zgaduj najpopularniejsze odpowiedzi i zdobywaj punkty!",
+  description: "Familiada Online - gra familijna za darmo! Multiplayer po polsku z własnymi pytaniami. Graj na telefon lub komputer. Tablica online, buzzer i rozgrywka jak w teleturnieju. Familiada gra online za darmo!",
   keywords: [
-    "familiada", 
-    "familiada online", 
-    "gra online", 
-    "multiplayer", 
-    "gra rodzinna", 
-    "teleturniej", 
+    "familiada",
+    "familiada online",
+    "familiada gra online",
+    "familiada gra",
+    "gra familiada online",
+    "familiada online gra",
+    "familiada gra online za darmo",
+    "familiada gra za darmo",
+    "familiada gra na telefon",
+    "familiada tablica online",
+    "familiada online multiplayer",
+    "gra familijna online",
+    "familiada online własne pytania",
+    "gry familiada",
+    "familiada gra online po polsku",
+    "familiada w domu",
+    "gra online",
+    "multiplayer",
+    "teleturniej",
     "quiz online",
-    "gra grupowa", 
-    "gra w familiadę", 
+    "gra grupowa",
+    "gra rodzinna",
     "teleturniej online",
     "gry towarzyskie",
     "gry imprezowe",
-    "gry rodzinne online"
+    "gry rodzinne online",
+    "za darmo",
+    "po polsku"
   ],
   authors: [{ name: "Familiada Online" }],
   creator: "Familiada Online",
@@ -52,8 +67,8 @@ export const metadata: Metadata = {
     locale: "pl_PL",
     url: siteUrl,
     siteName: "Familiada Online",
-    title: "Familiada Online - Gra Familijna Online | Rozgrywka Multiplayer",
-    description: "Przenieś legendarny teleturniej do swojego domu! Rywalizuj z przyjaciółmi w Familiadzie online. Zgaduj najpopularniejsze odpowiedzi i zdobywaj punkty!",
+    title: "Familiada Online - Gra Familijna Za Darmo | Multiplayer Po Polsku",
+    description: "Familiada gra online za darmo! Multiplayer z własnymi pytaniami, graj na telefon lub komputer. Tablica online jak w teleturnieju. Bez pobierania - graj w przeglądarce!",
     images: [
       {
         url: `${siteUrl}/og-image.png`,
@@ -67,8 +82,8 @@ export const metadata: Metadata = {
   // Twitter
   twitter: {
     card: "summary_large_image",
-    title: "Familiada Online - Gra Familijna Online | Rozgrywka Multiplayer",
-    description: "Przenieś legendarny teleturniej do swojego domu! Rywalizuj z przyjaciółmi w Familiadzie online. Zgaduj najpopularniejsze odpowiedzi i zdobywaj punkty!",
+    title: "Familiada Online - Gra Familijna Za Darmo | Multiplayer Po Polsku",
+    description: "Familiada gra online za darmo! Multiplayer z własnymi pytaniami, graj na telefon lub komputer. Tablica online jak w teleturnieju. Bez pobierania - graj w przeglądarce!",
     images: [`${siteUrl}/og-image.png`],
   },
   
@@ -126,17 +141,19 @@ export default function RootLayout({ children }: RootLayoutProps) {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "Familiada Online",
-    "alternateName": "Familiada - Gra Familijna",
+    "alternateName": ["Familiada - Gra Familijna", "Familiada Gra Online", "Gra Familiada Online", "Familiada Multiplayer"],
     "url": siteUrl,
-    "description": "Przenieś legendarny teleturniej do swojego domu! Rywalizuj z przyjaciółmi w Familiadzie online. Zgaduj najpopularniejsze odpowiedzi i zdobywaj punkty!",
+    "description": "Familiada gra online za darmo! Multiplayer po polsku z własnymi pytaniami, graj na telefon lub komputer. Tablica online jak w teleturnieju. Bez pobierania!",
     "applicationCategory": "Game",
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript. Requires HTML5.",
     "offers": {
       "@type": "Offer",
       "price": "0",
-      "priceCurrency": "PLN"
+      "priceCurrency": "PLN",
+      "availability": "https://schema.org/InStock"
     },
+    "featureList": "multiplayer online, własne pytania, gra na telefon, tablica online, gra za darmo, po polsku, bez rejestracji, bez pobierania",
     "aggregateRating": {
       "@type": "AggregateRating",
       "ratingValue": "4.8",
@@ -155,13 +172,16 @@ export default function RootLayout({ children }: RootLayoutProps) {
       "name": "Familiada Online",
       "url": siteUrl
     },
-    "keywords": "familiada, gra online, multiplayer, teleturniej, quiz, gra rodzinna",
+    "keywords": "familiada online, familiada gra online, familiada gra, gra familiada online, familiada gra za darmo, familiada online multiplayer, gra familijna online, własne pytania, na telefon, po polsku, za darmo, bez pobierania, tablica online",
     "image": `${siteUrl}/og-image.png`,
     "screenshot": `${siteUrl}/og-image.png`
   };
 
   return (
     <html lang="pl">
+      <head>
+        <link rel="author" href="/humans.txt" />
+      </head>
       <body>
         {/* Structured Data */}
         <Script

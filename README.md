@@ -1,6 +1,6 @@
-# 🎮 Familiada Online
+# 🎮 Familiada Online - Gra Familijna Za Darmo
 
-Polska gra internetowa oparta na popularnym teleturnieju Familiada. Gra w czasie rzeczywistym dla wielu graczy z wykorzystaniem Firebase i Next.js.
+Polska gra internetowa multiplayer oparta na popularnym teleturnieju Familiada. Graj za darmo online po polsku - na telefon lub komputer. Własne pytania, tablica online i rozgrywka w czasie rzeczywistym z Firebase i Next.js.
 
 [![Next.js](https://img.shields.io/badge/Next.js-15.1.5-black)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19-blue)](https://reactjs.org/)
@@ -13,15 +13,16 @@ Polska gra internetowa oparta na popularnym teleturnieju Familiada. Gra w czasie
 
 ## ✨ Funkcje
 
-- 🎯 **Gra w czasie rzeczywistym** - wieloosobowa rozgrywka online
+- 🎯 **Multiplayer online** - rozgrywka w czasie rzeczywistym za darmo
 - 🎮 **Tryb prowadzącego** - kontroluj przebieg gry
 - 👥 **Tryb drużynowy** - dołącz jako drużyna i rywalizuj
 - 🔥 **System buzzerów** - klikaj najszybciej, aby zdobyć prawo odpowiedzi
 - 📊 **Punktacja na żywo** - śledzenie wyników w czasie rzeczywistym
-- 🎲 **Losowe pytania** - system kategorii i losowania pytań
-- 💾 **Tryb offline** - graj bez Firebase (demo mode)
-- 📱 **Responsywny design** - działa na wszystkich urządzeniach
-- 🎨 **Nowoczesny UI** - piękne gradientowe komponenty
+- 🎲 **Własne pytania** - twórz własne kategorie i pytania
+- 📱 **Gra na telefon** - responsywny design, działa na wszystkich urządzeniach
+- 🇵🇱 **Po polsku** - 100% polska gra w języku polskim
+- 💾 **Bez pobierania** - graj bezpośrednio w przeglądarce
+- 🎨 **Tablica online** - piękny interfejs jak w teleturnieju
 
 ---
 

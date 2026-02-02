@@ -11,10 +11,10 @@ const Page = () => {
 
   // Set dynamic meta tags
   useEffect(() => {
-    document.title = "Familiada - Gra Familijna Online | Rozpocznij Rozgrywkę";
+    document.title = "Familiada Online - Gra Familijna Za Darmo | Multiplayer Po Polsku";
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
-      metaDescription.setAttribute('content', 'Przenieś legendarny teleturniej do swojego domu! Rywalizuj z przyjaciółmi w Familiadzie online. Zgaduj najpopularniejsze odpowiedzi i zdobywaj punkty!');
+      metaDescription.setAttribute('content', 'Familiada gra online za darmo! Multiplayer po polsku z własnymi pytaniami. Graj na telefon lub komputer. Tablica online jak w teleturnieju!');
     }
   }, []);
 
@@ -36,7 +36,23 @@ const Page = () => {
         "name": "Czy Familiada online jest darmowa?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Tak, Familiada online jest całkowicie darmowa. Możesz grać bez żadnych opłat z przyjaciółmi w trybie multiplayer."
+          "text": "Tak, Familiada online jest całkowicie darmowa i za darmo. Możesz grać bez żadnych opłat z przyjaciółmi w trybie multiplayer. Nie musisz niczego pobierać - graj bezpośrednio w przeglądarce!"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Czy mogę grać w Familiadę na telefonie?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tak! Familiada online działa na telefonie, tablecie i komputerze. Gra jest w pełni responsywna i dostosowana do urządzeń mobilnych. Wystarczy przeglądarka - bez pobierania aplikacji."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Czy mogę dodać własne pytania do Familiady?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tak! Jako prowadzący możesz tworzyć własne kategorie i pytania. To pozwala dostosować grę do Twojej grupy, imprezy lub wydarzenia. Możesz też używać gotowych zestawów pytań."
         }
       },
       {
@@ -44,7 +60,23 @@ const Page = () => {
         "name": "Ile osób może grać w Familiadę online?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "W Familiadzie online grają dwie drużyny. Każda drużyna może składać się z dowolnej liczby graczy. Dodatkowo potrzebny jest jeden prowadzący."
+          "text": "W Familiadzie online grają dwie drużyny. Każda drużyna może składać się z dowolnej liczby graczy. Dodatkowo potrzebny jest jeden prowadzący. To idealna gra familijna!"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Czy Familiada online ma tryb multiplayer?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tak! Familiada online jest grą multiplayer. Grasz online z przyjaciółmi w czasie rzeczywistym. Prowadzący tworzy pokój, a gracze dołączają przez kod gry."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Czy Familiada online jest po polsku?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tak, Familiada online jest w 100% po polsku. Interfejs, pytania i cała gra są w języku polskim. To polska gra stworzona dla polskich graczy!"
         }
       },
       {
@@ -52,7 +84,15 @@ const Page = () => {
         "name": "Czy potrzebuję rejestracji aby grać?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Nie, nie potrzebujesz rejestracji. Wystarczy że prowadzący stworzy grę i poda kod innym graczom, którzy mogą od razu dołączyć."
+          "text": "Nie, nie potrzebujesz rejestracji. Wystarczy że prowadzący stworzy grę i poda kod innym graczom, którzy mogą od razu dołączyć. Szybki start bez zbędnych formularzy!"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Czy muszę coś pobierać aby grać w Familiadę?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Nie! Familiada online działa bezpośrednio w przeglądarce. Nie musisz nic pobierać ani instalować. Wystarczy wejść na stronę i rozpocząć grę."
         }
       }
     ]
@@ -99,11 +139,12 @@ const Page = () => {
           </div>
           <h1 className="hero-title">
             <span className="title-word">FAMILIADA</span>
-            <span className="title-subtitle">Zagraj z przyjaciółmi!</span>
+            <span className="title-subtitle">Online za darmo!</span>
           </h1>
           <p className="hero-description">
-            Przenieś legendarny teleturniej do swojego domu! Rywalizuj z przyjaciółmi,
-            zdobywaj punkty i sprawdź, kto zna najlepsze odpowiedzi!
+            Gra familijna online multiplayer po polsku! Przenieś legendarny teleturniej do swojego domu. 
+            Rywalizuj z przyjaciółmi na telefon lub komputer, dodawaj własne pytania i korzystaj z tablicy online.
+            Bez pobierania - zacznij grać natychmiast!
           </p>
           <div className="hero-buttons">
             <button className="btn-primary" onClick={handleStart}>
@@ -521,6 +562,41 @@ const Page = () => {
             <button className="btn-primary btn-large btn-full-width" onClick={handleStart}>
               Rozpocznij grę za darmo <PiArrowRightBold />
             </button>
+          </div>
+        </div>
+      </section>
+
+      {/* SEO Section */}
+      <section className="seo-section" style={{ padding: '60px 20px', background: 'linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%)', textAlign: 'center' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <h2 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '30px', color: '#264653' }}>
+            Familiada Online - Gra Familijna Multiplayer
+          </h2>
+          <div style={{ textAlign: 'left', lineHeight: '1.8', color: '#555' }}>
+            <p style={{ marginBottom: '20px' }}>
+              <strong>Familiada online</strong> to popularna <strong>gra familijna</strong>, która pozwala Ci cieszyć się kultowym teleturniejem 
+              bez wychodzenia z domu! Nasza <strong>gra online za darmo</strong> działa w trybie <strong>multiplayer</strong>, 
+              co oznacza, że możesz grać z przyjaciółmi w czasie rzeczywistym.
+            </p>
+            <p style={{ marginBottom: '20px' }}>
+              <strong>Familiada gra online</strong> jest dostępna <strong>po polsku</strong> i działa na każdym urządzeniu - 
+              możesz grać <strong>na telefon</strong>, tablet lub komputer. Nie musisz nic pobierać - wystarczy przeglądarka!
+              Nasza <strong>tablica online</strong> wygląda dokładnie jak w prawdziwym teleturnieju.
+            </p>
+            <p style={{ marginBottom: '20px' }}>
+              Jedną z najlepszych funkcji jest możliwość tworzenia <strong>własnych pytań</strong>. Jako prowadzący możesz 
+              przygotować pytania dopasowane do Twojej grupy, co sprawia, że <strong>familiada w domu</strong> jest jeszcze 
+              bardziej osobista i zabawna. To idealna <strong>gra online</strong> na imprezę lub spotkanie rodzinne!
+            </p>
+            <p style={{ marginBottom: '20px' }}>
+              <strong>Gra familiada online</strong> nie wymaga rejestracji ani pobierania. Po prostu wejdź na stronę, 
+              stwórz pokój jako prowadzący i podziel się kodem z innymi graczami. To naprawdę tak proste!
+              <strong>Familiada gra za darmo</strong> - bez ukrytych opłat, bez reklam, bez ograniczeń czasowych.
+            </p>
+            <p style={{ marginBottom: '0' }}>
+              Zapraszamy do rozgrywki! Wypróbuj najlepszą polską <strong>grę familijną online</strong> i przekonaj się, 
+              dlaczego tysiące graczy wybrało naszą <strong>familiadę online</strong>. Rozpocznij grę już teraz i baw się świetnie!
+            </p>
           </div>
         </div>
       </section>
