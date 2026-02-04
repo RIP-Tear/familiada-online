@@ -34,6 +34,13 @@ export interface Team {
   joinedAt: string;
 }
 
+export interface Participant {
+  id: string;
+  name: string;
+  teamId: string;
+  joinedAt: string;
+}
+
 export interface GameData {
   code: string;
   hostId: string;
@@ -48,18 +55,21 @@ export interface GameData {
   wrongAnswers: string[];
   selectedTeam: number | null;
   categoryVotes: Record<string, string>;
+  participantCategoryVotes?: Record<string, string>;
   players: string[];
   rounds: Question[];
   teams?: Team[];
   team1Name?: string;
   team2Name?: string;
+  participants?: Participant[];
   
   // Dodatkowe pola używane w aplikacji
   selectedCategory?: string;
   categorySelectedAt?: string;
-  gamePhase?: 'category-selection' | 'creating-custom-category' | 'buzz' | 'playing' | 'finished';
+  gamePhase?: 'category-selection' | 'creating-custom-category' | 'buzzer-selection' | 'buzz' | 'playing' | 'finished';
   customCategory?: QuestionSet;
   hostCustomCategories?: QuestionSet[];
+  buzzerAssignments?: Record<string, string>; // { teamId: playerId } - który gracz/uczestnik naciska buzzer
   buzzedTeam?: string | null;
   buzzedTeamName?: string | null;
   buzzTimestamp?: number | null;

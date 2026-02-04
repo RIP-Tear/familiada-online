@@ -222,6 +222,142 @@ export const leaveGame = async (gameCode: string, teamId: string): Promise<void>
   }
 };
 
+// Pobranie dostępnych drużyn dla uczestnika
+export const getAvailableTeams = async (gameCode: string): Promise<Team[]> => {
+  try {
+    const cleanGameCode = gameCode.toUpperCase().trim();
+    console.log(`[GET_TEAMS] Fetching teams for game: ${cleanGameCode}`);
+    
+    if (useFirebase) {
+      const gameRef = doc(db, 'games', cleanGameCode);
+      const gameSnap = await getDoc(gameRef);
+      
+      if (!gameSnap.exists()) {
+        console.log(`[GET_TEAMS] Game ${cleanGameCode} not found`);
+        return [];
+      }
+      
+      const gameData = gameSnap.data() as GameData;
+      return gameData.teams || [];
+    } else {
+      // Demo mode
+      const gameData = await localGameStorage.getGame(cleanGameCode);
+      if (!gameData) return [];
+      return gameData.teams || [];
+    }
+  } catch (error) {
+    console.error('[GET_TEAMS] Error fetching teams:', error);
+    return [];
+  }
+};
+
+// Dołączanie do gry jako uczestnik
+export const joinGameAsParticipant = async (
+  gameCode: string, 
+  participantName: string, 
+  teamId: string
+): Promise<JoinGameResult> => {
+  try {
+    const cleanGameCode = gameCode.toUpperCase().trim();
+    console.log(`[JOIN_PARTICIPANT] Attempting to join game: ${cleanGameCode} as participant "${participantName}" for team ${teamId}`);
+    
+    let gameData: GameData | null;
+    
+    if (useFirebase) {
+      const gameRef = doc(db, 'games', cleanGameCode);
+      const gameSnap = await getDoc(gameRef);
+      
+      if (!gameSnap.exists()) {
+        return { success: false, error: 'Gra nie istnieje' } as any;
+      }
+      
+      gameData = gameSnap.data() as GameData;
+    } else {
+      // Demo mode
+      gameData = await localGameStorage.getGame(cleanGameCode);
+      if (!gameData) {
+        return { success: false, error: 'Gra nie istnieje' } as any;
+      }
+    }
+    
+    if (gameData.status !== 'waiting') {
+      throw new Error('Nie można dołączyć - gra już się rozpoczęła');
+    }
+    
+    // Sprawdź czy drużyna istnieje
+    const teamExists = (gameData.teams || []).some(team => team.id === teamId);
+    if (!teamExists) {
+      return { success: false, error: 'Wybrana drużyna nie istnieje' } as any;
+    }
+    
+    const participantId = `participant-${Date.now()}`;
+    const participant = {
+      id: participantId,
+      name: participantName,
+      teamId: teamId,
+      joinedAt: new Date().toISOString(),
+    };
+    
+    if (useFirebase) {
+      const gameRef = doc(db, 'games', cleanGameCode);
+      await updateDoc(gameRef, {
+        participants: arrayUnion(participant),
+      });
+    } else {
+      // Demo mode
+      const updatedParticipants = [...(gameData.participants || []), participant];
+      await localGameStorage.updateGame(cleanGameCode, {
+        participants: updatedParticipants,
+      });
+    }
+    
+    console.log(`[JOIN_PARTICIPANT] Successfully joined game ${cleanGameCode} as participant "${participantName}"`);
+    return { gameCode: cleanGameCode, gameId: cleanGameCode, teamId: participantId };
+  } catch (error) {
+    console.error('[JOIN_PARTICIPANT] Error joining game:', error);
+    throw error;
+  }
+};
+
+// Opuszczenie gry przez uczestnika
+export const leaveGameAsParticipant = async (gameCode: string, participantId: string): Promise<void> => {
+  try {
+    const cleanGameCode = gameCode.toUpperCase().trim();
+    console.log(`[LEAVE_PARTICIPANT] Participant ${participantId} leaving game: ${cleanGameCode}`);
+    
+    if (useFirebase) {
+      const gameRef = doc(db, 'games', cleanGameCode);
+      const gameSnap = await getDoc(gameRef);
+      
+      if (!gameSnap.exists()) {
+        console.error(`[LEAVE_PARTICIPANT] Game ${cleanGameCode} not found`);
+        return;
+      }
+      
+      const gameData = gameSnap.data() as GameData;
+      const updatedParticipants = (gameData.participants || []).filter(p => p.id !== participantId);
+      
+      await updateDoc(gameRef, {
+        participants: updatedParticipants,
+      });
+    } else {
+      // Demo mode
+      const gameData = await localGameStorage.getGame(cleanGameCode);
+      if (!gameData) return;
+      
+      const updatedParticipants = (gameData.participants || []).filter(p => p.id !== participantId);
+      await localGameStorage.updateGame(cleanGameCode, {
+        participants: updatedParticipants,
+      });
+    }
+    
+    console.log(`[LEAVE_PARTICIPANT] Participant ${participantId} successfully left game ${cleanGameCode}`);
+  } catch (error) {
+    console.error('[LEAVE_PARTICIPANT] Error leaving game:', error);
+    throw error;
+  }
+};
+
 // Pobranie gry z Firebase/localStorage
 export const getGame = async (gameCode: string): Promise<GameData | null> => {
   try {
@@ -385,6 +521,86 @@ export const voteForCategory = async (gameCode: string, teamId: string, category
   }
 };
 
+// Głosowanie na kategorię przez uczestnika (nie idzie do prowadzącego)
+export const voteForCategoryAsParticipant = async (gameCode: string, participantId: string, categoryName: string): Promise<void> => {
+  console.log(`[VOTE_PARTICIPANT] Participant ${participantId} voting for category: ${categoryName}`);
+  
+  if (useFirebase) {
+    const gameRef = doc(db, 'games', gameCode);
+    await updateDoc(gameRef, {
+      [`participantCategoryVotes.${participantId}`]: categoryName,
+    });
+    console.log(`[VOTE_PARTICIPANT] Vote saved to Firestore`);
+  } else {
+    // Demo mode
+    const game = await localGameStorage.getGame(gameCode);
+    if (game) {
+      const participantCategoryVotes = (game as any).participantCategoryVotes || {};
+      participantCategoryVotes[participantId] = categoryName;
+      await localGameStorage.updateGame(gameCode, {
+        participantCategoryVotes,
+      } as any);
+    }
+    console.log(`[VOTE_PARTICIPANT] Vote saved to local storage`);
+  }
+};
+
+// Przypisanie buzzera do gracza (kapitan lub uczestnik)
+export const assignBuzzer = async (gameCode: string, teamId: string, playerId: string): Promise<void> => {
+  console.log(`[BUZZER_ASSIGN] Team ${teamId} assigns buzzer to player ${playerId}`);
+  
+  if (useFirebase) {
+    const gameRef = doc(db, 'games', gameCode);
+    await updateDoc(gameRef, {
+      [`buzzerAssignments.${teamId}`]: playerId,
+    });
+    console.log(`[BUZZER_ASSIGN] Buzzer assignment saved to Firestore`);
+    
+    // Sprawdź czy obie drużyny przypisały buzzery
+    const gameSnap = await getDoc(gameRef);
+    const gameData = gameSnap.data() as any;
+    const teams = gameData.teams || [];
+    
+    if (teams.length === 2 && gameData.buzzerAssignments) {
+      const team1Id = teams[0].id;
+      const team2Id = teams[1].id;
+      
+      // Jeśli obie drużyny wybrały graczy, przejdź do fazy buzz
+      if (gameData.buzzerAssignments[team1Id] && gameData.buzzerAssignments[team2Id]) {
+        console.log('[BUZZER_ASSIGN] Both teams assigned buzzers, moving to buzz phase');
+        await updateDoc(gameRef, {
+          gamePhase: 'buzz',
+        });
+      }
+    }
+  } else {
+    // Demo mode
+    const game = await localGameStorage.getGame(gameCode);
+    if (game) {
+      const buzzerAssignments = (game as any).buzzerAssignments || {};
+      buzzerAssignments[teamId] = playerId;
+      await localGameStorage.updateGame(gameCode, {
+        buzzerAssignments,
+      } as any);
+      
+      // Sprawdź czy obie drużyny przypisały buzzery
+      const teams = (game as any).teams || [];
+      if (teams.length === 2) {
+        const team1Id = teams[0].id;
+        const team2Id = teams[1].id;
+        
+        if (buzzerAssignments[team1Id] && buzzerAssignments[team2Id]) {
+          console.log('[BUZZER_ASSIGN] Both teams assigned buzzers, moving to buzz phase');
+          await localGameStorage.updateGame(gameCode, {
+            gamePhase: 'buzz',
+          } as any);
+        }
+      }
+    }
+    console.log(`[BUZZER_ASSIGN] Buzzer assignment saved to local storage`);
+  }
+};
+
 // Wyczyść wszystkie głosy na kategorie
 export const clearCategoryVotes = async (gameCode: string): Promise<void> => {
   console.log(`[VOTE] Clearing all category votes for game ${gameCode}`);
@@ -438,11 +654,12 @@ export const selectCategory = async (gameCode: string, category: string, isRando
           }, 300);
         }, 2700);
           
-          // Po kolejnych 3 sekundach ukryj overlay i przejdź do fazy buzzerów
+          // Po kolejnych 3 sekundach ukryj overlay i przejdź do fazy wyboru gracza do buzzera
           setTimeout(async () => {
             await updateDoc(gameRef, {
               categorySelectedAlert: false,
-              gamePhase: 'buzz',
+              gamePhase: 'buzzer-selection',
+              buzzerAssignments: {}, // Reset wyborów gracza do buzzera
             });
           }, 6000);
       } else {
@@ -453,11 +670,12 @@ export const selectCategory = async (gameCode: string, category: string, isRando
           isCategoryRandomlySelected: isRandomlySelected,
         });
         
-        // Po 3 sekundach ukryj overlay i przejdź do fazy buzzerów
+        // Po 3 sekundach ukryj overlay i przejdź do fazy wyboru gracza do buzzera
         setTimeout(async () => {
           await updateDoc(gameRef, {
             categorySelectedAlert: false,
-            gamePhase: 'buzz',
+            gamePhase: 'buzzer-selection',
+            buzzerAssignments: {}, // Reset wyborów gracza do buzzera
           });
         }, 3000);
       }
@@ -486,11 +704,12 @@ export const selectCategory = async (gameCode: string, category: string, isRando
           }, 300);
         }, 2700);
           
-          // Po kolejnych 3 sekundach ukryj overlay i przejdź do fazy buzzerów
+          // Po kolejnych 3 sekundach ukryj overlay i przejdź do fazy wyboru gracza do buzzera
           setTimeout(async () => {
             await localGameStorage.updateGame(gameCode, {
               categorySelectedAlert: false,
-              gamePhase: 'buzz',
+              gamePhase: 'buzzer-selection',
+              buzzerAssignments: {}, // Reset wyborów gracza do buzzera
             });
           }, 6000);
       } else {
@@ -501,11 +720,12 @@ export const selectCategory = async (gameCode: string, category: string, isRando
           isCategoryRandomlySelected: isRandomlySelected,
         });
         
-        // Po 3 sekundach ukryj overlay i przejdź do fazy buzzerów
+        // Po 3 sekundach ukryj overlay i przejdź do fazy wyboru gracza do buzzera
         setTimeout(async () => {
           await localGameStorage.updateGame(gameCode, {
             categorySelectedAlert: false,
-            gamePhase: 'buzz',
+            gamePhase: 'buzzer-selection',
+            buzzerAssignments: {}, // Reset wyborów gracza do buzzera
           });
         }, 3000);
       }
@@ -1092,7 +1312,7 @@ export const nextQuestion = async (gameCode: string): Promise<void> => {
     
     await updateDoc(gameRef, {
       currentQuestionIndex: nextIndex,
-      gamePhase: nextIndex >= 5 ? 'finished' : 'buzz',
+      gamePhase: nextIndex >= 5 ? 'finished' : 'buzzer-selection', // Przejdź do wyboru gracza do buzzera
       buzzedTeam: null,
       buzzedTeamName: null,
       buzzTimestamp: null,
@@ -1104,6 +1324,7 @@ export const nextQuestion = async (gameCode: string): Promise<void> => {
       lastPointsRecipient: null,
       lastPointsAmount: 0,
       questionRevealed: false,
+      buzzerAssignments: {}, // Reset wyborów gracza do buzzera
     });
   } else {
     const gameData = await localGameStorage.getGame(gameCode);
@@ -1113,7 +1334,7 @@ export const nextQuestion = async (gameCode: string): Promise<void> => {
     
     await localGameStorage.updateGame(gameCode, {
       currentQuestionIndex: nextIndex,
-      gamePhase: nextIndex >= 5 ? 'finished' : 'buzz',
+      gamePhase: nextIndex >= 5 ? 'finished' : 'buzzer-selection', // Przejdź do wyboru gracza do buzzera
       buzzedTeam: null,
       buzzedTeamName: null,
       buzzTimestamp: null,
@@ -1125,6 +1346,7 @@ export const nextQuestion = async (gameCode: string): Promise<void> => {
       lastPointsRecipient: null,
       lastPointsAmount: 0,
       questionRevealed: false,
+      buzzerAssignments: {}, // Reset wyborów gracza do buzzera
     } as any);
   }
 };

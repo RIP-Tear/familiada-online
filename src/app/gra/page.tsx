@@ -7,6 +7,7 @@ import {
   PiGameControllerFill,
   PiUsersFill,
   PiBookOpenFill,
+  PiUserPlusFill,
 } from "react-icons/pi";
 import "./home.scss";
 import Link from "next/link";
@@ -39,6 +40,11 @@ export default function Home() {
   const handleJoinGame = () => {
     dispatch(setMode("player"));
     router.push("/druzyna/");
+  };
+
+  const handleJoinAsParticipant = () => {
+    dispatch(setMode("participant"));
+    router.push("/uczestnik/");
   };
 
   const handleRules = () => {
@@ -75,8 +81,21 @@ export default function Home() {
               <PiUsersFill size={48} />
             </div>
             <div className="button-text">
-              <h2>Dołącz do gry</h2>
-              <p>jako drużyna</p>
+              <h2>Dołącz jako drużyna</h2>
+              <p>zostaniesz kapitanem drużyny</p>
+            </div>
+          </button>
+
+          <button
+            className="mode-button participant-button"
+            onClick={handleJoinAsParticipant}
+          >
+            <div className="button-icon">
+              <PiUserPlusFill size={48} />
+            </div>
+            <div className="button-text">
+              <h2>Dołącz jako uczestnik</h2>
+              <p>graj dla swojej drużyny</p>
             </div>
           </button>
 
