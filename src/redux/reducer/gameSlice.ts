@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 // Typy dla stanu gry
 interface GameState {
   // Tryb gry
-  mode: 'host' | 'player' | null;
+  mode: 'host' | 'player' | 'participant' | null;
   
   // Informacje o grze
   gameCode: string | null;
@@ -13,7 +13,8 @@ interface GameState {
   // Informacje o użytkowniku
   userId: string | null;
   userName: string | null;
-  userTeam: 'team1' | 'team2' | null;
+  userTeam: 'team1' | 'team2' | string | null;
+  isParticipant: boolean;
   
   // Lista drużyn
   teams: Array<{
@@ -40,6 +41,7 @@ const initialState: GameState = {
   userId: null,
   userName: null,
   userTeam: null,
+  isParticipant: false,
   
   // Lista drużyn
   teams: [],
@@ -53,8 +55,8 @@ const gameSlice = createSlice({
   name: "game",
   initialState,
   reducers: {
-    // Ustawienie trybu (host/player)
-    setMode: (state, action: PayloadAction<'host' | 'player'>) => {
+    // Ustawienie trybu (host/player/participant)
+    setMode: (state, action: PayloadAction<'host' | 'player' | 'participant'>) => {
       state.mode = action.payload;
     },
     
@@ -69,21 +71,23 @@ const gameSlice = createSlice({
       state.isConnected = true;
     },
     
-    // Dołączanie do gry (player)
+    // Dołączanie do gry (player lub participant)
     joinGame: (state, action: PayloadAction<{ 
       gameCode: string; 
       gameId: string; 
       userId: string; 
       userName: string; 
-      userTeam: 'team1' | 'team2' 
+      userTeam: 'team1' | 'team2' | string | null;
+      isParticipant?: boolean;
     }>) => {
-      const { gameCode, gameId, userId, userName, userTeam } = action.payload;
+      const { gameCode, gameId, userId, userName, userTeam, isParticipant = false } = action.payload;
       state.gameCode = gameCode;
       state.gameId = gameId;
       state.userId = userId;
       state.userName = userName;
       state.userTeam = userTeam;
-      state.mode = 'player';
+      state.isParticipant = isParticipant;
+      state.mode = isParticipant ? 'participant' : 'player';
       state.isConnected = true;
     },
     

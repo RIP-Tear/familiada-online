@@ -217,6 +217,92 @@
   }
 }
 
+.participant {
+  &-count {
+    background: rgba($c-blue, .6);
+    color: $c-white;
+    padding: 0.3rem 0.7rem;
+    border-radius: $r-round;
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-left: auto;
+  }
+  
+  &-item {
+    display: flex;
+    align-items: center;
+    gap: $s-sm;
+    padding: $s-sm;
+    background: rgba($c-black, .2);
+    border-radius: $r-2;
+    border: 1px solid rgba($c-white, .1);
+  }
+  
+  &-icon {
+    font-size: 1.2rem;
+    color: rgba($c-yellow, .7);
+  }
+  
+  &-name {
+    color: rgba($c-white, .9);
+    font-size: 0.95rem;
+  }
+}
+
+.participants {
+  &-section {
+    margin-top: $s-md;
+    padding-top: $s-md;
+    border-top: 2px solid rgba($c-yellow, .2);
+    
+    h3 {
+      color: $c-yellow;
+      margin-bottom: $s-sm;
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+  }
+  
+  &-list {
+    display: flex;
+    flex-direction: column;
+    gap: $s-md;
+  }
+}
+
+.team-participants {
+  background: rgba($c-black, .2);
+  padding: $s-md;
+  border-radius: $r-3;
+  border: 1px solid rgba($c-yellow, .2);
+  
+  &-header {
+    display: flex;
+    align-items: center;
+    gap: $s-sm;
+    margin-bottom: $s-sm;
+    padding-bottom: $s-sm;
+    border-bottom: 1px solid rgba($c-white, .1);
+  }
+  
+  &-name {
+    color: $c-yellow;
+    font-weight: 600;
+    font-size: 1.05rem;
+  }
+  
+  &-count {
+    color: rgba($c-white, .7);
+    font-size: 0.9rem;
+  }
+  
+  &-list {
+    display: flex;
+    flex-direction: column;
+    gap: $s-xs;
+  }
+}
+
 .team-icon {
   font-size: 2.5rem;
   color: $c-yellow;
@@ -465,6 +551,67 @@
     display: flex;
     gap: $s-sm;
   }
+  
+  &-box {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: $s-sm;
+    padding: $s-md;
+    background: rgba($c-black, .3);
+    border: 2px solid rgba($c-yellow, .2);
+    border-radius: $r-3;
+    cursor: pointer;
+    transition: all $t-norm;
+    
+    &.waiting {
+      cursor: not-allowed;
+      opacity: 0.3;
+      background: rgba($c-black, .2);
+      border-color: rgba($c-white, .1);
+    }
+    
+    &.active {
+      border-color: rgba($c-yellow, .5);
+      background: rgba($c-black, .4);
+      
+      &:hover {
+        border-color: $c-yellow;
+        background: rgba($c-black, .5);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba($c-yellow, .3);
+      }
+    }
+    
+    &.selected {
+      border-color: $c-green;
+      background: rgba($c-green, .2);
+      box-shadow: 0 0 20px rgba($c-green, .4);
+      
+      .team-icon.active {
+        color: $c-green;
+        animation: teamPulse 1.5s ease-in-out infinite;
+      }
+      
+      .team-name {
+        color: $c-yellow;
+        font-weight: bold;
+      }
+    }
+  }
+  
+  &-name {
+    color: $c-yellow;
+    font-size: 1.1rem;
+    font-weight: 600;
+    flex: 1;
+    
+    &.waiting {
+      color: rgba($c-white, .5);
+      font-style: italic;
+      font-size: 0.95rem;
+    }
+  }
 
   &-button {
     font-family: $f;
@@ -488,6 +635,12 @@
       background: rgba($c-green, 0.3);
     }
   }
+}
+
+.teams-selection {
+  display: flex;
+  flex-direction: column;
+  gap: $s-sm;
 }
 
 /* === MESSAGES === */

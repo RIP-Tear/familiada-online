@@ -222,6 +222,142 @@ export const leaveGame = async (gameCode: string, teamId: string): Promise<void>
   }
 };
 
+// Pobranie dostępnych drużyn dla uczestnika
+export const getAvailableTeams = async (gameCode: string): Promise<Team[]> => {
+  try {
+    const cleanGameCode = gameCode.toUpperCase().trim();
+    console.log(`[GET_TEAMS] Fetching teams for game: ${cleanGameCode}`);
+    
+    if (useFirebase) {
+      const gameRef = doc(db, 'games', cleanGameCode);
+      const gameSnap = await getDoc(gameRef);
+      
+      if (!gameSnap.exists()) {
+        console.log(`[GET_TEAMS] Game ${cleanGameCode} not found`);
+        return [];
+      }
+      
+      const gameData = gameSnap.data() as GameData;
+      return gameData.teams || [];
+    } else {
+      // Demo mode
+      const gameData = await localGameStorage.getGame(cleanGameCode);
+      if (!gameData) return [];
+      return gameData.teams || [];
+    }
+  } catch (error) {
+    console.error('[GET_TEAMS] Error fetching teams:', error);
+    return [];
+  }
+};
+
+// Dołączanie do gry jako uczestnik
+export const joinGameAsParticipant = async (
+  gameCode: string, 
+  participantName: string, 
+  teamId: string
+): Promise<JoinGameResult> => {
+  try {
+    const cleanGameCode = gameCode.toUpperCase().trim();
+    console.log(`[JOIN_PARTICIPANT] Attempting to join game: ${cleanGameCode} as participant "${participantName}" for team ${teamId}`);
+    
+    let gameData: GameData | null;
+    
+    if (useFirebase) {
+      const gameRef = doc(db, 'games', cleanGameCode);
+      const gameSnap = await getDoc(gameRef);
+      
+      if (!gameSnap.exists()) {
+        return { success: false, error: 'Gra nie istnieje' } as any;
+      }
+      
+      gameData = gameSnap.data() as GameData;
+    } else {
+      // Demo mode
+      gameData = await localGameStorage.getGame(cleanGameCode);
+      if (!gameData) {
+        return { success: false, error: 'Gra nie istnieje' } as any;
+      }
+    }
+    
+    if (gameData.status !== 'waiting') {
+      throw new Error('Nie można dołączyć - gra już się rozpoczęła');
+    }
+    
+    // Sprawdź czy drużyna istnieje
+    const teamExists = (gameData.teams || []).some(team => team.id === teamId);
+    if (!teamExists) {
+      return { success: false, error: 'Wybrana drużyna nie istnieje' } as any;
+    }
+    
+    const participantId = `participant-${Date.now()}`;
+    const participant = {
+      id: participantId,
+      name: participantName,
+      teamId: teamId,
+      joinedAt: new Date().toISOString(),
+    };
+    
+    if (useFirebase) {
+      const gameRef = doc(db, 'games', cleanGameCode);
+      await updateDoc(gameRef, {
+        participants: arrayUnion(participant),
+      });
+    } else {
+      // Demo mode
+      const updatedParticipants = [...(gameData.participants || []), participant];
+      await localGameStorage.updateGame(cleanGameCode, {
+        participants: updatedParticipants,
+      });
+    }
+    
+    console.log(`[JOIN_PARTICIPANT] Successfully joined game ${cleanGameCode} as participant "${participantName}"`);
+    return { gameCode: cleanGameCode, gameId: cleanGameCode, teamId: participantId };
+  } catch (error) {
+    console.error('[JOIN_PARTICIPANT] Error joining game:', error);
+    throw error;
+  }
+};
+
+// Opuszczenie gry przez uczestnika
+export const leaveGameAsParticipant = async (gameCode: string, participantId: string): Promise<void> => {
+  try {
+    const cleanGameCode = gameCode.toUpperCase().trim();
+    console.log(`[LEAVE_PARTICIPANT] Participant ${participantId} leaving game: ${cleanGameCode}`);
+    
+    if (useFirebase) {
+      const gameRef = doc(db, 'games', cleanGameCode);
+      const gameSnap = await getDoc(gameRef);
+      
+      if (!gameSnap.exists()) {
+        console.error(`[LEAVE_PARTICIPANT] Game ${cleanGameCode} not found`);
+        return;
+      }
+      
+      const gameData = gameSnap.data() as GameData;
+      const updatedParticipants = (gameData.participants || []).filter(p => p.id !== participantId);
+      
+      await updateDoc(gameRef, {
+        participants: updatedParticipants,
+      });
+    } else {
+      // Demo mode
+      const gameData = await localGameStorage.getGame(cleanGameCode);
+      if (!gameData) return;
+      
+      const updatedParticipants = (gameData.participants || []).filter(p => p.id !== participantId);
+      await localGameStorage.updateGame(cleanGameCode, {
+        participants: updatedParticipants,
+      });
+    }
+    
+    console.log(`[LEAVE_PARTICIPANT] Participant ${participantId} successfully left game ${cleanGameCode}`);
+  } catch (error) {
+    console.error('[LEAVE_PARTICIPANT] Error leaving game:', error);
+    throw error;
+  }
+};
+
 // Pobranie gry z Firebase/localStorage
 export const getGame = async (gameCode: string): Promise<GameData | null> => {
   try {

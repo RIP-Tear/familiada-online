@@ -23,6 +23,7 @@ export default function HostPage() {
   const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState(null);
   const [teams, setTeams] = useState([]);
+  const [participants, setParticipants] = useState([]);
 
   // Set dynamic meta tags
   useEffect(() => {
@@ -79,6 +80,7 @@ export default function HostPage() {
     if (gameState.gameCode && gameSelected) {
       const unsubscribe = subscribeToGame(gameState.gameCode, (gameData) => {
         setTeams(gameData.teams || []);
+        setParticipants(gameData.participants || []);
         
         // Aktualizuj historię
         if (gameData.teams && gameData.teams.length > 0) {
@@ -364,7 +366,11 @@ export default function HostPage() {
                 {teams.length >= 1 ? (
                   <>
                     <PiUsersThree className="team-icon active" />
-                    <span className="player-name">{teams[0]?.name}</span>
+                    {participants.filter(p => p.teamId === teams[0]?.id).length > 0 && (
+                      <span className="participant-count">
+                        +{participants.filter(p => p.teamId === teams[0]?.id).length}
+                      </span>
+                    )}
                   </>
                 ) : (
                   <>
@@ -379,6 +385,11 @@ export default function HostPage() {
                   <>
                     <PiUsersThree className="team-icon active" />
                     <span className="player-name">{teams[1]?.name}</span>
+                    {participants.filter(p => p.teamId === teams[1]?.id).length > 0 && (
+                      <span className="participant-count">
+                        +{participants.filter(p => p.teamId === teams[1]?.id).length}
+                      </span>
+                    )}
                   </>
                 ) : (
                   <>
@@ -389,6 +400,36 @@ export default function HostPage() {
               </div>
             </div>
           </div>
+
+          {/* Sekcja uczestników */}
+          {participants.length > 0 && (
+            <div className="participants-section">
+              <h3>Uczestnicy ({participants.length})</h3>
+              <div className="participants-list">
+                {teams.map((team, index) => {
+                  const teamParticipants = participants.filter(p => p.teamId === team.id);
+                  if (teamParticipants.length === 0) return null;
+                  
+                  return (
+                    <div key={team.id} className="team-participants">
+                      <div className="team-participants-header">
+                        <span className="team-participants-name">{team.name}</span>
+                        <span className="team-participants-count">({teamParticipants.length})</span>
+                      </div>
+                      <div className="team-participants-list">
+                        {teamParticipants.map((participant) => (
+                          <div key={participant.id} className="participant-item">
+                            <PiUsers className="participant-icon" />
+                            <span className="participant-name">{participant.name}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           <div className="host-actions">
             <button 

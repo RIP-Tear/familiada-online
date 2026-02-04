@@ -128,6 +128,14 @@
   box-shadow: 0 12px 40px rgba($c-orange, 0.5);
 }
 
+.participant-button {
+  background: linear-gradient(135deg, #8B5CF6 0%, #6366F1 100%);
+}
+
+.participant-button:hover {
+  box-shadow: 0 12px 40px rgba(139, 92, 246, 0.5);
+}
+
 .rules-button {
   background: linear-gradient(135deg, $c-yellow 0%, $c-orange 100%);
 }

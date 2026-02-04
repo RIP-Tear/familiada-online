@@ -34,6 +34,13 @@ export interface Team {
   joinedAt: string;
 }
 
+export interface Participant {
+  id: string;
+  name: string;
+  teamId: string;
+  joinedAt: string;
+}
+
 export interface GameData {
   code: string;
   hostId: string;
@@ -53,6 +60,7 @@ export interface GameData {
   teams?: Team[];
   team1Name?: string;
   team2Name?: string;
+  participants?: Participant[];
   
   // Dodatkowe pola używane w aplikacji
   selectedCategory?: string;
