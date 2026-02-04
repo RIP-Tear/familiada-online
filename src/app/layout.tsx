@@ -191,6 +191,14 @@ export default function RootLayout({ children }: RootLayoutProps) {
           strategy="beforeInteractive"
         />
         
+        {/* Google AdSense */}
+        <Script
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || 'ca-pub-XXXXXXXXXXXXXXXXX'}`}
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
+        
         {/* Google Analytics - opcjonalnie */}
         <Script
           strategy="afterInteractive"

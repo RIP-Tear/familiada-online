@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { joinGame as joinGameAction } from "@/redux/reducer/gameSlice";
 import { joinGame, leaveGame, subscribeToGame } from "@/utils/firebaseUtils";
 import { Navbar } from "@/components";
+import AdSense from "@/components/AdSense";
 import { PiBookOpenFill } from "react-icons/pi";
 import "@/styles/multiplayer.scss";
 
@@ -220,6 +221,9 @@ export default function JoinPage() {
           </div>
         </form>
       </div>
+      
+      {/* Reklama AdSense */}
+      <AdSense adSlot="1234567891" />
       
       <div className="rules-link-section">
         <button className="btn-rules-link" onClick={() => router.push('/zasady/')}>

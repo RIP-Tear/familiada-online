@@ -9,6 +9,7 @@ import {
   PiBookOpenFill,
   PiUserPlusFill,
 } from "react-icons/pi";
+import AdSense from "@/components/AdSense";
 import "./home.scss";
 import Link from "next/link";
 
@@ -109,6 +110,9 @@ export default function Home() {
             </div>
           </button>
         </div>
+
+        {/* Reklama AdSense */}
+        <AdSense adSlot="1234567890" />
 
         <div className="home-footer">
           <p>

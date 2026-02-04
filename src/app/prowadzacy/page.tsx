@@ -6,6 +6,7 @@ import { createGame as createGameAction } from "@/redux/reducer/gameSlice";
 import { createGame, generateUserId, startGame, subscribeToGame, resetGameToWaiting, resetGameStatus, getGame } from "@/utils/firebaseUtils";
 import { gameHistoryStorage, type GameHistoryEntry } from "@/utils/gameHistoryStorage";
 import { Navbar } from "@/components";
+import AdSense from "@/components/AdSense";
 import { PiUsers, PiUsersThree, PiBookOpenFill, PiPlus, PiClock, PiPlusCircleFill } from "react-icons/pi";
 import "@/styles/multiplayer.scss";
 
@@ -326,6 +327,9 @@ export default function HostPage() {
               </button>
             </div>
           </div>
+          
+          {/* Reklama AdSense */}
+          <AdSense adSlot="1234567893" />
           
           <div className="rules-link-section">
             <button className="btn-rules-link" onClick={() => router.push('/zasady/')}>

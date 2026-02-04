@@ -10,6 +10,7 @@ import {
   leaveGameAsParticipant 
 } from "@/utils/firebaseUtils";
 import { Navbar } from "@/components";
+import AdSense from "@/components/AdSense";
 import { PiBookOpenFill, PiUsersThree, PiUsers } from "react-icons/pi";
 import "@/styles/multiplayer.scss";
 import type { Team } from "@/types/game";
@@ -328,6 +329,9 @@ export default function ParticipantJoinPage() {
             </div>
           </form>
         </div>
+        
+        {/* Reklama AdSense */}
+        <AdSense adSlot="1234567892" />
         
         <div className="rules-link-section">
           <button className="btn-rules-link" onClick={() => router.push('/zasady/')}>
