@@ -55,6 +55,7 @@ export interface GameData {
   wrongAnswers: string[];
   selectedTeam: number | null;
   categoryVotes: Record<string, string>;
+  participantCategoryVotes?: Record<string, string>;
   players: string[];
   rounds: Question[];
   teams?: Team[];
@@ -65,9 +66,10 @@ export interface GameData {
   // Dodatkowe pola używane w aplikacji
   selectedCategory?: string;
   categorySelectedAt?: string;
-  gamePhase?: 'category-selection' | 'creating-custom-category' | 'buzz' | 'playing' | 'finished';
+  gamePhase?: 'category-selection' | 'creating-custom-category' | 'buzzer-selection' | 'buzz' | 'playing' | 'finished';
   customCategory?: QuestionSet;
   hostCustomCategories?: QuestionSet[];
+  buzzerAssignments?: Record<string, string>; // { teamId: playerId } - który gracz/uczestnik naciska buzzer
   buzzedTeam?: string | null;
   buzzedTeamName?: string | null;
   buzzTimestamp?: number | null;

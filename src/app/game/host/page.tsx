@@ -994,7 +994,7 @@ export default function HostGamePage() {
           <h1 className="header-title">
             {gamePhase === "category-selection"
               ? "Wybieranie kategorii"
-              : gamePhase === "buzz"
+              : gamePhase === "buzz" || gameData?.gamePhase === "buzzer-selection"
               ? (gameData?.currentQuestionIndex || 0) === 4
                 ? "Ostatnie pytanie"
                 : `Pytanie ${(gameData?.currentQuestionIndex || 0) + 1}`
@@ -1334,8 +1334,8 @@ export default function HostGamePage() {
             </div>
           )}
           </>
-        ) : gamePhase === "buzz" ? (
-          // FAZA 2: Pytanie buzz
+        ) : (gamePhase === "buzz" || gameData?.gamePhase === "buzzer-selection") ? (
+          // FAZA 2: Pytanie buzz (również podczas wyboru osób do buzzera)
           <div className="buzz-round">
             {/* Informacja o podwojonych punktach - tylko dla ostatniego pytania */}
             {(gameData?.currentQuestionIndex || 0) === 4 && (
@@ -1394,8 +1394,8 @@ export default function HostGamePage() {
                 <div className="buzzed-info">
                   <div className="buzzed-info-content">
                     <div className="buzzed-label">
-                      <PiClockCountdownFill className="buzzed-icon pulse-animation" />
-                      <span>Czekam na naciśnięcie przycisku przez drużyny...</span>
+                      <PiUsersFill className="buzzed-icon pulse-animation" />
+                      <span>Czekaj na wybór osób do buzzera...</span>
                     </div>
                     <div className="team-name-display empty"></div>
                   </div>
@@ -1407,11 +1407,21 @@ export default function HostGamePage() {
               <button 
                 className="btn-reveal-question" 
                 onClick={handleRevealQuestion}
-                disabled={gameData?.questionRevealed}
+                disabled={gameData?.questionRevealed || gameData?.gamePhase === 'buzzer-selection'}
               >
-                <PiQuestionFill /> {gameData?.questionRevealed ? 'Pytanie odkryte' : 'Odkryj pytanie'}
+                <PiQuestionFill /> {
+                  gameData?.gamePhase === 'buzzer-selection' 
+                    ? 'Czekam na wybór graczy...' 
+                    : gameData?.questionRevealed 
+                      ? 'Pytanie odkryte' 
+                      : 'Odkryj pytanie'
+                }
               </button>
-              <button className="btn-reset" onClick={handleResetBuzz}>
+              <button 
+                className="btn-reset" 
+                onClick={handleResetBuzz}
+                disabled={gameData?.gamePhase === 'buzzer-selection'}
+              >
                 <PiArrowClockwiseBold /> Reset przycisku
               </button>
               <button

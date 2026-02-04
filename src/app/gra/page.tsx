@@ -81,8 +81,8 @@ export default function Home() {
               <PiUsersFill size={48} />
             </div>
             <div className="button-text">
-              <h2>Dołącz do gry</h2>
-              <p>jako drużyna</p>
+              <h2>Dołącz jako drużyna</h2>
+              <p>zostaniesz kapitanem drużyny</p>
             </div>
           </button>
 
@@ -95,7 +95,7 @@ export default function Home() {
             </div>
             <div className="button-text">
               <h2>Dołącz jako uczestnik</h2>
-              <p>oglądaj grę z zespołem</p>
+              <p>graj dla swojej drużyny</p>
             </div>
           </button>
 
