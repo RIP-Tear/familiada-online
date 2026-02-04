@@ -119,6 +119,11 @@ export const metadata: Metadata = {
     google: "BFOu5J4qV2n1ircNWrqUuqCxtZxx75czOqBrke8_GSE",
   },
   
+  // Google AdSense Verification
+  other: {
+    "google-adsense-account": "ca-pub-2764762981727603",
+  },
+  
   // Alternates
   alternates: {
     canonical: siteUrl,
