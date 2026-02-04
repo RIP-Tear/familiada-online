@@ -1,7 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { PiArrowLeftBold, PiGameControllerFill, PiUsersFill, PiLightningFill, PiTrophyFill, PiXCircleFill, PiCheckCircleFill } from "react-icons/pi";
+import { PiArrowLeftBold, PiGameControllerFill, PiUsersFill, PiUserPlusFill, PiLightningFill, PiTrophyFill, PiXCircleFill, PiCheckCircleFill } from "react-icons/pi";
 import "./rules.scss";
 
 export default function RulesPage() {
@@ -217,6 +217,78 @@ export default function RulesPage() {
             <div className="success-box">
               <PiCheckCircleFill />
               <p><strong>Wskazówka:</strong> Komunikujcie się w drużynie! Wspólna burza mózgów to klucz do zwycięstwa. Pamiętajcie, że liczy się szybkość reakcji przy buzzerze!</p>
+            </div>
+          </div>
+        </section>
+
+        {/* INSTRUKCJA DLA UCZESTNIKÓW */}
+        <section className="rules-section">
+          <h2 className="section-title"><PiUserPlusFill /> Instrukcja dla uczestników</h2>
+          <div className="rules-text">
+            <div className="info-box">
+              <PiCheckCircleFill />
+              <p><strong>Uczestnicy</strong> to dodatkowi gracze, którzy dołączają do istniejącej drużyny i mogą aktywnie uczestniczyć w grze - głosować na kategorie i naciskać buzzer!</p>
+            </div>
+
+            <h3>1. Dołączanie jako uczestnik</h3>
+            <ol>
+              <li>Na stronie głównej kliknij <strong>"Dołącz jako uczestnik"</strong></li>
+              <li>Wprowadź <strong>kod gry</strong> otrzymany od prowadzącego (np. A7K2)</li>
+              <li>Wpisz <strong>swoje imię</strong></li>
+              <li>Wybierz drużynę, do której chcesz dołączyć</li>
+              <li>Kliknij <strong>"Dołącz jako uczestnik"</strong></li>
+              <li>Poczekaj, aż prowadzący rozpocznie grę</li>
+            </ol>
+
+            <h3>2. Głosowanie na kategorię (wraz z drużyną)</h3>
+            <ol>
+              <li>Jako uczestnik <strong>możesz głosować na kategorie</strong> razem z kapitanem swojej drużyny</li>
+              <li>Twój głos jest widoczny dla kapitana drużyny jako sugestia</li>
+              <li><strong>Kapitan drużyny podejmuje ostateczną decyzję</strong> w kwestii wyboru kategorii</li>
+              <li>Widzisz, na którą kategorię zagłosował kapitan i inni uczestnicy z Twojej drużyny</li>
+            </ol>
+
+            <h3>3. Wybór osoby do buzzera</h3>
+            <ol>
+              <li>Na początku każdej rundy <strong>kapitan drużyny wybiera</strong>, kto będzie naciskał buzzer</li>
+              <li>Kapitan może wybrać siebie lub któregoś z uczestników</li>
+              <li>Tylko wybrana osoba będzie mogła nacisnąć buzzer w tej rundzie</li>
+              <li><strong>Jeśli zostałeś wybrany:</strong> zobaczysz duży przycisk buzzera - bądź gotowy!</li>
+              <li><strong>Jeśli nie zostałeś wybrany:</strong> zobaczysz ekran oczekiwania z informacją, kto został wybrany</li>
+            </ol>
+
+            <h3>4. Naciskanie buzzera (jeśli zostałeś wybrany)</h3>
+            <ol>
+              <li>Poczekaj, aż prowadzący odkryje pytanie</li>
+              <li>Przycisk zmieni się z <strong>"CZEKAJ..."</strong> na <strong>"NACIŚNIJ!"</strong></li>
+              <li><PiLightningFill style={{color: 'var(--jasmine)', verticalAlign: 'middle'}} /> Kliknij go jak najszybciej!</li>
+              <li>System automatycznie wykryje, która drużyna była pierwsza</li>
+              <li>Zobaczysz wynik - czy Twoja drużyna była pierwsza czy druga</li>
+            </ol>
+
+            <h3>5. Oglądanie tablicy i gra zespołowa</h3>
+            <ol>
+              <li>Widzisz tę samą tablicę z odpowiedziami co kapitan drużyny</li>
+              <li>Możesz podpowiadać odpowiedzi kapitanowi i całej drużynie</li>
+              <li>Widzisz punkty, błędy i postęp gry w czasie rzeczywistym</li>
+              <li>Komunikujcie się przez komunikator głosowy/czat, aby wspólnie zgadywać!</li>
+            </ol>
+
+            <div className="success-box">
+              <PiCheckCircleFill />
+              <p><strong>Wskazówka dla uczestników:</strong> Strategia wyboru osoby do buzzera jest ważna! Kapitan może zmieniać wybór w każdej rundzie - wykorzystajcie to, aby wybrać osobę z najszybszym refleksem w danym momencie!</p>
+            </div>
+
+            <div className="warning-box">
+              <PiXCircleFill />
+              <div>
+                <p><strong>Pamiętaj:</strong></p>
+                <ul>
+                  <li>Tylko kapitan drużyny może podejmować decyzje podczas gry (wybór kategorii, odpowiedzi)</li>
+                  <li>Twoje głosy na kategorie to sugestie - ostateczna decyzja należy do kapitana</li>
+                  <li>W każdej rundzie może naciskać buzzer tylko jedna wybrana osoba z każdej drużyny</li>
+                </ul>
+              </div>
             </div>
           </div>
         </section>
