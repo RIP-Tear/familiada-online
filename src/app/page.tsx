@@ -535,15 +535,15 @@ const Page = () => {
 
           <div className={`security-card animate-on-scroll ${isVisible['security-4'] ? 'visible' : ''}`} id="security-4">
             <div className="security-icon ads">
-              <span className="icon-emoji">🚫</span>
+              <span className="icon-emoji">⚡</span>
             </div>
-            <h3 className="security-title">Bez reklam i śledzenia</h3>
+            <h3 className="security-title">Szybka i stabilna rozgrywka</h3>
             <p className="security-description">
-              Nie wyświetlamy reklam i nie śledzimy Twojej aktywności. 
-              Żadnych trackerów, cookies reklamowych czy analityki firm trzecich.
+              Nowoczesna infrastruktura zapewnia płynną synchronizację 
+              w czasie rzeczywistym. Graj bez opóźnień i zawieszek!
             </p>
             <div className="security-badge">
-              <span className="badge-text">Ad-Free</span>
+              <span className="badge-text">Real-time Sync</span>
             </div>
           </div>
         </div>
@@ -567,33 +567,37 @@ const Page = () => {
       </section>
 
       {/* SEO Section */}
-      <section className="seo-section" style={{ padding: '60px 20px', background: 'linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%)', textAlign: 'center' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <h2 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '30px', color: '#264653' }}>
-            Familiada Online - Gra Familijna Multiplayer
-          </h2>
-          <div style={{ textAlign: 'left', lineHeight: '1.8', color: '#555' }}>
-            <p style={{ marginBottom: '20px' }}>
+      <section className="seo-section">
+        <div className={`section-header animate-on-scroll ${isVisible['seo-header'] ? 'visible' : ''}`} id="seo-header">
+          <span className="section-badge">
+            🎮 Familiada Online
+          </span>
+          <h2 className="section-title-landing">Gra Familijna Multiplayer Po Polsku</h2>
+        </div>
+        
+        <div className={`seo-content animate-on-scroll ${isVisible['seo-content'] ? 'visible' : ''}`} id="seo-content">
+          <div className="seo-text">
+            <p>
               <strong>Familiada online</strong> to popularna <strong>gra familijna</strong>, która pozwala Ci cieszyć się kultowym teleturniejem 
               bez wychodzenia z domu! Nasza <strong>gra online za darmo</strong> działa w trybie <strong>multiplayer</strong>, 
               co oznacza, że możesz grać z przyjaciółmi w czasie rzeczywistym.
             </p>
-            <p style={{ marginBottom: '20px' }}>
+            <p>
               <strong>Familiada gra online</strong> jest dostępna <strong>po polsku</strong> i działa na każdym urządzeniu - 
               możesz grać <strong>na telefon</strong>, tablet lub komputer. Nie musisz nic pobierać - wystarczy przeglądarka!
               Nasza <strong>tablica online</strong> wygląda dokładnie jak w prawdziwym teleturnieju.
             </p>
-            <p style={{ marginBottom: '20px' }}>
+            <p>
               Jedną z najlepszych funkcji jest możliwość tworzenia <strong>własnych pytań</strong>. Jako prowadzący możesz 
               przygotować pytania dopasowane do Twojej grupy, co sprawia, że <strong>familiada w domu</strong> jest jeszcze 
               bardziej osobista i zabawna. To idealna <strong>gra online</strong> na imprezę lub spotkanie rodzinne!
             </p>
-            <p style={{ marginBottom: '20px' }}>
+            <p>
               <strong>Gra familiada online</strong> nie wymaga rejestracji ani pobierania. Po prostu wejdź na stronę, 
               stwórz pokój jako prowadzący i podziel się kodem z innymi graczami. To naprawdę tak proste!
-              <strong>Familiada gra za darmo</strong> - bez ukrytych opłat, bez reklam, bez ograniczeń czasowych.
+              <strong>Familiada gra za darmo</strong> - bez ukrytych opłat i bez ograniczeń czasowych.
             </p>
-            <p style={{ marginBottom: '0' }}>
+            <p>
               Zapraszamy do rozgrywki! Wypróbuj najlepszą polską <strong>grę familijną online</strong> i przekonaj się, 
               dlaczego tysiące graczy wybrało naszą <strong>familiadę online</strong>. Rozpocznij grę już teraz i baw się świetnie!
             </p>
@@ -645,7 +649,7 @@ const Page = () => {
               <span>🛡️ Privacy Protected</span>
             </div>
             <div className="footer-badge">
-              <span>🚫 No Ads</span>
+              <span>⚡ Real-time Sync</span>
             </div>
           </div>
         </div>
