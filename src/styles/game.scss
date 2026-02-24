@@ -511,6 +511,53 @@
 // === BUZZ ROUND - HOST ===
 .buzz-round { width: 100%; max-width: 900px; @include fx-col; gap: $s-lg; }
 
+.buzzer-assignments {
+  width: 100%;
+  background: rgba($c-blue, .95);
+  border-radius: $r-4;
+  padding: $s-md;
+  box-shadow: $s-3;
+  @include fx-col;
+  gap: $s-sm;
+
+  &-title {
+    @include txt($fs-3, bold, $c-yellow);
+    margin: 0 0 $s-sm;
+  }
+
+  &-grid {
+    @include fx-col;
+    gap: $s-sm;
+  }
+}
+
+.buzzer-assignment-card {
+  border-radius: $r-3;
+  padding: $s-sm $s-md;
+  background: rgba($c-black, .3);
+  border: 2px dashed rgba($c-yellow, .3);
+
+  &.assigned {
+    border-style: solid;
+    border-color: $c-green;
+    background: rgba($c-green, .2);
+  }
+
+  .buzzer-assignment-team {
+    @include txt($fs-2, bold, $c-white);
+    margin-bottom: .25rem;
+  }
+
+  .buzzer-assignment-player {
+    @include txt(1rem, normal, rgba($c-white, .8));
+  }
+
+  &.waiting .buzzer-assignment-player {
+    font-style: italic;
+    color: rgba($c-white, .5);
+  }
+}
+
 .host {
   &-question-card { 
     background: rgba($c-blue, .95); border-radius: $r-4; padding: $s-md; box-shadow: $s-3; text-align: center; 

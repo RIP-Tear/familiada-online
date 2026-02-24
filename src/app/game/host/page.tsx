@@ -1369,6 +1369,9 @@ export default function HostGamePage() {
               )}
             </div>
 
+            {/* Podgląd wybranych graczy do buzzera dla obu drużyn */}
+
+
             <div className="buzz-status">
               {buzzProcessing ? (
                 <div className="buzzed-info">
@@ -1394,14 +1397,46 @@ export default function HostGamePage() {
                 <div className="buzzed-info">
                   <div className="buzzed-info-content">
                     <div className="buzzed-label">
-                      <PiUsersFill className="buzzed-icon pulse-animation" />
-                      <span>Czekaj na wybór osób do buzzera...</span>
+                      <PiGameControllerFill className="buzzed-icon pulse-animation" />
+                      <span>Czekaj na wynik buzzera...</span>
                     </div>
                     <div className="team-name-display empty"></div>
                   </div>
                 </div>
               )}
             </div>
+
+                        {gameData?.teams && gameData.teams.length >= 1 && (
+              <div className="buzzer-assignments">
+                <h3 className="buzzer-assignments-title">Kto naciska buzzer?</h3>
+                <div className="buzzer-assignments-grid">
+                  {gameData.teams.slice(0, 2).map((team: any) => {
+                    const assignedPlayerId = gameData?.buzzerAssignments?.[team.id];
+                    const assignedPlayer = assignedPlayerId
+                      ? gameData?.participants?.find((p: any) => p.id === assignedPlayerId)
+                      : null;
+                    const isCaptainSelected = assignedPlayerId && assignedPlayerId === team.id;
+                    const assignedLabel = assignedPlayerId
+                      ? (isCaptainSelected ? "Kapitan" : assignedPlayer?.name || "Wybrany gracz")
+                      : null;
+
+                    return (
+                      <div
+                        key={team.id}
+                        className={`buzzer-assignment-card ${assignedPlayerId ? "assigned" : "waiting"}`}
+                      >
+                        <div className="buzzer-assignment-team">{team.name}</div>
+                        <div className="buzzer-assignment-player">
+                          {assignedPlayerId
+                            ? assignedLabel
+                            : "Oczekiwanie na wybór gracza..."}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
             <div className="buzz-controls">
               <button 

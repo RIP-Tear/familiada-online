@@ -366,6 +366,7 @@ export default function HostPage() {
                 {teams.length >= 1 ? (
                   <>
                     <PiUsersThree className="team-icon active" />
+                    <span className="player-name">{teams[0]?.name}</span>
                     {participants.filter(p => p.teamId === teams[0]?.id).length > 0 && (
                       <span className="participant-count">
                         +{participants.filter(p => p.teamId === teams[0]?.id).length}
@@ -404,7 +405,7 @@ export default function HostPage() {
           {/* Sekcja uczestników */}
           {participants.length > 0 && (
             <div className="participants-section">
-              <h3>Uczestnicy ({participants.length})</h3>
+              <h3>Uczestnicy</h3>
               <div className="participants-list">
                 {teams.map((team, index) => {
                   const teamParticipants = participants.filter(p => p.teamId === team.id);
