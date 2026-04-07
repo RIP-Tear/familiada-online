@@ -1369,8 +1369,35 @@ export default function HostGamePage() {
               )}
             </div>
 
-            {/* Podgląd wybranych graczy do buzzera dla obu drużyn */}
+            {/* Badge'y z informacją kto naciska buzzer w każdej drużynie */}
+            {gameData?.teams && gameData.teams.length >= 1 && (
+              <div className="buzzer-badges">
+                {gameData.teams.slice(0, 2).map((team: any) => {
+                  const assignedPlayerId = gameData?.buzzerAssignments?.[team.id];
+                  const assignedPlayer = assignedPlayerId
+                    ? gameData?.participants?.find((p: any) => p.id === assignedPlayerId)
+                    : null;
+                  const isCaptainSelected = assignedPlayerId && assignedPlayerId === team.id;
 
+                  let playerLabel = "oczekiwanie...";
+                  if (assignedPlayerId) {
+                    playerLabel = isCaptainSelected
+                      ? "Kapitan"
+                      : assignedPlayer?.name || "Wybrany gracz";
+                  }
+
+                  return (
+                    <div
+                      key={team.id}
+                      className={`buzzer-badge ${assignedPlayerId ? "" : "waiting"}`}
+                    >
+                      <div className="buzzer-badge-team">{team.name}</div>
+                      <div className="buzzer-badge-player">{playerLabel}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
 
             <div className="buzz-status">
               {buzzProcessing ? (
@@ -1405,38 +1432,6 @@ export default function HostGamePage() {
                 </div>
               )}
             </div>
-
-                        {gameData?.teams && gameData.teams.length >= 1 && (
-              <div className="buzzer-assignments">
-                <h3 className="buzzer-assignments-title">Kto naciska buzzer?</h3>
-                <div className="buzzer-assignments-grid">
-                  {gameData.teams.slice(0, 2).map((team: any) => {
-                    const assignedPlayerId = gameData?.buzzerAssignments?.[team.id];
-                    const assignedPlayer = assignedPlayerId
-                      ? gameData?.participants?.find((p: any) => p.id === assignedPlayerId)
-                      : null;
-                    const isCaptainSelected = assignedPlayerId && assignedPlayerId === team.id;
-                    const assignedLabel = assignedPlayerId
-                      ? (isCaptainSelected ? "Kapitan" : assignedPlayer?.name || "Wybrany gracz")
-                      : null;
-
-                    return (
-                      <div
-                        key={team.id}
-                        className={`buzzer-assignment-card ${assignedPlayerId ? "assigned" : "waiting"}`}
-                      >
-                        <div className="buzzer-assignment-team">{team.name}</div>
-                        <div className="buzzer-assignment-player">
-                          {assignedPlayerId
-                            ? assignedLabel
-                            : "Oczekiwanie na wybór gracza..."}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
 
             <div className="buzz-controls">
               <button 

@@ -132,6 +132,71 @@ const questionSets: QuestionSet[] = [
     ],
   },
 
+  // ZESTAW 2A: Pop-kultura - Łatwy
+  {
+    category: "Pop-kultura",
+    difficulty: "easy",
+    questions: [
+      {
+        question: "Znani aktorzy Hollywood",
+        answers: [
+          "Brad Pitt",
+          "Leonardo DiCaprio",
+          "Tom Hanks",
+          "Johnny Depp",
+          "Angelina Jolie",
+          "Julia Roberts",
+          "Meryl Streep",
+        ],
+      },
+      {
+        question: "Popularne seriale komediowe (sitcomy)",
+        answers: [
+          "Przyjaciele",
+          "Teoria wielkiego podrywu",
+          "Jak poznałem waszą matkę",
+          "Dwóch i pół",
+          "The Office",
+          "Modern Family",
+          "Moda na sukces",
+        ],
+      },
+      {
+        question: "Popularne filmy o superbohaterach",
+        answers: [
+          "Avengers",
+          "Batman",
+          "Spider-Man",
+          "Iron Man",
+          "Thor",
+          "Guardians of the Galaxy",
+        ],
+      },
+      {
+        question: "Znane serie filmowe",
+        answers: [
+          "Star Wars",
+          "Harry Potter",
+          "Władca Pierścieni",
+          "James Bond",
+          "Szybcy i wściekli",
+          "Jurassic Park",
+        ],
+      },
+      {
+        question: "Popularni artyści pop",
+        answers: [
+          "Taylor Swift",
+          "Ed Sheeran",
+          "Dua Lipa",
+          "Rihanna",
+          "Justin Bieber",
+          "Ariana Grande",
+        ],
+      },
+    ],
+  },
+
   // ZESTAW 3: Zwierzęta - Łatwy
   {
     category: "Zwierzęta",
@@ -260,6 +325,326 @@ const questionSets: QuestionSet[] = [
           "Electronic",
           "Trap",
           "R&B",
+        ],
+      },
+    ],
+  },
+
+  // ZESTAW 4A: Pop-kultura - Średni
+  {
+    category: "Pop-kultura",
+    difficulty: "medium",
+    questions: [
+      {
+        question: "Kultowe seriale z lat 90. i 2000.",
+        answers: [
+          "Przyjaciele",
+          "Beverly Hills 90210",
+          "Z Archiwum X",
+          "Gotowe na wszystko",
+          "Ostry dyżur",
+          "Seks w wielkim mieście",
+        ],
+      },
+      {
+        question: "Znane seriale animowane dla dorosłych",
+        answers: [
+          "Simpsonowie",
+          "South Park",
+          "Family Guy",
+          "Rick i Morty",
+          "BoJack Horseman",
+          "Futurama",
+        ],
+      },
+      {
+        question: "Znani reżyserzy filmowi",
+        answers: [
+          "Steven Spielberg",
+          "Christopher Nolan",
+          "Quentin Tarantino",
+          "Martin Scorsese",
+          "James Cameron",
+          "Ridley Scott",
+        ],
+      },
+      {
+        question: "Popularne serie gier wideo",
+        answers: [
+          "FIFA",
+          "The Sims",
+          "Call of Duty",
+          "Grand Theft Auto",
+          "Assassin's Creed",
+          "Minecraft",
+        ],
+      },
+      {
+        question: "Znani polscy celebryci telewizyjni",
+        answers: [
+          "Kuba Wojewódzki",
+          "Magda Gessler",
+          "Robert Lewandowski",
+          "Małgorzata Rozenek",
+          "Dorota Wellman",
+          "Martyna Wojciechowska",
+        ],
+      },
+    ],
+  },
+
+  // ZESTAW 4B: Seriale i programy TV - Łatwy
+  {
+    category: "Seriale i programy TV",
+    difficulty: "easy",
+    questions: [
+      {
+        question: "Popularne polskie seriale",
+        answers: [
+          "M jak miłość",
+          "Na Wspólnej",
+          "Barwy szczęścia",
+          "Klan",
+          "Na dobre i na złe",
+          "Ranczo",
+          "Rodzinka.pl",
+        ],
+      },
+      {
+        question: "Popularne zagraniczne seriale",
+        answers: [
+          "Przyjaciele",
+          "Gra o tron",
+          "Dom z papieru",
+          "Stranger Things",
+          "Teoria wielkiego podrywu",
+          "Sherlock",
+          "Breaking Bad",
+        ],
+      },
+      {
+        question: "Programy rozrywkowe w polskiej TV",
+        answers: [
+          "Familiada",
+          "Jaka to melodia?",
+          "Koło Fortuny",
+          "Milionerzy",
+          "The Voice of Poland",
+          "Mam Talent!",
+          "Taniec z gwiazdami",
+        ],
+      },
+      {
+        question: "Seriale dla nastolatków",
+        answers: [
+          "Riverdale",
+          "13 powodów",
+          "Plotkara",
+          "Sex Education",
+          "Outer Banks",
+          "Elite",
+        ],
+      },
+      {
+        question: "Seriale kryminalne",
+        answers: [
+          "CSI",
+          "Sherlock",
+          "True Detective",
+          "Detektyw Monk",
+          "Luther",
+          "Broadchurch",
+          "NCIS",
+        ],
+      },
+    ],
+  },
+
+  // ZESTAW 4C: Seriale i programy TV - Średni
+  {
+    category: "Seriale i programy TV",
+    difficulty: "medium",
+    questions: [
+      {
+        question: "Kultowe polskie seriale z PRL i lat 90.",
+        answers: [
+          "Czterdziestolatek",
+          "Alternatywy 4",
+          "07 zgłoś się",
+          "Zmiennicy",
+          "Klan",
+          "Dom",
+        ],
+      },
+      {
+        question: "Seriale medyczne",
+        answers: [
+          "Ostry dyżur",
+          "Dr House",
+          "Chirurdzy",
+          "Na dobre i na złe",
+          "The Good Doctor",
+          "Scrubs",
+        ],
+      },
+      {
+        question: "Reality shows i talent shows",
+        answers: [
+          "Big Brother",
+          "Top Model",
+          "The Voice of Poland",
+          "Mam Talent!",
+          "Idol",
+          "Love Island",
+        ],
+      },
+      {
+        question: "Seriale kryminalne z Europy",
+        answers: [
+          "Most nad Sundem",
+          "Wallander",
+          "Luther",
+          "Broadchurch",
+          "Quicksand",
+          "Dark",
+        ],
+      },
+      {
+        question: "Seriale, o których było głośno w internecie",
+        answers: [
+          "Squid Game",
+          "Dom z papieru",
+          "Gra o tron",
+          "Czarnobyl",
+          "Tiger King",
+          "Stranger Things",
+        ],
+      },
+    ],
+  },
+
+  // ZESTAW 4D: Polska muzyka współczesna - Łatwy
+  {
+    category: "Polska muzyka współczesna",
+    difficulty: "easy",
+    questions: [
+      {
+        question: "Współcześni polscy wokaliści pop",
+        answers: [
+          "Dawid Podsiadło",
+          "Mrozu",
+          "Krzysztof Zalewski",
+          "Bedoes",
+          "Kamil Bednarek",
+          "Sobel",
+        ],
+      },
+      {
+        question: "Współczesne polskie wokalistki pop",
+        answers: [
+          "Sanah",
+          "Doda",
+          "Cleo",
+          "Sylwia Grzeszczak",
+          "Margaret",
+          "Roksana Węgiel",
+        ],
+      },
+      {
+        question: "Polskie zespoły pop i rock",
+        answers: [
+          "Enej",
+          "Feel",
+          "Blue Café",
+          "Ich Troje",
+          "Lady Pank",
+          "Perfect",
+        ],
+      },
+      {
+        question: "Polskie festiwale muzyczne",
+        answers: [
+          "Open'er Festival",
+          "Pol'and'Rock Festival",
+          "Orange Warsaw Festival",
+          "OFF Festival",
+          "Sunrise Festival",
+          "Jarocin Festival",
+        ],
+      },
+      {
+        question: "Telewizyjne programy muzyczne",
+        answers: [
+          "The Voice of Poland",
+          "Szansa na sukces",
+          "Idol",
+          "X Factor",
+          "Mam Talent!",
+          "Must Be the Music",
+        ],
+      },
+    ],
+  },
+
+  // ZESTAW 4E: Polska muzyka współczesna - Średni
+  {
+    category: "Polska muzyka współczesna",
+    difficulty: "medium",
+    questions: [
+      {
+        question: "Polscy raperzy",
+        answers: [
+          "Taco Hemingway",
+          "Quebonafide",
+          "Mata",
+          "Sokół",
+          "O.S.T.R.",
+          "Pezet",
+          "Paluch",
+        ],
+      },
+      {
+        question: "Polskie zespoły rockowe po 2000 roku",
+        answers: [
+          "Coma",
+          "Happysad",
+          "Strachy na Lachy",
+          "T.Love",
+          "Hey",
+          "Lao Che",
+        ],
+      },
+      {
+        question: "Polscy wykonawcy kojarzeni z festiwalem w Opolu",
+        answers: [
+          "Maryla Rodowicz",
+          "Edyta Górniak",
+          "Andrzej Piaseczny",
+          "Justyna Steczkowska",
+          "Natalia Kukulska",
+          "Ryszard Rynkowski",
+        ],
+      },
+      {
+        question: "Polskie przeboje kojarzone z imprezą",
+        answers: [
+          "Ona tańczy dla mnie",
+          "Jestes szalona",
+          "Przez twe oczy zielone",
+          "Bałkanica",
+          "Czerwone korale",
+          "Małomiasteczkowy",
+        ],
+      },
+      {
+        question: "Miejsca dużych koncertów w Polsce",
+        answers: [
+          "Stadion Narodowy",
+          "Tauron Arena Kraków",
+          "Spodek",
+          "Atlas Arena",
+          "Ergo Arena",
+          "Opera Leśna w Sopocie",
         ],
       },
     ],

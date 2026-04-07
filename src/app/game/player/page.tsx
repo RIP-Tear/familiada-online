@@ -1097,11 +1097,9 @@ export default function PlayerGamePage() {
                         ? "question-locked"
                         : isFirst === true
                           ? "buzz-first"
-                          : isFirst === false
-                            ? "buzz-second"
-                            : buzzedTeam
-                              ? "buzz-disabled"
-                              : ""
+                          : buzzedTeam
+                            ? "buzz-disabled"
+                            : ""
                     }`}
                     onClick={handleBuzz}
                     disabled={
@@ -1114,10 +1112,10 @@ export default function PlayerGamePage() {
                       <>CZEKAJ...</>
                     ) : isFirst === true ? (
                       <>PIERWSZY!</>
-                    ) : isFirst === false ? (
-                      <>ZA PÓŹNO</>
                     ) : buzzedTeam ? (
                       <>ZABLOKOWANY</>
+                    ) : myTeamBuzzed ? (
+                      <>CZEKAJ NA WERDYKT...</>
                     ) : (
                       "NACIŚNIJ!"
                     )}
