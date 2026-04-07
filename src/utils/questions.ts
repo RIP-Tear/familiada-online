@@ -147,6 +147,10 @@ const questionSets: QuestionSet[] = [
           "Angelina Jolie",
           "Julia Roberts",
           "Meryl Streep",
+          "George Clooney",
+          "Scarlett Johansson",
+          "Chris Hemsworth",
+          "Emma Stone",
         ],
       },
       {
@@ -159,6 +163,8 @@ const questionSets: QuestionSet[] = [
           "The Office",
           "Modern Family",
           "Moda na sukces",
+          "Brooklyn 9-9",
+          "How I Met Your Father",
         ],
       },
       {
@@ -170,6 +176,8 @@ const questionSets: QuestionSet[] = [
           "Iron Man",
           "Thor",
           "Guardians of the Galaxy",
+          "Captain America",
+          "Black Panther",
         ],
       },
       {
@@ -181,6 +189,7 @@ const questionSets: QuestionSet[] = [
           "James Bond",
           "Szybcy i wściekli",
           "Jurassic Park",
+          "Mission: Impossible",
         ],
       },
       {
@@ -192,6 +201,7 @@ const questionSets: QuestionSet[] = [
           "Rihanna",
           "Justin Bieber",
           "Ariana Grande",
+          "Shawn Mendes",
         ],
       },
     ],
@@ -344,6 +354,7 @@ const questionSets: QuestionSet[] = [
           "Gotowe na wszystko",
           "Ostry dyżur",
           "Seks w wielkim mieście",
+          "Pełna chata",
         ],
       },
       {
@@ -355,6 +366,7 @@ const questionSets: QuestionSet[] = [
           "Rick i Morty",
           "BoJack Horseman",
           "Futurama",
+          "American Dad!",
         ],
       },
       {
@@ -366,6 +378,7 @@ const questionSets: QuestionSet[] = [
           "Martin Scorsese",
           "James Cameron",
           "Ridley Scott",
+          "Peter Jackson",
         ],
       },
       {
@@ -377,6 +390,7 @@ const questionSets: QuestionSet[] = [
           "Grand Theft Auto",
           "Assassin's Creed",
           "Minecraft",
+          "League of Legends",
         ],
       },
       {
@@ -388,6 +402,7 @@ const questionSets: QuestionSet[] = [
           "Małgorzata Rozenek",
           "Dorota Wellman",
           "Martyna Wojciechowska",
+          "Marcin Prokop",
         ],
       },
     ],
@@ -408,6 +423,8 @@ const questionSets: QuestionSet[] = [
           "Na dobre i na złe",
           "Ranczo",
           "Rodzinka.pl",
+          "Ojciec Mateusz",
+          "Świat według Kiepskich",
         ],
       },
       {
@@ -420,6 +437,7 @@ const questionSets: QuestionSet[] = [
           "Teoria wielkiego podrywu",
           "Sherlock",
           "Breaking Bad",
+          "House of Cards",
         ],
       },
       {
@@ -432,6 +450,8 @@ const questionSets: QuestionSet[] = [
           "The Voice of Poland",
           "Mam Talent!",
           "Taniec z gwiazdami",
+          "Twoja twarz brzmi znajomo",
+          "Idol",
         ],
       },
       {
@@ -443,6 +463,7 @@ const questionSets: QuestionSet[] = [
           "Sex Education",
           "Outer Banks",
           "Elite",
+          "Euforia",
         ],
       },
       {
@@ -455,6 +476,7 @@ const questionSets: QuestionSet[] = [
           "Luther",
           "Broadchurch",
           "NCIS",
+          "Zaginiona",
         ],
       },
     ],
@@ -474,6 +496,7 @@ const questionSets: QuestionSet[] = [
           "Zmiennicy",
           "Klan",
           "Dom",
+          "Czterej pancerni i pies",
         ],
       },
       {
@@ -485,6 +508,7 @@ const questionSets: QuestionSet[] = [
           "Na dobre i na złe",
           "The Good Doctor",
           "Scrubs",
+          "New Amsterdam",
         ],
       },
       {
@@ -496,6 +520,7 @@ const questionSets: QuestionSet[] = [
           "Mam Talent!",
           "Idol",
           "Love Island",
+          "X Factor",
         ],
       },
       {
@@ -507,6 +532,7 @@ const questionSets: QuestionSet[] = [
           "Broadchurch",
           "Quicksand",
           "Dark",
+          "Baptiste",
         ],
       },
       {
@@ -518,6 +544,7 @@ const questionSets: QuestionSet[] = [
           "Czarnobyl",
           "Tiger King",
           "Stranger Things",
+          "Wednesday",
         ],
       },
     ],
@@ -525,7 +552,7 @@ const questionSets: QuestionSet[] = [
 
   // ZESTAW 4D: Polska muzyka współczesna - Łatwy
   {
-    category: "Polska muzyka współczesna",
+    category: "Polska muzyka",
     difficulty: "easy",
     questions: [
       {
@@ -537,6 +564,8 @@ const questionSets: QuestionSet[] = [
           "Bedoes",
           "Kamil Bednarek",
           "Sobel",
+          "Smolasty",
+          "White 2115",
         ],
       },
       {
@@ -548,6 +577,7 @@ const questionSets: QuestionSet[] = [
           "Sylwia Grzeszczak",
           "Margaret",
           "Roksana Węgiel",
+          "Lanberry",
         ],
       },
       {
@@ -559,6 +589,8 @@ const questionSets: QuestionSet[] = [
           "Ich Troje",
           "Lady Pank",
           "Perfect",
+          "Łzy",
+          "Pectus",
         ],
       },
       {
@@ -570,6 +602,7 @@ const questionSets: QuestionSet[] = [
           "OFF Festival",
           "Sunrise Festival",
           "Jarocin Festival",
+          "Opener Park",
         ],
       },
       {
@@ -581,6 +614,7 @@ const questionSets: QuestionSet[] = [
           "X Factor",
           "Mam Talent!",
           "Must Be the Music",
+          "The Voice Kids",
         ],
       },
     ],
@@ -588,7 +622,7 @@ const questionSets: QuestionSet[] = [
 
   // ZESTAW 4E: Polska muzyka współczesna - Średni
   {
-    category: "Polska muzyka współczesna",
+    category: "Polska muzyka",
     difficulty: "medium",
     questions: [
       {
@@ -601,6 +635,8 @@ const questionSets: QuestionSet[] = [
           "O.S.T.R.",
           "Pezet",
           "Paluch",
+          "Bedoes",
+          "KęKę",
         ],
       },
       {
@@ -612,6 +648,7 @@ const questionSets: QuestionSet[] = [
           "T.Love",
           "Hey",
           "Lao Che",
+          "Riverside",
         ],
       },
       {
@@ -623,6 +660,8 @@ const questionSets: QuestionSet[] = [
           "Justyna Steczkowska",
           "Natalia Kukulska",
           "Ryszard Rynkowski",
+          "Krzysztof Krawczyk",
+          "Zbigniew Wodecki",
         ],
       },
       {
@@ -634,6 +673,7 @@ const questionSets: QuestionSet[] = [
           "Bałkanica",
           "Czerwone korale",
           "Małomiasteczkowy",
+          "Miłość w Zakopanem",
         ],
       },
       {
@@ -645,6 +685,7 @@ const questionSets: QuestionSet[] = [
           "Atlas Arena",
           "Ergo Arena",
           "Opera Leśna w Sopocie",
+          "Stadion Wrocław",
         ],
       },
     ],
@@ -2402,7 +2443,7 @@ const questionSets: QuestionSet[] = [
 
   // ZESTAW NOWY 8: Święta i uroczystości - Średni
   {
-    category: "Święta i uroczystości",
+    category: "Święta",
     difficulty: "medium",
     questions: [
       {
@@ -2599,19 +2640,49 @@ const questionSets: QuestionSet[] = [
   },
 ];
 
+// Pomocnicza funkcja generująca stabilne ID zestawu pytań
+const buildQuestionSetId = (set: QuestionSet, index: number): string => {
+  // Jeśli zestaw ma własne id, użyj go (np. dla customów w przyszłości)
+  if (set.id) return set.id;
+  // W przeciwnym razie zbuduj ID deterministycznie z kategorii, trudności i indeksu
+  return `${set.category}__${set.difficulty}__${index}`;
+};
+
 // Funkcja zwracająca listę dostępnych kategorii (dla UI wyboru)
 export const getAvailableCategories = (): CategoryInfo[] => {
-  return questionSets.map((set) => ({
+  return questionSets.map((set, index) => ({
+    id: buildQuestionSetId(set, index),
     category: set.category,
     difficulty: set.difficulty,
   }));
 };
 
-// Funkcja zwracająca pytania dla wybranej kategorii
-export const getQuestionsByCategory = (category: string): Question[] => {
-  const set = questionSets.find((s) => s.category === category);
+// Zwraca metadane kategorii po ID (używane m.in. do wyświetlania nazw)
+export const getCategoryMetaById = (id: string): CategoryInfo | null => {
+  const index = questionSets.findIndex((set, i) => buildQuestionSetId(set, i) === id);
+  if (index === -1) return null;
+  const set = questionSets[index];
+  return {
+    id: buildQuestionSetId(set, index),
+    category: set.category,
+    difficulty: set.difficulty,
+  };
+};
+
+// Funkcja zwracająca pytania dla wybranej kategorii lub ID zestawu
+export const getQuestionsByCategory = (categoryOrId: string): Question[] => {
+  let set: QuestionSet | undefined;
+
+  // Najpierw spróbuj dopasować po ID (nowy mechanizm)
+  set = questionSets.find((s, index) => buildQuestionSetId(s, index) === categoryOrId);
+
+  // Dla zgodności wstecznej: jeśli nie znaleziono po ID, szukaj po nazwie kategorii
+  if (!set) {
+    set = questionSets.find((s) => s.category === categoryOrId);
+  }
+
   if (!set) return [];
-  
+
   // Przekonwertuj odpowiedzi na obiekty z punktacją
   return set.questions.map((q) => ({
     question: q.question,

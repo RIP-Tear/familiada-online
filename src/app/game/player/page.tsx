@@ -119,7 +119,8 @@ export default function PlayerGamePage() {
           },
         );
 
-        const customCats = completeCategories.map((cat: any) => ({
+        const customCats = completeCategories.map((cat: any, idx: number) => ({
+          id: cat.id || `custom_${idx}_${cat.name}`,
           category: cat.name,
           difficulty: cat.difficulty,
         }));
@@ -205,15 +206,20 @@ export default function PlayerGamePage() {
             `[PLAYER] Host selected category: ${data.selectedCategory}`,
           );
 
-          // Zapisz kategorię w localStorage
-          if (!usedCategories.includes(data.selectedCategory)) {
-            gameHistoryStorage.addUsedCategory(gameCode, data.selectedCategory);
-            setUsedCategories((prev) => [...prev, data.selectedCategory]);
+          // Zapisz kategorię w localStorage po nazwie wyświetlanej
+          const displayName =
+            (data as any).selectedCategoryName || data.selectedCategory;
+          if (!usedCategories.includes(displayName)) {
+            gameHistoryStorage.addUsedCategory(gameCode, displayName);
+            setUsedCategories((prev) => [...prev, displayName]);
           }
 
-          // Sprawdź czy to custom category
+          // Sprawdź czy to custom category (po id lub nazwie)
           const customCat = data.hostCustomCategories?.find(
-            (cat: any) => cat.name === data.selectedCategory,
+            (cat: any) =>
+              cat.id === data.selectedCategory ||
+              cat.name === (data as any).selectedCategoryName ||
+              cat.name === data.selectedCategory,
           );
           if (customCat) {
             // Użyj pytań z custom category
@@ -286,7 +292,8 @@ export default function PlayerGamePage() {
               },
             );
 
-            const customCats = completeCategories.map((cat: any) => ({
+            const customCats = completeCategories.map((cat: any, idx: number) => ({
+              id: cat.id || `custom_${idx}_${cat.name}`,
               category: cat.name,
               difficulty: cat.difficulty,
             }));
@@ -380,20 +387,20 @@ export default function PlayerGamePage() {
     }
   }, [gameData?.hostLeftAlert, gameData?.teamLeftAlert, router]);
 
-  const handleVoteCategory = async (categoryName) => {
+  const handleVoteCategory = async (categoryId: string) => {
     try {
       if (isParticipant) {
         // Uczestnik głosuje, ale głos nie idzie do prowadzącego
-        await voteForCategoryAsParticipant(gameCode, userId, categoryName);
-        setMyVote(categoryName);
+        await voteForCategoryAsParticipant(gameCode, userId, categoryId);
+        setMyVote(categoryId);
         console.log(
-          `[PARTICIPANT] Voted for category (suggestion only): ${categoryName}`,
+          `[PARTICIPANT] Voted for category (suggestion only): ${categoryId}`,
         );
       } else {
         // Kapitan głosuje normalnie
-        await voteForCategory(gameCode, userId, categoryName);
-        setMyVote(categoryName);
-        console.log(`[PLAYER] Voted for category: ${categoryName}`);
+        await voteForCategory(gameCode, userId, categoryId);
+        setMyVote(categoryId);
+        console.log(`[PLAYER] Voted for category: ${categoryId}`);
       }
     } catch (error) {
       console.error("[PLAYER] Error voting for category:", error);
@@ -748,13 +755,13 @@ export default function PlayerGamePage() {
             <p className="instruction">Głosuj na kategorię pytań!</p>
 
             <div className="categories-grid">
-              {categories.map((cat, index) => {
+              {categories.map((cat: any, index) => {
                 // Sprawdź czy jakaś drużyna zagłosowała na tę kategorię
                 const votedTeams = [];
                 if (gameData?.categoryVotes) {
                   Object.entries(gameData.categoryVotes).forEach(
                     ([teamId, votedCategory]) => {
-                      if (votedCategory === cat.category) {
+                      if (votedCategory === cat.id) {
                         const teamName =
                           gameData.teams?.find((t) => t.id === teamId)?.name ||
                           "Drużyna";
@@ -789,7 +796,7 @@ export default function PlayerGamePage() {
                     ));
 
                 return (
-                  <Fragment key={`${cat.category}-${index}`}>
+                  <Fragment key={`${cat.id || cat.category}-${index}`}>
                     {isFirstCustom && (
                       <div className="category-separator">
                         <div className="separator-line"></div>
@@ -798,8 +805,8 @@ export default function PlayerGamePage() {
                       </div>
                     )}
                     <div
-                      className={`category-card ${myVote === cat.category ? "voted" : ""} ${votedTeams.length > 0 ? "has-votes" : ""} ${isUsed ? "used" : ""} ${isCustom ? "custom" : ""} votable`}
-                      onClick={() => handleVoteCategory(cat.category)}
+                      className={`category-card ${myVote === cat.id ? "voted" : ""} ${votedTeams.length > 0 ? "has-votes" : ""} ${isUsed ? "used" : ""} ${isCustom ? "custom" : ""} votable`}
+                      onClick={() => handleVoteCategory(cat.id)}
                     >
                       <div className="category-icon">
                         {getDifficultyStars(cat.difficulty)}
@@ -813,7 +820,7 @@ export default function PlayerGamePage() {
                           <PiCheckCircleFill /> Użyta
                         </div>
                       )}
-                      {myVote === cat.category && (
+                      {myVote === cat.id && (
                         <div className="vote-badge">
                           <PiCheckBold /> Twój głos
                         </div>
@@ -834,7 +841,7 @@ export default function PlayerGamePage() {
                         (() => {
                           const participantCount = Object.values(
                             participantVotes,
-                          ).filter((v) => v === cat.category).length;
+                          ).filter((v) => v === cat.id).length;
                           if (participantCount > 0) {
                             console.log(
                               `[PLAYER] Category "${cat.category}" has ${participantCount} participant votes`,
@@ -846,7 +853,7 @@ export default function PlayerGamePage() {
                             <PiUsersFill />{" "}
                             {
                               Object.values(participantVotes).filter(
-                                (v) => v === cat.category,
+                                (v) => v === cat.id,
                               ).length
                             }
                           </div>

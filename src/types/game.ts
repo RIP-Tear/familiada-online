@@ -23,6 +23,7 @@ export interface QuestionSet {
 }
 
 export interface CategoryInfo {
+  id: string;
   category: string;
   difficulty: 'easy' | 'medium' | 'hard';
 }

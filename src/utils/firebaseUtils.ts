@@ -16,7 +16,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import questions from './questions';
-import { getQuestionsByCategory } from './questions';
+import { getQuestionsByCategory, getCategoryMetaById } from './questions';
 import { localGameStorage } from './localGameStorage';
 import type { GameData, Team, JoinGameResult, CreateGameResult } from '../types/game';
 
@@ -621,11 +621,12 @@ export const clearCategoryVotes = async (gameCode: string): Promise<void> => {
 };
 
 // Wybór kategorii pytań (tylko host)
+// Parametr `category` może być teraz ID zestawu standardowego lub ID/nazwą własnej kategorii.
 export const selectCategory = async (gameCode: string, category: string, isRandomlySelected: boolean = false): Promise<void> => {
   console.log(`[SELECT] Setting category for game ${gameCode}: ${category}`);
   
-  const showCategorySelectedAlert = async (gameCode: string, category: string, isRandomlySelected: boolean) => {
-    console.log(`[GAME] Showing category selected alert: ${category}, isRandomlySelected: ${isRandomlySelected}`);
+  const showCategorySelectedAlert = async (gameCode: string, displayName: string, isRandomlySelected: boolean) => {
+    console.log(`[GAME] Showing category selected alert: ${displayName}, isRandomlySelected: ${isRandomlySelected}`);
     
     if (useFirebase) {
       const gameRef = doc(db, 'games', gameCode);
@@ -648,7 +649,7 @@ export const selectCategory = async (gameCode: string, category: string, isRando
               categoryDrawingAlert: false,
               categoryDrawingFadeOut: false,
               categorySelectedAlert: true,
-              selectedCategoryName: category,
+              selectedCategoryName: displayName,
               isCategoryRandomlySelected: isRandomlySelected,
             });
           }, 300);
@@ -666,7 +667,7 @@ export const selectCategory = async (gameCode: string, category: string, isRando
         // Obie drużyny wybrały to samo - pokaż od razu overlay wybrano kategorię
         await updateDoc(gameRef, {
           categorySelectedAlert: true,
-          selectedCategoryName: category,
+          selectedCategoryName: displayName,
           isCategoryRandomlySelected: isRandomlySelected,
         });
         
@@ -698,7 +699,7 @@ export const selectCategory = async (gameCode: string, category: string, isRando
               categoryDrawingAlert: false,
               categoryDrawingFadeOut: false,
               categorySelectedAlert: true,
-              selectedCategoryName: category,
+              selectedCategoryName: displayName,
               isCategoryRandomlySelected: isRandomlySelected,
             });
           }, 300);
@@ -716,7 +717,7 @@ export const selectCategory = async (gameCode: string, category: string, isRando
         // Obie drużyny wybrały to samo - pokaż od razu overlay wybrano kategorię
         await localGameStorage.updateGame(gameCode, {
           categorySelectedAlert: true,
-          selectedCategoryName: category,
+          selectedCategoryName: displayName,
           isCategoryRandomlySelected: isRandomlySelected,
         });
         
@@ -732,14 +733,25 @@ export const selectCategory = async (gameCode: string, category: string, isRando
     }
   };
   
+  // Ustal nazwę wyświetlaną dla kategorii (bez względu na to, czy `category` jest ID czy nazwą)
+  const resolveDisplayName = (rawCategory: string, customCat?: any): string => {
+    if (customCat) return customCat.name || rawCategory;
+    const meta = getCategoryMetaById(rawCategory);
+    return meta?.category || rawCategory;
+  };
+
   if (useFirebase) {
     const gameRef = doc(db, 'games', gameCode);
     const gameSnap = await getDoc(gameRef);
     const gameData = gameSnap.data() as any;
     
-    // Sprawdź czy to własna kategoria
-    const customCat = gameData?.hostCustomCategories?.find((cat: any) => cat.name === category);
+    // Sprawdź czy to własna kategoria (po ID lub nazwie - dla zgodności wstecznej)
+    const customCat = gameData?.hostCustomCategories?.find(
+      (cat: any) => cat.id === category || cat.name === category,
+    );
     let categoryQuestions;
+    let selectedCategory = category;
+    let selectedCategoryName: string;
     
     if (customCat) {
       // Użyj pytań z własnej kategorii
@@ -752,15 +764,23 @@ export const selectCategory = async (gameCode: string, category: string, isRando
             points: 100 - (aIdx * 10) // 100, 90, 80, 70, 60...
           }))
       }));
+      selectedCategory = customCat.id || category;
+      selectedCategoryName = resolveDisplayName(category, customCat);
       console.log(`[SELECT] Using custom category with ${categoryQuestions.length} questions`);
     } else {
-      // Pobierz pytania dla wybranej kategorii ze standardowych
+      // Pobierz pytania dla wybranej kategorii ze standardowych (ID lub nazwa)
       categoryQuestions = getQuestionsByCategory(category);
+      selectedCategoryName = resolveDisplayName(category);
+      const meta = getCategoryMetaById(category);
+      if (meta) {
+        selectedCategory = meta.id;
+      }
       console.log(`[SELECT] Using standard category with ${categoryQuestions.length} questions`);
     }
     
     await updateDoc(gameRef, {
-      selectedCategory: category,
+      selectedCategory,
+      selectedCategoryName,
       categorySelectedAt: new Date().toISOString(),
       currentQuestionIndex: 0,
       buzzedTeam: null,
@@ -768,16 +788,20 @@ export const selectCategory = async (gameCode: string, category: string, isRando
       categoryVotes: {},
       currentRound: categoryQuestions, // Zapisz pytania z wybranej kategorii
     });
-    console.log(`[SELECT] Category ${category} saved to Firestore`);
+    console.log(`[SELECT] Category ${selectedCategory} saved to Firestore (display: ${selectedCategoryName})`);
     
-    await showCategorySelectedAlert(gameCode, category, isRandomlySelected);
+    await showCategorySelectedAlert(gameCode, selectedCategoryName, isRandomlySelected);
   } else {
     // Demo mode
     const gameData = await localGameStorage.getGame(gameCode);
     
-    // Sprawdź czy to własna kategoria
-    const customCat = gameData?.hostCustomCategories?.find((cat: any) => cat.name === category);
+    // Sprawdź czy to własna kategoria (po ID lub nazwie)
+    const customCat = gameData?.hostCustomCategories?.find(
+      (cat: any) => cat.id === category || cat.name === category,
+    );
     let categoryQuestions;
+    let selectedCategory = category;
+    let selectedCategoryName: string;
     
     if (customCat) {
       // Użyj pytań z własnej kategorii
@@ -790,15 +814,23 @@ export const selectCategory = async (gameCode: string, category: string, isRando
             points: 100 - (aIdx * 10)
           }))
       }));
+      selectedCategory = customCat.id || category;
+      selectedCategoryName = resolveDisplayName(category, customCat);
       console.log(`[SELECT] Using custom category with ${categoryQuestions.length} questions`);
     } else {
-      // Pobierz pytania dla wybranej kategorii ze standardowych
+      // Pobierz pytania dla wybranej kategorii ze standardowych (ID lub nazwa)
       categoryQuestions = getQuestionsByCategory(category);
+      selectedCategoryName = resolveDisplayName(category);
+      const meta = getCategoryMetaById(category);
+      if (meta) {
+        selectedCategory = meta.id;
+      }
       console.log(`[SELECT] Using standard category with ${categoryQuestions.length} questions`);
     }
     
     await localGameStorage.updateGame(gameCode, {
-      selectedCategory: category,
+      selectedCategory,
+      selectedCategoryName,
       categorySelectedAt: new Date().toISOString(),
       currentQuestionIndex: 0,
       buzzedTeam: null,
@@ -806,9 +838,9 @@ export const selectCategory = async (gameCode: string, category: string, isRando
       categoryVotes: {},
       currentRound: categoryQuestions, // Zapisz pytania z wybranej kategorii
     });
-    console.log(`[SELECT] Category ${category} saved to local storage`);
+    console.log(`[SELECT] Category ${selectedCategory} saved to local storage (display: ${selectedCategoryName})`);
     
-    await showCategorySelectedAlert(gameCode, category, isRandomlySelected);
+    await showCategorySelectedAlert(gameCode, selectedCategoryName, isRandomlySelected);
   }
 };
 

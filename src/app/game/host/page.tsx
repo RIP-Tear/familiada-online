@@ -220,8 +220,13 @@ export default function HostGamePage() {
       if (data.selectedCategory && !selectedCategory) {
         setSelectedCategory(data.selectedCategory);
 
-        // Sprawdź czy to custom category
-        const customCat = data.hostCustomCategories?.find((cat: any) => cat.name === data.selectedCategory);
+        // Sprawdź czy to custom category (po id lub nazwie)
+        const customCat = data.hostCustomCategories?.find(
+          (cat: any) =>
+            cat.id === data.selectedCategory ||
+            cat.name === (data as any).selectedCategoryName ||
+            cat.name === data.selectedCategory,
+        );
         if (customCat) {
           // Użyj pytań z custom category
           const customQuestions = customCat.questions.map((q: any, idx: number) => ({
@@ -342,14 +347,33 @@ export default function HostGamePage() {
 
     try {
       await selectCategory(gameCode, category, isRandomlySelected);
-      
-      // Zapisz wybraną kategorię lokalnie
-      gameHistoryStorage.addUsedCategory(gameCode, category);
-      
-      // Aktualizuj stan używanych kategorii
-      setUsedCategories(prev => [...prev, category]);
-      
-      console.log(`[HOST] Selected category: ${category}`);
+
+      // Ustal nazwę wyświetlaną kategorii (do historii użytych kategorii)
+      let displayName: string = category;
+
+      // Najpierw spróbuj znaleźć w kategoriach standardowych (po id lub nazwie)
+      const standardCat: any = categories.find(
+        (c: any) => c.id === category || c.category === category,
+      );
+      if (standardCat?.category) {
+        displayName = standardCat.category;
+      } else if (hostCustomCategories && hostCustomCategories.length > 0) {
+        // Jeśli to kategoria własna prowadzącego, szukaj po id lub nazwie
+        const customCat = hostCustomCategories.find(
+          (cat: any) => cat.id === category || cat.name === category,
+        );
+        if (customCat?.name) {
+          displayName = customCat.name;
+        }
+      }
+
+      // Zapisz wybraną kategorię lokalnie po nazwie wyświetlanej
+      gameHistoryStorage.addUsedCategory(gameCode, displayName);
+
+      // Aktualizuj stan używanych kategorii również po nazwie
+      setUsedCategories((prev) => [...prev, displayName]);
+
+      console.log(`[HOST] Selected category: ${category} (display: ${displayName})`);
     } catch (error) {
       console.error("[HOST] Error selecting category:", error);
       setIsSelecting(false);
@@ -1207,14 +1231,19 @@ export default function HostGamePage() {
                       {team1Vote ? (
                         <>
                           {(() => {
-                            const cat = categories.find(c => c.category === team1Vote);
-                            const isUsed = usedCategories.includes(team1Vote);
+                            const cat: any =
+                              categories.find((c: any) => c.id === team1Vote) ||
+                              categories.find((c: any) => c.category === team1Vote);
+                            const displayName = cat?.category || team1Vote;
+                            const isUsed = cat
+                              ? usedCategories.includes(cat.category)
+                              : usedCategories.includes(team1Vote);
                             return (
                               <>
                                 <div className="category-icon">
                                   {getDifficultyStars(cat?.difficulty)}
                                 </div>
-                                <h3 className="category-name">{team1Vote}</h3>
+                                <h3 className="category-name">{displayName}</h3>
                                 <p className="category-difficulty">
                                   {getDifficultyLabel(cat?.difficulty)}
                                 </p>
@@ -1241,14 +1270,19 @@ export default function HostGamePage() {
                       {team2Vote ? (
                         <>
                           {(() => {
-                            const cat = categories.find(c => c.category === team2Vote);
-                            const isUsed = usedCategories.includes(team2Vote);
+                            const cat: any =
+                              categories.find((c: any) => c.id === team2Vote) ||
+                              categories.find((c: any) => c.category === team2Vote);
+                            const displayName = cat?.category || team2Vote;
+                            const isUsed = cat
+                              ? usedCategories.includes(cat.category)
+                              : usedCategories.includes(team2Vote);
                             return (
                               <>
                                 <div className="category-icon">
                                   {getDifficultyStars(cat?.difficulty)}
                                 </div>
-                                <h3 className="category-name">{team2Vote}</h3>
+                                <h3 className="category-name">{displayName}</h3>
                                 <p className="category-difficulty">
                                   {getDifficultyLabel(cat?.difficulty)}
                                 </p>
