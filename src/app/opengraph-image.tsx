@@ -1,6 +1,8 @@
 import { ImageResponse } from 'next/og'
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
+
+export const dynamic = 'force-static'
  
 // Rozmiar obrazu
 export const size = {
