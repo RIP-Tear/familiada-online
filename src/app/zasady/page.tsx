@@ -1,7 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { PiArrowLeftBold, PiGameControllerFill, PiUsersFill, PiUserPlusFill, PiLightningFill, PiTrophyFill, PiXCircleFill, PiCheckCircleFill } from "react-icons/pi";
+import { PiArrowLeftBold, PiGameControllerFill, PiUsersFill, PiUserPlusFill, PiLightningFill, PiTrophyFill, PiXCircleFill, PiCheckCircleFill, PiMagicWandBold } from "react-icons/pi";
 import "./rules.scss";
 
 export default function RulesPage() {
@@ -299,7 +299,7 @@ export default function RulesPage() {
           <div className="rules-text">
             <div className="info-box">
               <PiCheckCircleFill />
-              <p><strong>Tylko prowadzący może tworzyć własne kategorie pytań!</strong> Stworzone kategorie będą dostępne do głosowania dla drużyn podczas wyboru kategorii.</p>
+              <p><strong>Prowadzący może tworzyć własne kategorie pytań</strong> - ręcznie lub przy pomocy AI. <strong>Drużyny i uczestnicy</strong> mogą dodatkowo wygenerować własną kategorię przy pomocy AI podczas głosowania na kategorię. Wszystkie stworzone kategorie są dostępne do głosowania dla obu drużyn.</p>
             </div>
 
             <h3>Kiedy można stworzyć kategorię?</h3>
@@ -363,6 +363,36 @@ export default function RulesPage() {
               <li>Kategorie stworzone w poczekalni pojawią się w głosowaniu gdy drużyny dołączą</li>
               <li>Możesz edytować kategorię nawet gdy drużyny już są w grze (przed rozpoczęciem rundy)</li>
               <li><strong>Nie można usunąć</strong> stworzonych kategorii - upewnij się przed zapisaniem!</li>
+            </ul>
+
+            <h3><PiMagicWandBold /> Generowanie pytań przez AI (prowadzący)</h3>
+            <p>Zamiast wpisywać pytania i odpowiedzi ręcznie, prowadzący może skorzystać z przycisku <strong>"Wygeneruj pytania i odpowiedzi"</strong>, który automatycznie stworzy całą kategorię przy pomocy AI.</p>
+            <ol>
+              <li><strong>Co musisz podać przed wygenerowaniem:</strong>
+                <ul>
+                  <li>Nazwę kategorii - im bardziej konkretna, tym lepsze pytania</li>
+                  <li>Poziom trudności: łatwy, średni lub trudny</li>
+                </ul>
+              </li>
+              <li><strong>Co wygeneruje AI:</strong>
+                <ul>
+                  <li>Dokładnie <strong>5 pytań</strong> dopasowanych do podanej kategorii i trudności</li>
+                  <li>Dla każdego pytania <strong>od 3 do 10 odpowiedzi</strong>, posortowanych od najbardziej do najmniej popularnej</li>
+                </ul>
+              </li>
+              <li><strong>Nadpisywanie:</strong> Jeśli w formularzu masz już wpisane jakiekolwiek pytania lub odpowiedzi, przed wygenerowaniem pojawi się pytanie o potwierdzenie - wygenerowanie nadpisze wszystko, co zostało wpisane ręcznie.</li>
+              <li><strong>Edycja po wygenerowaniu:</strong> Wygenerowane przez AI pytania i odpowiedzi możesz <strong>dowolnie edytować</strong> - zmieniać treść, dodawać/usuwać odpowiedzi, zmieniać ich kolejność - dokładnie tak samo jak przy ręcznie tworzonej kategorii.</li>
+            </ol>
+
+            <h3><PiMagicWandBold /> Generowanie kategorii przez drużyny i uczestników</h3>
+            <p>Podczas głosowania na kategorię (ekran "Głosuj na kategorię pytań!") każda drużyna i każdy uczestnik ma dostępny przycisk <strong>"Wygeneruj kategorię"</strong>, który pozwala samodzielnie stworzyć nową kategorię przy pomocy AI.</p>
+            <ul>
+              <li>Po kliknięciu pojawia się okno z zasadami, które trzeba potwierdzić przed przejściem dalej</li>
+              <li>Trzeba podać <strong>nazwę kategorii</strong> i wybrać <strong>poziom trudności</strong> - tak samo jak u prowadzącego</li>
+              <li>Drużyny i uczestnicy <strong>nie mogą ręcznie pisać pytań ani odpowiedzi</strong> - jedyna opcja to wygenerowanie ich przez AI</li>
+              <li><strong>Nie można podejrzeć ani edytować</strong> wygenerowanych przez siebie pytań i odpowiedzi - ani przed, ani po stworzeniu kategorii</li>
+              <li>Po wygenerowaniu kategoria od razu pojawia się na liście "Własne kategorie" (oznaczona na fioletowo) i jest <strong>dostępna do głosowania dla obu drużyn</strong> - łącznie z drużyną, która ją stworzyła</li>
+              <li>Nowo stworzone kategorie pojawiają się na górze listy własnych kategorii, od najnowszej</li>
             </ul>
 
             <div className="success-box">

@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     default: "Familiada Online - Gra Familijna Za Darmo | Multiplayer Po Polsku",
     template: "%s | Familiada Online"
   },
-  description: "Familiada Online - gra familijna za darmo! Multiplayer po polsku z własnymi pytaniami. Graj na telefon lub komputer. Tablica online, buzzer i rozgrywka jak w teleturnieju. Familiada gra online za darmo!",
+  description: "Familiada Online - gra familijna za darmo! Multiplayer po polsku z własnymi pytaniami generowanymi przez AI. Graj na telefon lub komputer. Tablica online, buzzer i rozgrywka jak w teleturnieju. Familiada gra online za darmo!",
   keywords: [
     "familiada",
     "familiada online",
@@ -33,6 +33,10 @@ export const metadata: Metadata = {
     "familiada online multiplayer",
     "gra familijna online",
     "familiada online własne pytania",
+    "familiada ai",
+    "generator pytań ai",
+    "pytania generowane przez ai",
+    "familiada z ai",
     "gry familiada",
     "familiada gra online po polsku",
     "familiada w domu",
@@ -68,7 +72,7 @@ export const metadata: Metadata = {
     url: siteUrl,
     siteName: "Familiada Online",
     title: "Familiada Online - Gra Familijna Za Darmo | Multiplayer Po Polsku",
-    description: "Familiada gra online za darmo! Multiplayer z własnymi pytaniami, graj na telefon lub komputer. Tablica online jak w teleturnieju. Bez pobierania - graj w przeglądarce!",
+    description: "Familiada gra online za darmo! Multiplayer z własnymi pytaniami generowanymi przez AI, graj na telefon lub komputer. Tablica online jak w teleturnieju. Bez pobierania - graj w przeglądarce!",
     images: [
       {
         url: `${siteUrl}/og-image.png`,
@@ -83,7 +87,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Familiada Online - Gra Familijna Za Darmo | Multiplayer Po Polsku",
-    description: "Familiada gra online za darmo! Multiplayer z własnymi pytaniami, graj na telefon lub komputer. Tablica online jak w teleturnieju. Bez pobierania - graj w przeglądarce!",
+    description: "Familiada gra online za darmo! Multiplayer z własnymi pytaniami generowanymi przez AI, graj na telefon lub komputer. Tablica online jak w teleturnieju. Bez pobierania - graj w przeglądarce!",
     images: [`${siteUrl}/og-image.png`],
   },
   
@@ -148,7 +152,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
     "name": "Familiada Online",
     "alternateName": ["Familiada - Gra Familijna", "Familiada Gra Online", "Gra Familiada Online", "Familiada Multiplayer"],
     "url": siteUrl,
-    "description": "Familiada gra online za darmo! Multiplayer po polsku z własnymi pytaniami, graj na telefon lub komputer. Tablica online jak w teleturnieju. Bez pobierania!",
+    "description": "Familiada gra online za darmo! Multiplayer po polsku z własnymi pytaniami generowanymi przez AI, graj na telefon lub komputer. Tablica online jak w teleturnieju. Bez pobierania!",
     "applicationCategory": "Game",
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript. Requires HTML5.",
@@ -158,7 +162,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       "priceCurrency": "PLN",
       "availability": "https://schema.org/InStock"
     },
-    "featureList": "multiplayer online, własne pytania, gra na telefon, tablica online, gra za darmo, po polsku, bez rejestracji, bez pobierania",
+    "featureList": "multiplayer online, własne pytania, generowanie pytań przez AI, gra na telefon, tablica online, gra za darmo, po polsku, bez rejestracji, bez pobierania",
     "aggregateRating": {
       "@type": "AggregateRating",
       "ratingValue": "4.8",
@@ -177,7 +181,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       "name": "Familiada Online",
       "url": siteUrl
     },
-    "keywords": "familiada online, familiada gra online, familiada gra, gra familiada online, familiada gra za darmo, familiada online multiplayer, gra familijna online, własne pytania, na telefon, po polsku, za darmo, bez pobierania, tablica online",
+    "keywords": "familiada online, familiada gra online, familiada gra, gra familiada online, familiada gra za darmo, familiada online multiplayer, gra familijna online, własne pytania, generator pytań ai, pytania generowane przez ai, na telefon, po polsku, za darmo, bez pobierania, tablica online",
     "image": `${siteUrl}/og-image.png`,
     "screenshot": `${siteUrl}/og-image.png`
   };

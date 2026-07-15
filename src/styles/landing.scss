@@ -90,7 +90,7 @@
 
 // === HERO SECTION ===
 .hero {
-  &-section { min-height: 100vh; @include fx-b; padding: 4rem 6rem; position: relative; gap: 4rem; align-items: center; justify-content: space-between; }
+  &-section { min-height: min(100vh, 780px); @include fx-b; padding: 4rem 6rem; position: relative; gap: 4rem; align-items: center; justify-content: space-between; }
   &-background { @include abs(0, 0, 0, 0); position: absolute; width: 100%; height: 100%; background: radial-gradient(circle at 20% 80%, rgba($c-yellow, .1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba($c-green, .15) 0%, transparent 50%); pointer-events: none; }
   &-content { flex: 1; z-index: 1; animation: fadeInLeft 1s ease-out; }
   &-badge { 
@@ -379,7 +379,7 @@
   z-index: 1;
 }
 
-.custom-feature { 
+.custom-feature {
   display: flex;
   gap: $s-lg;
   align-items: flex-start;
@@ -388,11 +388,23 @@
   border-radius: $r-4;
   border: 2px solid rgba($c-yellow, .2);
   transition: all .4s ease;
-  
+
   &:hover {
     transform: translateY(-5px);
     border-color: rgba($c-yellow, .4);
     box-shadow: 0 15px 40px rgba($c-black, .3);
+  }
+
+  &.ai-feature {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, rgba(#9b5de5, .35), rgba(#6a3ec2, .2));
+    border: 2px solid rgba(#9b5de5, .5);
+    box-shadow: 0 0 30px rgba(#9b5de5, .25);
+
+    &:hover {
+      border-color: rgba(#9b5de5, .8);
+      box-shadow: 0 15px 40px rgba(#9b5de5, .45);
+    }
   }
 }
 
@@ -429,6 +441,12 @@
       background: $g-bright;
       color: $c-white;
       animation: iconPulse 2s ease-in-out infinite 1.5s;
+    }
+
+    &.ai {
+      background: linear-gradient(135deg, #9b5de5, #6a3ec2);
+      color: $c-white;
+      animation: iconPulse 2s ease-in-out infinite;
     }
   }
 }
@@ -693,8 +711,8 @@
 @include mq('xl') { .hero-section, .features-section, .how-it-works-section, .extra-section, .custom-categories-section, .security-section, .seo-section { padding: 3rem; } .features-grid { grid-template-columns: 1fr; } .extra-grid { grid-template-columns: repeat(2, 1fr); } .custom-categories-content { grid-template-columns: 1fr; } .security-features { grid-template-columns: 1fr; } }
 
 @include mq('md') {
-  .hero { 
-    &-section { padding: 3rem; flex-direction: column; text-align: center; } 
+  .hero {
+    &-section { min-height: auto; padding: 3rem; flex-direction: column; text-align: center; }
     &-content { align-items: center; } 
     &-description { margin-left: auto; margin-right: auto; } 
     &-buttons { justify-content: center; flex-direction: column; width: 100%; } 

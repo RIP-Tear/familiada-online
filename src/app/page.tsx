@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { PiGameControllerFill, PiUsersThreeFill, PiLightningFill, PiTrophyFill, PiArrowRightBold, PiSparkle, PiStarFill } from "react-icons/pi";
+import { PiGameControllerFill, PiUsersThreeFill, PiLightningFill, PiTrophyFill, PiArrowRightBold, PiSparkle, PiStarFill, PiMagicWandBold } from "react-icons/pi";
 import Script from "next/script";
 import "../styles/landing.scss";
 
@@ -391,16 +391,35 @@ const Page = () => {
       <section className="custom-categories-section">
         <div className={`section-header animate-on-scroll ${isVisible['custom-header'] ? 'visible' : ''}`} id="custom-header">
           <span className="section-badge">
-            <PiSparkle /> Twoja gra, Twoje pytania <PiSparkle />
+            <PiSparkle /> Twoja gra, Twoje pytania - teraz z AI! <PiSparkle />
           </span>
           <h2 className="section-title-landing">Twórz własne kategorie</h2>
           <p className="section-subtitle">
-            Spersonalizuj swoją rozgrywkę! Jako prowadzący możesz stworzyć unikalne kategorie 
-            pytań dostosowane do zainteresowań Twoich graczy.
+            Spersonalizuj swoją rozgrywkę! Napisz pytania i odpowiedzi samodzielnie
+            albo <strong>wygeneruj je automatycznie przy pomocy AI</strong> w kilka sekund -
+            wystarczy podać nazwę kategorii i poziom trudności.
           </p>
         </div>
 
         <div className="custom-categories-content">
+          <div className={`custom-feature ai-feature animate-on-scroll ${isVisible['custom-ai'] ? 'visible' : ''}`} id="custom-ai">
+            <div className="custom-icon">
+              <div className="icon-wrapper ai">
+                <PiMagicWandBold />
+              </div>
+            </div>
+            <div className="custom-text">
+              <h3 className="custom-title">Pytania i odpowiedzi generowane przez AI</h3>
+              <p className="custom-description">
+                Podaj tylko nazwę kategorii i poziom trudności, a AI błyskawicznie wygeneruje
+                <strong> 5 pytań wraz z odpowiedziami</strong> - bez pisania czegokolwiek samodzielnie!
+                Wygenerowaną treść możesz potem dowolnie edytować. Co więcej, <strong>drużyny
+                i uczestnicy</strong> również mogą samodzielnie wygenerować własną kategorię AI
+                podczas głosowania - żeby zaskoczyć wszystkich niespodziewanym tematem!
+              </p>
+            </div>
+          </div>
+
           <div className={`custom-feature animate-on-scroll ${isVisible['custom-1'] ? 'visible' : ''}`} id="custom-1">
             <div className="custom-icon">
               <div className="icon-wrapper create">
@@ -410,7 +429,8 @@ const Page = () => {
             <div className="custom-text">
               <h3 className="custom-title">Pełna kontrola nad pytaniami</h3>
               <p className="custom-description">
-                Twórz własne pytania z odpowiedziami dopasowanymi do Twojej grupy. 
+                Twórz własne pytania z odpowiedziami dopasowanymi do Twojej grupy, ręcznie
+                lub z pomocą AI jako punktu startowego.
                 Każda kategoria zawiera 5 pytań, a każde pytanie może mieć od 3 do 10 odpowiedzi.
                 Określasz kolejność odpowiedzi, która wpływa na punktację!
               </p>
@@ -470,9 +490,10 @@ const Page = () => {
           <div className="note-box">
             <PiSparkle className="note-icon" />
             <p className="note-text">
-              <strong>Wskazówka:</strong> Najlepsze kategorie to te, które znają wszyscy gracze! 
-              Twórz pytania dopasowane do zainteresowań Twojej grupy - od memów po wspólne 
-              doświadczenia. Pamiętaj, że kolejność odpowiedzi określa punktację (pierwsza = 100 pkt).
+              <strong>Wskazówka:</strong> Nie masz pomysłu na pytania? Kliknij "Wygeneruj pytania
+              i odpowiedzi" i pozwól AI zrobić to za Ciebie! Najlepsze kategorie to te, które znają
+              wszyscy gracze - twórz pytania dopasowane do zainteresowań Twojej grupy, od memów po
+              wspólne doświadczenia. Pamiętaj, że kolejność odpowiedzi określa punktację (pierwsza = 100 pkt).
             </p>
           </div>
         </div>
@@ -588,9 +609,16 @@ const Page = () => {
               Nasza <strong>tablica online</strong> wygląda dokładnie jak w prawdziwym teleturnieju.
             </p>
             <p>
-              Jedną z najlepszych funkcji jest możliwość tworzenia <strong>własnych pytań</strong>. Jako prowadzący możesz 
-              przygotować pytania dopasowane do Twojej grupy, co sprawia, że <strong>familiada w domu</strong> jest jeszcze 
+              Jedną z najlepszych funkcji jest możliwość tworzenia <strong>własnych pytań</strong>. Jako prowadzący możesz
+              przygotować pytania dopasowane do Twojej grupy, co sprawia, że <strong>familiada w domu</strong> jest jeszcze
               bardziej osobista i zabawna. To idealna <strong>gra online</strong> na imprezę lub spotkanie rodzinne!
+            </p>
+            <p>
+              Nie masz czasu na pisanie pytań? Skorzystaj z <strong>generatora pytań AI</strong> wbudowanego w grę!
+              Wystarczy podać nazwę kategorii i poziom trudności, a <strong>pytania generowane przez AI</strong> pojawią się
+              w kilka sekund - razem z gotowymi odpowiedziami. Co więcej, własną kategorię przy pomocy AI mogą
+              wygenerować też drużyny i uczestnicy podczas gry, co czyni <strong>familiadę z AI</strong> jeszcze bardziej
+              nieprzewidywalną i zabawną.
             </p>
             <p>
               <strong>Gra familiada online</strong> nie wymaga rejestracji ani pobierania. Po prostu wejdź na stronę, 
