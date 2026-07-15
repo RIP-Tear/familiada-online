@@ -126,6 +126,7 @@ function CategoryEditorContent() {
   const [isGeneratingAi, setIsGeneratingAi] = useState(false);
   const [aiError, setAiError] = useState('');
   const [showOverwriteConfirm, setShowOverwriteConfirm] = useState(false);
+  const [isAiGenerated, setIsAiGenerated] = useState(false);
   const categoryNameRef = useRef<HTMLTextAreaElement>(null);
   const questionRef = useRef<HTMLTextAreaElement>(null);
 
@@ -167,6 +168,7 @@ function CategoryEditorContent() {
             question: q.question,
             answers: [...q.answers, '', ''].slice(0, Math.max(q.answers.length, 3))
           })));
+          setIsAiGenerated(!!categoryToEdit.aiGenerated);
         }
       }
     });
@@ -267,7 +269,8 @@ function CategoryEditorContent() {
         questions: customQuestions.map(q => ({
           question: q.question.trim(),
           answers: q.answers.filter(a => a.trim() !== '').map(a => a.trim())
-        }))
+        })),
+        aiGenerated: isAiGenerated,
       };
       
       const updatedCategories = editCategoryId
@@ -337,6 +340,7 @@ function CategoryEditorContent() {
           answers: q.answers.length >= 3 ? q.answers : [...q.answers, '', ''].slice(0, 3),
         }))
       );
+      setIsAiGenerated(true);
       setCreatorStep(1);
     } catch (error) {
       console.error('Error generating category with AI:', error);
@@ -568,7 +572,7 @@ function CategoryEditorContent() {
         <h2 className="modal-title">Nadpisać istniejące pytania?</h2>
         <p className="modal-message">
           Masz już wpisane pytania lub odpowiedzi w tej kategorii. Wygenerowanie
-          pytań przez AI nadpisze wszystko, co zostało dotąd wpisane ręcznie.
+          pytań nadpisze wszystko, co zostało dotąd wpisane ręcznie.
         </p>
         <p className="modal-warning">
           <PiWarningFill /> Tej operacji nie można cofnąć

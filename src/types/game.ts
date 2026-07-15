@@ -20,12 +20,14 @@ export interface QuestionSet {
   name?: string;
   difficulty: 'easy' | 'medium' | 'hard';
   questions: SimpleQuestion[];
+  aiGenerated?: boolean;
 }
 
 export interface CategoryInfo {
   id: string;
   category: string;
   difficulty: 'easy' | 'medium' | 'hard';
+  aiGenerated?: boolean;
 }
 
 // Typy dla gry

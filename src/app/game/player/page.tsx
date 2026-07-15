@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, Fragment } from "react";
+import { useState, useEffect, useRef, Fragment } from "react";
 import { useRouter } from "next/navigation";
 import { useAppSelector } from "@/redux/hooks";
 import {
@@ -13,6 +13,7 @@ import {
   voteForCategoryAsParticipant,
   teamLeftGame,
   assignBuzzer,
+  saveCustomCategory,
 } from "@/utils/firebaseUtils";
 import { gameHistoryStorage } from "@/utils/gameHistoryStorage";
 import {
@@ -37,8 +38,9 @@ import {
   PiFlagCheckeredFill,
   PiArrowClockwiseBold,
   PiQuestionFill,
+  PiMagicWandBold,
 } from "react-icons/pi";
-import { Navbar } from "@/components";
+import { Navbar, Modal } from "@/components";
 import "@/styles/game.scss";
 import "@/styles/board.scss";
 
@@ -63,10 +65,89 @@ export default function PlayerGamePage() {
   >({}); // Głosy uczestników na kategorie (dla kapitana)
   const [mounted, setMounted] = useState(false); // Fix dla hydratacji
 
+  // Generowanie własnej kategorii przez drużynę/uczestnika
+  const [showGenerateInfoModal, setShowGenerateInfoModal] = useState(false);
+  const [isCreatingOwnCategory, setIsCreatingOwnCategory] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [newCategoryDifficulty, setNewCategoryDifficulty] = useState<
+    "easy" | "medium" | "hard"
+  >("medium");
+  const [isGeneratingTeamCategory, setIsGeneratingTeamCategory] =
+    useState(false);
+  const [teamCategoryError, setTeamCategoryError] = useState("");
+  const teamCategoryNameRef = useRef<HTMLTextAreaElement>(null);
+
   // Fix dla hydratacji - montuj komponent
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    const el = teamCategoryNameRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${el.scrollHeight}px`;
+  }, [newCategoryName, isCreatingOwnCategory]);
+
+  const handleGenerateTeamCategory = async () => {
+    if (!newCategoryName.trim()) {
+      alert("Wprowadź nazwę kategorii");
+      return;
+    }
+
+    setIsGeneratingTeamCategory(true);
+    setTeamCategoryError("");
+
+    try {
+      const response = await fetch("/api/ai/generate-category", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          category: newCategoryName.trim(),
+          difficulty: newCategoryDifficulty,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Błąd generowania pytań");
+      }
+
+      const newCategory = {
+        id: `custom_${Date.now()}`,
+        name: newCategoryName.trim(),
+        category: newCategoryName.trim(),
+        difficulty: newCategoryDifficulty,
+        questions: data.questions,
+        aiGenerated: true,
+      };
+
+      const updatedCategories = [
+        ...(gameData?.hostCustomCategories || []),
+        newCategory,
+      ];
+      await saveCustomCategory(gameCode, updatedCategories);
+
+      setIsCreatingOwnCategory(false);
+      setNewCategoryName("");
+      setNewCategoryDifficulty("medium");
+    } catch (error) {
+      console.error("Error generating team category:", error);
+      setTeamCategoryError(
+        error instanceof Error ? error.message : "Błąd generowania pytań",
+      );
+    } finally {
+      setIsGeneratingTeamCategory(false);
+    }
+  };
+
+  const handleCancelCreatingOwnCategory = () => {
+    setIsCreatingOwnCategory(false);
+    setNewCategoryName("");
+    setNewCategoryDifficulty("medium");
+    setTeamCategoryError("");
+  };
 
   useEffect(() => {
     if (!gameCode) {
@@ -119,11 +200,15 @@ export default function PlayerGamePage() {
           },
         );
 
-        const customCats = completeCategories.map((cat: any, idx: number) => ({
-          id: cat.id || `custom_${idx}_${cat.name}`,
-          category: cat.name,
-          difficulty: cat.difficulty,
-        }));
+        const customCats = completeCategories
+          .slice()
+          .reverse()
+          .map((cat: any, idx: number) => ({
+            id: cat.id || `custom_${idx}_${cat.name}`,
+            category: cat.name,
+            difficulty: cat.difficulty,
+            aiGenerated: !!cat.aiGenerated,
+          }));
 
         // Dodaj custom kategorie na początek
         const filteredCategories = availableCategories.filter(
@@ -292,11 +377,15 @@ export default function PlayerGamePage() {
               },
             );
 
-            const customCats = completeCategories.map((cat: any, idx: number) => ({
-              id: cat.id || `custom_${idx}_${cat.name}`,
-              category: cat.name,
-              difficulty: cat.difficulty,
-            }));
+            const customCats = completeCategories
+              .slice()
+              .reverse()
+              .map((cat: any, idx: number) => ({
+                id: cat.id || `custom_${idx}_${cat.name}`,
+                category: cat.name,
+                difficulty: cat.difficulty,
+                aiGenerated: !!cat.aiGenerated,
+              }));
             const filteredCategories = availableCategories.filter(
               (c) => !customCats.some((cc: any) => cc.category === c.category),
             );
@@ -751,11 +840,99 @@ export default function PlayerGamePage() {
           </div>
         ) : gamePhase === "category-selection" ? (
           // FAZA 1: Wybór kategorii
-          <div className="category-selection">
-            <p className="instruction">Głosuj na kategorię pytań!</p>
+          isCreatingOwnCategory ? (
+            <div className="custom-category-creator-steps">
+              <h2 className="creator-step-title">
+                Nazwa kategorii i trudność
+              </h2>
 
-            <div className="categories-grid">
-              {categories.map((cat: any, index) => {
+                <div className="creator-name-input">
+                  <textarea
+                    ref={teamCategoryNameRef}
+                    className="form-input-large"
+                    value={newCategoryName}
+                    onChange={(e) => setNewCategoryName(e.target.value)}
+                    placeholder="Wpisz nazwę kategorii..."
+                    maxLength={50}
+                    rows={1}
+                  />
+                </div>
+
+                <div className="difficulty-cards">
+                  <div
+                    className={`difficulty-card ${newCategoryDifficulty === "easy" ? "selected" : ""}`}
+                    onClick={() => setNewCategoryDifficulty("easy")}
+                  >
+                    <div className="difficulty-stars easy">
+                      <PiStarFill />
+                    </div>
+                    <div className="difficulty-label">Łatwy</div>
+                  </div>
+                  <div
+                    className={`difficulty-card ${newCategoryDifficulty === "medium" ? "selected" : ""}`}
+                    onClick={() => setNewCategoryDifficulty("medium")}
+                  >
+                    <div className="difficulty-stars medium">
+                      <PiStarFill />
+                      <PiStarFill />
+                    </div>
+                    <div className="difficulty-label">Średni</div>
+                  </div>
+                  <div
+                    className={`difficulty-card ${newCategoryDifficulty === "hard" ? "selected" : ""}`}
+                    onClick={() => setNewCategoryDifficulty("hard")}
+                  >
+                    <div className="difficulty-stars hard">
+                      <PiStarFill />
+                      <PiStarFill />
+                      <PiStarFill />
+                    </div>
+                    <div className="difficulty-label">Trudny</div>
+                  </div>
+                </div>
+
+                {teamCategoryError && (
+                  <p className="ai-generate-error">{teamCategoryError}</p>
+                )}
+
+                <div className="actions-container">
+                  <button
+                    className="btn-ai-generate"
+                    onClick={handleGenerateTeamCategory}
+                    disabled={
+                      !newCategoryName.trim() || isGeneratingTeamCategory
+                    }
+                  >
+                    {isGeneratingTeamCategory ? (
+                      "Generowanie..."
+                    ) : (
+                      <>
+                        <PiMagicWandBold />
+                        Wygeneruj pytania i odpowiedzi
+                      </>
+                    )}
+                  </button>
+                  <button
+                    className="btn-step-cancel"
+                    onClick={handleCancelCreatingOwnCategory}
+                  >
+                    Anuluj
+                  </button>
+                </div>
+              </div>
+          ) : (
+            <div className="category-selection">
+              <p className="instruction">Głosuj na kategorię pytań!</p>
+
+              <button
+                className="btn-ai-generate team-generate-category-btn"
+                onClick={() => setShowGenerateInfoModal(true)}
+              >
+                <PiMagicWandBold /> Wygeneruj kategorię
+              </button>
+
+              <div className="categories-grid">
+                {categories.map((cat: any, index) => {
                 // Sprawdź czy jakaś drużyna zagłosowała na tę kategorię
                 const votedTeams = [];
                 if (gameData?.categoryVotes) {
@@ -805,7 +982,7 @@ export default function PlayerGamePage() {
                       </div>
                     )}
                     <div
-                      className={`category-card ${myVote === cat.id ? "voted" : ""} ${votedTeams.length > 0 ? "has-votes" : ""} ${isUsed ? "used" : ""} ${isCustom ? "custom" : ""} votable`}
+                      className={`category-card ${myVote === cat.id ? "voted" : ""} ${votedTeams.length > 0 ? "has-votes" : ""} ${isUsed ? "used" : ""} ${isCustom ? "custom" : ""} ${cat.aiGenerated ? "ai-generated" : ""} votable`}
                       onClick={() => handleVoteCategory(cat.id)}
                     >
                       <div className="category-icon">
@@ -883,7 +1060,8 @@ export default function PlayerGamePage() {
               <p>Prowadzący wybiera zestaw pytań...</p>
             </div>
           )} */}
-          </div>
+            </div>
+          )
         ) : gamePhase === "buzzer-selection" ? (
           // FAZA 1.5: Wybór gracza do buzzera
           <div>
@@ -1349,7 +1527,51 @@ export default function PlayerGamePage() {
             </p>
           </div>
         ) : null}
+
+        {isGeneratingTeamCategory && (
+          <div className="wrong-answer-overlay ai-generating">
+            <div className="wrong-answer-content">
+              <div className="category-drawing-spinner"></div>
+              <h2 className="wrong-answer-text">
+                Generowanie pytań i odpowiedzi...
+              </h2>
+            </div>
+          </div>
+        )}
       </div>
+
+      <Modal
+        isOpen={showGenerateInfoModal}
+        onClose={() => setShowGenerateInfoModal(false)}
+      >
+        <div className="modal-icon">
+          <PiMagicWandBold />
+        </div>
+        <h2 className="modal-title">Generowanie własnej kategorii</h2>
+        <p className="modal-message">
+          Możesz wygenerować pytania i odpowiedzi do podanej kategorii dla obu
+          drużyn. Możesz na nią później zagłosować - drużyna przeciwna też.
+          Jako drużyna nie możesz jednak podejrzeć ani edytować później pytań
+          i odpowiedzi do wygenerowanej przez siebie kategorii.
+        </p>
+        <div className="modal-buttons">
+          <button
+            className="modal-btn confirm-no"
+            onClick={() => setShowGenerateInfoModal(false)}
+          >
+            <PiXBold /> Anuluj
+          </button>
+          <button
+            className="modal-btn confirm-yes"
+            onClick={() => {
+              setShowGenerateInfoModal(false);
+              setIsCreatingOwnCategory(true);
+            }}
+          >
+            <PiCheckBold /> Rozumiem
+          </button>
+        </div>
+      </Modal>
     </>
   );
 }

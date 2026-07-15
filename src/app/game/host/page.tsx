@@ -212,10 +212,39 @@ export default function HostGamePage() {
       if (data.hostCustomCategories) {
         setHostCustomCategories(data.hostCustomCategories);
       }
-      
-      // Aktualizuj listę dostępnych kategorii
+
+      // Aktualizuj listę dostępnych kategorii (w tym własne kategorie hosta)
       const availableCategories = getAvailableCategories();
-      setCategories(availableCategories);
+
+      if (data.hostCustomCategories && data.hostCustomCategories.length > 0) {
+        const completeCategories = data.hostCustomCategories.filter((cat: any) => {
+          if (!cat.name || !cat.name.trim()) return false;
+          if (!cat.questions || cat.questions.length !== 5) return false;
+
+          return cat.questions.every((q: any) => {
+            if (!q.question || !q.question.trim()) return false;
+            const validAnswers = q.answers?.filter((a: string) => a && a.trim()) || [];
+            return validAnswers.length >= 3;
+          });
+        });
+
+        const customCats = completeCategories
+          .slice()
+          .reverse()
+          .map((cat: any, idx: number) => ({
+            id: cat.id || `custom_${idx}_${cat.name}`,
+            category: cat.name,
+            difficulty: cat.difficulty,
+            aiGenerated: !!cat.aiGenerated,
+          }));
+
+        const filteredCategories = availableCategories.filter(
+          (c) => !customCats.some((cc: any) => cc.category === c.category),
+        );
+        setCategories([...customCats, ...filteredCategories]);
+      } else {
+        setCategories(availableCategories);
+      }
 
       if (data.selectedCategory && !selectedCategory) {
         setSelectedCategory(data.selectedCategory);
