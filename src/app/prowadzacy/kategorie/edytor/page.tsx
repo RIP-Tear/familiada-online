@@ -1,15 +1,17 @@
 "use client";
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAppSelector } from "@/redux/hooks";
 import { subscribeToGame, saveCustomCategory } from "@/utils/firebaseUtils";
-import { Navbar } from "@/components";
+import { Navbar, Modal } from "@/components";
 import {
   PiArrowRightBold,
   PiXBold,
   PiStarFill,
   PiCheckBold,
   PiDotsSixVerticalBold,
+  PiMagicWandBold,
+  PiWarningFill,
 } from "react-icons/pi";
 import "@/styles/game.scss";
 import "@/styles/board.scss";
@@ -121,6 +123,25 @@ function CategoryEditorContent() {
   })));
   const [creatorStep, setCreatorStep] = useState(0); // 0 = nazwa i trudność, 1-5 = pytania
   const [hostCustomCategories, setHostCustomCategories] = useState<QuestionSet[]>([]);
+  const [isGeneratingAi, setIsGeneratingAi] = useState(false);
+  const [aiError, setAiError] = useState('');
+  const [showOverwriteConfirm, setShowOverwriteConfirm] = useState(false);
+  const categoryNameRef = useRef<HTMLTextAreaElement>(null);
+  const questionRef = useRef<HTMLTextAreaElement>(null);
+
+  const autoResize = (el: HTMLTextAreaElement | null) => {
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${el.scrollHeight}px`;
+  };
+
+  useEffect(() => {
+    autoResize(categoryNameRef.current);
+  }, [customCategoryName]);
+
+  useEffect(() => {
+    autoResize(questionRef.current);
+  }, [creatorStep, customQuestions[creatorStep - 1]?.question]);
 
   useEffect(() => {
     document.title = editCategoryId ? "Edytuj kategorię | Familiada Online" : "Nowa kategoria | Familiada Online";
@@ -267,6 +288,64 @@ function CategoryEditorContent() {
     }
   };
 
+  const hasExistingQuestionContent = customQuestions.some(
+    (q) => q.question.trim() || q.answers.some((a) => a.trim())
+  );
+
+  const handleGenerateClick = () => {
+    if (!customCategoryName.trim()) {
+      alert('Wprowadź nazwę kategorii');
+      return;
+    }
+
+    if (hasExistingQuestionContent) {
+      setShowOverwriteConfirm(true);
+      return;
+    }
+
+    handleGenerateWithAi();
+  };
+
+  const handleConfirmOverwrite = () => {
+    setShowOverwriteConfirm(false);
+    handleGenerateWithAi();
+  };
+
+  const handleGenerateWithAi = async () => {
+    setIsGeneratingAi(true);
+    setAiError('');
+
+    try {
+      const response = await fetch('/api/ai/generate-category', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          category: customCategoryName.trim(),
+          difficulty: customDifficulty,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Błąd generowania pytań');
+      }
+
+      setCustomQuestions(
+        data.questions.map((q: { question: string; answers: string[] }) => ({
+          question: q.question,
+          answers: q.answers.length >= 3 ? q.answers : [...q.answers, '', ''].slice(0, 3),
+        }))
+      );
+      setCreatorStep(1);
+    } catch (error) {
+      console.error('Error generating category with AI:', error);
+      setAiError(error instanceof Error ? error.message : 'Błąd generowania pytań');
+    } finally {
+      setIsGeneratingAi(false);
+    }
+  };
+
   const handleCancel = () => {
     if (returnTo === 'game') {
       router.push('/game/host/');
@@ -278,6 +357,16 @@ function CategoryEditorContent() {
   return (
     <>
       <Navbar />
+
+      {isGeneratingAi && (
+        <div className="wrong-answer-overlay ai-generating">
+          <div className="wrong-answer-content">
+            <div className="category-drawing-spinner"></div>
+            <h2 className="wrong-answer-text">Generowanie pytań i odpowiedzi...</h2>
+          </div>
+        </div>
+      )}
+
       <div className="game-container">
         <div className="game-header">
           <h1 className="header-title">
@@ -295,13 +384,14 @@ function CategoryEditorContent() {
               </h2>
               
               <div className="creator-name-input">
-                <input
-                  type="text"
+                <textarea
+                  ref={categoryNameRef}
                   className="form-input-large"
                   value={customCategoryName}
                   onChange={(e) => setCustomCategoryName(e.target.value)}
                   placeholder="Wpisz nazwę kategorii..."
                   maxLength={50}
+                  rows={1}
                 />
               </div>
               
@@ -338,9 +428,25 @@ function CategoryEditorContent() {
                 </div>
               </div>
               
+              {aiError && <p className="ai-generate-error">{aiError}</p>}
+
               <div className="actions-container">
-                <button 
-                  className="btn-step-next" 
+                <button
+                  className="btn-ai-generate"
+                  onClick={handleGenerateClick}
+                  disabled={!customCategoryName.trim() || isGeneratingAi}
+                >
+                  {isGeneratingAi ? (
+                    'Generowanie...'
+                  ) : (
+                    <>
+                      <PiMagicWandBold />
+                      Wygeneruj pytania i odpowiedzi
+                    </>
+                  )}
+                </button>
+                <button
+                  className="btn-step-next"
                   onClick={() => setCreatorStep(1)}
                   disabled={!customCategoryName.trim()}
                 >
@@ -360,8 +466,8 @@ function CategoryEditorContent() {
               </h2>
               
               <div className="question-creator-board">
-                <input
-                  type="text"
+                <textarea
+                  ref={questionRef}
                   className="question-input-large"
                   value={customQuestions[creatorStep - 1].question}
                   onChange={(e) => {
@@ -371,6 +477,7 @@ function CategoryEditorContent() {
                   }}
                   placeholder="Wpisz pytanie..."
                   maxLength={200}
+                  rows={2}
                 />
                 
                 <div className="answers-board">
@@ -453,6 +560,28 @@ function CategoryEditorContent() {
           )}
         </div>
       </div>
+
+      <Modal isOpen={showOverwriteConfirm} onClose={() => setShowOverwriteConfirm(false)}>
+        <div className="modal-icon">
+          <PiWarningFill />
+        </div>
+        <h2 className="modal-title">Nadpisać istniejące pytania?</h2>
+        <p className="modal-message">
+          Masz już wpisane pytania lub odpowiedzi w tej kategorii. Wygenerowanie
+          pytań przez AI nadpisze wszystko, co zostało dotąd wpisane ręcznie.
+        </p>
+        <p className="modal-warning">
+          <PiWarningFill /> Tej operacji nie można cofnąć
+        </p>
+        <div className="modal-buttons">
+          <button className="modal-btn confirm-no" onClick={() => setShowOverwriteConfirm(false)}>
+            <PiXBold /> Anuluj
+          </button>
+          <button className="modal-btn confirm-yes" onClick={handleConfirmOverwrite}>
+            <PiCheckBold /> Tak, nadpisz
+          </button>
+        </div>
+      </Modal>
     </>
   );
 }

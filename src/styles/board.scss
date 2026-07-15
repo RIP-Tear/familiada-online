@@ -171,9 +171,13 @@
     background: linear-gradient(135deg, rgba(52, 152, 219, .95), rgba(41, 128, 185, .95)); 
     .wrong-answer-icon { animation: transferPulse 0.8s ease-in-out infinite; }
   }
-  &-overlay.category-drawing { 
+  &-overlay.category-drawing {
     background: rgba(233, 196, 106, .95);
     animation: overlayFadeIn .3s ease-in-out, overlayFadeOut .3s ease-in-out 2.7s forwards;
+  }
+  &-overlay.ai-generating {
+    background: linear-gradient(135deg, rgba(#9b5de5, .95), rgba(#6a3ec2, .95));
+    animation: overlayFadeIn .3s ease-in-out;
   }
   &-overlay.category-selected { background: rgba(233, 196, 106, .95); }
   &-overlay.next-question { background: rgba($c-green, .95); }
