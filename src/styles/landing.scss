@@ -90,7 +90,7 @@
 
 // === HERO SECTION ===
 .hero {
-  &-section { min-height: min(100vh, 780px); @include fx-b; padding: 4rem 6rem; position: relative; gap: 4rem; align-items: center; justify-content: space-between; }
+  &-section { @include fx-b; padding: 4rem 6rem; position: relative; gap: 4rem; align-items: center; justify-content: space-between; }
   &-background { @include abs(0, 0, 0, 0); position: absolute; width: 100%; height: 100%; background: radial-gradient(circle at 20% 80%, rgba($c-yellow, .1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba($c-green, .15) 0%, transparent 50%); pointer-events: none; }
   &-content { flex: 1; z-index: 1; animation: fadeInLeft 1s ease-out; }
   &-badge { 
@@ -184,7 +184,7 @@
 
 // === FEATURES SECTION ===
 .features {
-  &-section { padding: 0 6rem; background: rgba($c-blue, .3); backdrop-filter: blur(10px); }
+  &-section { padding: 3rem 6rem 0; background: rgba($c-blue, .3); backdrop-filter: blur(10px); }
   &-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2.5rem; }
 }
 
@@ -228,11 +228,72 @@
 .tag { background: rgba($c-green, .3); color: $c-green; padding: .5rem $s-sm; border-radius: $r-4; @include txt(.85rem, bold); border: 2px solid rgba($c-green, .4); }
 
 // Illustrations dla features
-.categories-illustration { display: flex; gap: $s-sm; padding: $s-lg; background: linear-gradient(135deg, rgba($c-blue, .8), rgba($c-green, .6)); border-radius: $r-2; }
-.category-card-demo { flex: 1; background: linear-gradient(135deg, rgba($c-green, .3), rgba($c-blue, .9)); border-radius: $r-3; padding: $s-lg $s-sm; text-align: center; border: 3px solid rgba($c-yellow, .2); transition: all $t-norm; cursor: pointer; &:hover { transform: translateY(-5px); border-color: rgba($c-yellow, .5); } &.card-easy { animation: cardFloat 3s ease-in-out infinite; } &.card-medium { animation: cardFloat 3s ease-in-out infinite 1s; } &.card-hard { animation: cardFloat 3s ease-in-out infinite 2s; } }
-@keyframes cardFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+.categories-illustration {
+  padding: $s-lg;
+  background: linear-gradient(135deg, rgba($c-blue, .8), rgba($c-green, .6));
+  border-radius: $r-2;
+}
 
-.card { &-stars { font-size: $fs-4; margin-bottom: $s-sm; } &-name { @include txt(1.2rem, bold, $c-yellow); } }
+.categories-illustration-header {
+  @include txt(1.1rem, bold, $c-yellow);
+  text-align: center;
+  padding: $s-sm $s-md;
+  background: rgba($c-blue, .8);
+  border-radius: $r-3;
+  margin-bottom: $s-md;
+}
+
+.category-chip-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $s-sm;
+}
+
+.category-chip {
+  position: relative;
+  @include fx-col;
+  align-items: center;
+  gap: .3rem;
+  background: linear-gradient(135deg, rgba($c-green, .3), rgba($c-blue, .9));
+  border: 3px solid rgba($c-yellow, .2);
+  border-radius: $r-3;
+  padding: $s-md $s-sm;
+  transition: all $t-norm;
+  animation: cardFloat 3s ease-in-out infinite;
+
+  &:nth-child(2) { animation-delay: .7s; }
+  &:nth-child(3) { animation-delay: 1.4s; }
+  &:nth-child(4) { animation-delay: 2.1s; }
+
+  &:hover { transform: translateY(-5px); border-color: rgba($c-yellow, .5); }
+
+  .chip-stars { font-size: 1.4rem; }
+  .chip-name { @include txt(.95rem, bold, $c-yellow); }
+
+  &.voted {
+    border-color: $c-yellow;
+    box-shadow: 0 0 15px rgba($c-yellow, .3);
+  }
+
+  .chip-vote {
+    position: absolute; top: -10px; right: -10px;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: $g-bright; color: $c-white;
+    @include fx-c; font-size: .85rem; font-weight: bold;
+    box-shadow: 0 3px 10px rgba($c-black, .4);
+  }
+
+  &.ai-chip {
+    background: linear-gradient(135deg, rgba(#9b5de5, .4), rgba(#6a3ec2, .75));
+    border-color: rgba(#9b5de5, .6);
+
+    &:hover { border-color: rgba(#9b5de5, .9); }
+    .chip-stars { color: #c9a3f0; }
+    .chip-name { color: #e4d1fb; }
+  }
+}
+
+@keyframes cardFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
 .board {
   &-illustration { padding: $s-lg; background: linear-gradient(135deg, rgba($c-blue, .8), rgba($c-green, .6)); border-radius: $r-2; }
@@ -712,11 +773,12 @@
 
 @include mq('md') {
   .hero {
-    &-section { min-height: auto; padding: 3rem; flex-direction: column; text-align: center; }
-    &-content { align-items: center; } 
-    &-description { margin-left: auto; margin-right: auto; } 
-    &-buttons { justify-content: center; flex-direction: column; width: 100%; } 
-    &-stats { justify-content: center; flex-direction: column; gap: $s-md; } 
+    &-section { min-height: auto; padding: 3rem; flex-direction: column; justify-content: flex-start; text-align: center; }
+    &-content { flex: none; align-items: center; }
+    &-image-container { flex: none; }
+    &-description { margin-left: auto; margin-right: auto; }
+    &-buttons { justify-content: center; flex-direction: column; width: 100%; }
+    &-stats { justify-content: center; flex-direction: column; gap: $s-md; }
   }
   
   .title { &-word { font-size: 3rem; } &-subtitle { font-size: $fs-4; } }

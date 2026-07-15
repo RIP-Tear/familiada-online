@@ -208,7 +208,7 @@ const Page = () => {
 
       {/* Features Section */}
       <section id="features" className="features-section">
-        <div className="section-header animate-on-scroll" id="features-header">
+        <div className={`section-header animate-on-scroll ${isVisible['features-header'] ? 'visible' : ''}`} id="features-header">
           <span className="section-badge">
             <PiStarFill /> Funkcje <PiStarFill />
           </span>
@@ -259,17 +259,25 @@ const Page = () => {
             </p>
             <div className="feature-image">
               <div className="categories-illustration">
-                <div className="category-card-demo card-easy">
-                  <div className="card-stars">⭐</div>
-                  <div className="card-name">Łatwe</div>
-                </div>
-                <div className="category-card-demo card-medium">
-                  <div className="card-stars">⭐⭐</div>
-                  <div className="card-name">Średnie</div>
-                </div>
-                <div className="category-card-demo card-hard">
-                  <div className="card-stars">⭐⭐⭐</div>
-                  <div className="card-name">Trudne</div>
+                <div className="categories-illustration-header">Głosowanie na kategorię</div>
+                <div className="category-chip-grid">
+                  <div className="category-chip">
+                    <span className="chip-stars">⭐⭐</span>
+                    <span className="chip-name">Sport</span>
+                  </div>
+                  <div className="category-chip voted">
+                    <span className="chip-vote">✓</span>
+                    <span className="chip-stars">⭐</span>
+                    <span className="chip-name">Kuchnia</span>
+                  </div>
+                  <div className="category-chip">
+                    <span className="chip-stars">⭐⭐⭐</span>
+                    <span className="chip-name">Historia</span>
+                  </div>
+                  <div className="category-chip ai-chip">
+                    <span className="chip-stars"><PiMagicWandBold /></span>
+                    <span className="chip-name">Wygenerowana AI</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -340,7 +348,7 @@ const Page = () => {
 
       {/* How It Works Section */}
       <section className="how-it-works-section">
-        <div className="section-header animate-on-scroll" id="how-header">
+        <div className={`section-header animate-on-scroll ${isVisible['how-header'] ? 'visible' : ''}`} id="how-header">
           <span className="section-badge">
             <PiArrowRightBold /> Jak to działa? <PiArrowRightBold />
           </span>
