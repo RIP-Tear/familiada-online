@@ -104,6 +104,7 @@ export interface GameData {
   questionRevealed?: boolean;
   teamVsAlert?: boolean;
   newGameAlert?: boolean;
+  newGameCount?: number;
   hostLeftAlert?: boolean;
   teamLeftAlert?: boolean;
   teamLeftName?: string;

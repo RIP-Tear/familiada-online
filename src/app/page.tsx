@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { PiGameControllerFill, PiUsersThreeFill, PiLightningFill, PiTrophyFill, PiArrowRightBold, PiSparkle, PiStarFill, PiMagicWandBold } from "react-icons/pi";
+import { PiGameControllerFill, PiUsersThreeFill, PiLightningFill, PiTrophyFill, PiArrowRightBold, PiSparkle, PiStarFill, PiMagicWandBold, PiCoffeeBold, PiHeartFill } from "react-icons/pi";
 import Script from "next/script";
 import "../styles/landing.scss";
 
@@ -150,9 +150,14 @@ const Page = () => {
             <button className="btn-primary" onClick={handleStart}>
               Rozpocznij grę <PiArrowRightBold />
             </button>
-            <button className="btn-secondary" onClick={() => document.getElementById('features').scrollIntoView({ behavior: 'smooth' })}>
-              Zobacz więcej
-            </button>
+            <a
+              className="btn-support"
+              href="https://buycoffee.to/rip-tear"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <PiCoffeeBold /> Postaw nam kawę
+            </a>
           </div>
           <div className="hero-stats">
             <div className="stat-item">
@@ -638,6 +643,24 @@ const Page = () => {
               dlaczego tysiące graczy wybrało naszą <strong>familiadę online</strong>. Rozpocznij grę już teraz i baw się świetnie!
             </p>
           </div>
+        </div>
+      </section>
+
+      {/* Support Bar */}
+      <section className="support-bar">
+        <div className="support-bar-content">
+          <PiHeartFill className="support-bar-icon" />
+          <p className="support-bar-text">
+            Podoba Ci się gra? Wesprzyj nas i pomóż pokryć koszty hostingu i AI!
+          </p>
+          <a
+            className="btn-support"
+            href="https://buycoffee.to/rip-tear"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <PiCoffeeBold /> Postaw nam kawę
+          </a>
         </div>
       </section>
 

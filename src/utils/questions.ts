@@ -150,7 +150,6 @@ const questionSets: QuestionSet[] = [
           "George Clooney",
           "Scarlett Johansson",
           "Chris Hemsworth",
-          "Emma Stone",
         ],
       },
       {

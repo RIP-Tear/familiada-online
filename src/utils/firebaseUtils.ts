@@ -1445,10 +1445,13 @@ export const restartGame = async (gameCode: string): Promise<void> => {
       hostLeftAt: null,
       teamLeftAlert: false,
       teamLeftName: null,
+      newGameCount: (gameData?.newGameCount || 0) + 1,
     });
-    
+
     console.log(`[GAME] Game restarted - teams preserved`);
   } else {
+    const gameData = await localGameStorage.getGame(gameCode) as any;
+
     await localGameStorage.updateGame(gameCode, {
       status: 'waiting',
       gamePhase: 'category-selection',
@@ -1475,6 +1478,7 @@ export const restartGame = async (gameCode: string): Promise<void> => {
       hostLeftAt: null,
       teamLeftAlert: false,
       teamLeftName: null,
+      newGameCount: (gameData?.newGameCount || 0) + 1,
     } as any);
   }
 };

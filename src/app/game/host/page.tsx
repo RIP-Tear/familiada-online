@@ -55,6 +55,8 @@ import {
   PiPlusCircleFill,
   PiDotsSixVerticalBold,
   PiPen,
+  PiHeartFill,
+  PiCoffeeBold,
 } from "react-icons/pi";
 import { Navbar, Modal, Button } from "@/components";
 import "@/styles/game.scss";
@@ -167,6 +169,9 @@ export default function HostGamePage() {
   const [selectedTeamForTransfer, setSelectedTeamForTransfer] = useState(null);
   const [buzzProcessing, setBuzzProcessing] = useState(false);
   const buzzDelayTimeoutRef = useRef(null);
+  const [showSupportModal, setShowSupportModal] = useState(false);
+  const processedNewGameCountRef = useRef<number | null>(null);
+  const isFirstGameSnapshotRef = useRef(true);
   
   // Stan dla tworzenia własnej kategorii
   const [isCreatingCustom, setIsCreatingCustom] = useState(false);
@@ -207,7 +212,22 @@ export default function HostGamePage() {
     // Nasłuchuj zmian w grze
     const unsubscribe = subscribeToGame(gameCode, (data) => {
       setGameData(data);
-      
+
+      // Co drugie "Nowa gra" (1., 3., 5. ...) pokaż modal ze wsparciem, po zniknięciu overlayu
+      // (pomijamy pierwszy snapshot po wejściu na stronę, żeby nie pokazywać modala od razu)
+      const isFirstSnapshot = isFirstGameSnapshotRef.current;
+      isFirstGameSnapshotRef.current = false;
+
+      if (
+        data.newGameCount !== undefined &&
+        data.newGameCount !== processedNewGameCountRef.current
+      ) {
+        processedNewGameCountRef.current = data.newGameCount;
+        if (!isFirstSnapshot && data.newGameCount % 2 === 1) {
+          setTimeout(() => setShowSupportModal(true), 900);
+        }
+      }
+
       // Załaduj listę wszystkich własnych kategorii
       if (data.hostCustomCategories) {
         setHostCustomCategories(data.hostCustomCategories);
@@ -893,6 +913,39 @@ export default function HostGamePage() {
             >
               <PiCheckBold /> Tak, przekaż punkty
             </button>
+          </div>
+        </Modal>
+
+        <Modal
+          isOpen={showSupportModal}
+          onClose={() => setShowSupportModal(false)}
+          className="support-modal"
+        >
+          <div className="modal-icon support-icon">
+            <PiHeartFill />
+          </div>
+          <h2 className="modal-title">Jak Wam się podoba gra?</h2>
+          <p className="modal-message">
+            Cieszymy się, że gracie w Familiadę Online! To projekt studia RIP &amp; Tear,
+            rozwijany z pasji i całkowicie za darmo. Jeśli chcecie nas wesprzeć w
+            utrzymaniu i rozwoju gry, postawcie nam kawę ☕
+          </p>
+          <div className="modal-buttons">
+            <button
+              className="modal-btn btn-later"
+              onClick={() => setShowSupportModal(false)}
+            >
+              Innym razem
+            </button>
+            <a
+              className="modal-btn btn-coffee"
+              href="https://buycoffee.to/rip-tear"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setShowSupportModal(false)}
+            >
+              <PiCoffeeBold /> Postaw nam kawę
+            </a>
           </div>
         </Modal>
 

@@ -52,6 +52,10 @@
     margin-bottom: $s-xs;
     animation: iconPulse 2s ease-in-out infinite;
     display: inline-block;
+
+    &.support-icon {
+      color: $c-white;
+    }
   }
 
   &-title {
@@ -175,6 +179,37 @@
     svg {
       font-size: 1.3rem;
     }
+
+    &.btn-coffee {
+      background: $c-white;
+      color: #e63950;
+      text-decoration: none;
+      box-shadow: 0 4px 15px rgba($c-black, .2);
+
+      &:hover {
+        background: rgba($c-white, .9);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba($c-black, .3);
+      }
+    }
+
+    &.btn-later {
+      background: rgba($c-white, .15);
+      color: $c-white;
+      border: 2px solid rgba($c-white, .4);
+
+      &:hover {
+        background: rgba($c-white, .25);
+        transform: translateY(-2px);
+      }
+    }
+  }
+
+  &-content.support-modal {
+    background: linear-gradient(135deg, #ff4d6d, #e63950);
+    border-color: rgba($c-white, .4);
+
+    .modal-title { color: $c-white; }
   }
 }
 
