@@ -2,7 +2,22 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { PiGameControllerFill, PiUsersThreeFill, PiLightningFill, PiTrophyFill, PiArrowRightBold, PiSparkle, PiStarFill, PiMagicWandBold, PiCoffeeBold, PiHeartFill } from "react-icons/pi";
+import { Bebas_Neue } from "next/font/google";
 import Script from "next/script";
+
+// Czcionka CAŁEGO paska promo Koła Fortuny Online (ten projekt ma własną
+// czcionkę "BPdots" - $f w _variables.scss - więc żeby pasek wyglądał tak
+// jak kolofortuny-online.pl, doładowujemy TĘ SAMĄ czcionkę Google jako
+// zmienną CSS (--font-bebas-neue, zob. .kolofortuny-bar w landing.scss) -
+// NIE jako `font-family: inherit`, bo minifikator CSS scala to z
+// `font: ...` z mixinów @include txt/@include btn w jedną (nieprawidłową)
+// deklarację `font: 2rem/1.5 inherit`, przez co cała reguła jest
+// odrzucana przez przeglądarkę.
+const bebasNeue = Bebas_Neue({
+  variable: "--font-bebas-neue",
+  subsets: ["latin", "latin-ext"],
+  weight: "400",
+});
 import "../styles/landing.scss";
 
 const Page = () => {
@@ -129,7 +144,29 @@ const Page = () => {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
       />
-      
+
+      {/* Promo: Koło Fortuny Online */}
+      <a
+        href="https://kolofortuny-online.pl/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`kolofortuny-bar ${bebasNeue.variable}`}
+      >
+        <div className="kolofortuny-bar-content">
+          <div className="kolofortuny-bar-brand">
+            <span className="kolofortuny-bar-wheel" aria-hidden="true">
+              <span className="kolofortuny-bar-wheel-disc" />
+              <span className="kolofortuny-bar-wheel-pointer" />
+            </span>
+            <span className="kolofortuny-bar-logo">Koło Fortuny</span>
+          </div>
+          <p className="kolofortuny-bar-text">
+            Lubisz Familiadę? Wypróbuj też Koło Fortuny – darmowy teleturniej słowny online, multiplayer po polsku!
+          </p>
+          <span className="btn-kolofortuny">Zagraj teraz</span>
+        </div>
+      </a>
+
       {/* Hero Section */}
       <section className="hero-section">
         <div className="hero-background"></div>
@@ -669,7 +706,7 @@ const Page = () => {
         <div className="footer-content">
           <div className="footer-main">
             <p className="footer-copyright">
-              © 2025 Familiada. Gra stworzona przez{" "}
+              © 2026 Familiada. Gra stworzona przez{" "}
               <a 
                 href="https://www.rip-tear.com/" 
                 target="_blank" 

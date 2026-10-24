@@ -108,11 +108,29 @@ export default function Home() {
               <p>zasady i poradnik</p>
             </div>
           </button>
+
+          <a
+            className="mode-button kolofortuny-button"
+            href="https://kolofortuny-online.pl/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <div className="button-icon">
+              <span className="kolofortuny-wheel" aria-hidden="true">
+                <span className="kolofortuny-wheel-disc" />
+                <span className="kolofortuny-wheel-pointer" />
+              </span>
+            </div>
+            <div className="button-text">
+              <h2>Koło Fortuny</h2>
+              <p>zagraj w inny teleturniej</p>
+            </div>
+          </a>
         </div>
 
         <div className="home-footer">
           <p>
-            © 2025 Familiada. Gra stworzona przez{" "}
+            © 2026 Familiada. Gra stworzona przez{" "}
             <a
               href="https://www.rip-tear.com/"
               target="_blank"

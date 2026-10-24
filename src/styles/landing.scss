@@ -440,8 +440,157 @@
   }
 }
 
+// === KOŁO FORTUNY PROMO BAR ===
+// Kolory marki Koło Fortuny Online (nie z palety Familiady) - navy + gold,
+// żeby pasek czytelnie wyglądał jak promocja INNEJ gry, nie jak część
+// Familiady, a jednocześnie trzymał się tych samych mixinów/zmiennych
+// odstępów co resztę strony (zob. .support-bar wyżej - ta sama struktura).
+// Czcionka (Bebas Neue, zob. bebasNeue w page.tsx) - .kolofortuny-bar ma
+// zmienną CSS --font-bebas-neue (bebasNeue.variable), a logo/tekst/przycisk
+// w środku jawnie ustawiają `font-family: var(--font-bebas-neue), ...`,
+// żeby nadpisać $f (czcionkę Familiady) z @include txt/@include btn.
+// UWAGA: NIE `font-family: inherit` - minifikator CSS (lightningcss w
+// Next.js) scala taki longhand z sąsiednim `font: ...` shorthandem w JEDNĄ,
+// NIEPRAWIDŁOWĄ deklarację (`font: 2rem/1.5 inherit` - "inherit" nie może
+// być częścią shorthand z podanym rozmiarem), przez co cała reguła jest
+// odrzucana przez przeglądarkę i rozmiar/czcionka w ogóle się nie zmieniają.
+$kf-font: var(--font-bebas-neue), sans-serif;
+.kolofortuny-bar {
+  // Cały pasek to teraz <a> (klik gdziekolwiek otwiera kolofortuny-online.pl
+  // w nowej karcie) - display:block + text-decoration:none, bo <a> jest
+  // domyślnie inline i podkreślone.
+  display: block;
+  text-decoration: none;
+  transition: filter $t-fast;
+  // Celowo niski pasek (nie $s-lg jak .support-bar) - to tylko wąski banner
+  // odnośnikowy na samej górze strony, nie pełna sekcja.
+  padding: .5rem 4rem;
+  background: linear-gradient(135deg, #003a5c, #006199);
+  border-bottom: 3px solid #ffd444;
+
+  &:hover {
+    filter: brightness(1.08);
+  }
+}
+
+.kolofortuny-bar-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $s-md;
+  // Wszystko w JEDNEJ linii (nie zawija się do kolejnego rzędu) - tekst
+  // opisu dostaje ellipsis (zob. .kolofortuny-bar-text niżej), zamiast
+  // łamać wiersz, gdy nie ma już miejsca.
+  flex-wrap: nowrap;
+}
+
+.kolofortuny-bar-brand {
+  @include fx-c;
+  gap: .5rem;
+  flex-shrink: 0;
+}
+
+// Mini wersja prawdziwego koła z gry (segmenty jak w Wheel.tsx: kolory
+// graczy + czarny "BANKRUT" + złoty "ZŁOTA KARTA"/"500?"), nie generyczna
+// ikonka kierownicy - sam disc się obraca, wskaźnik u góry stoi w miejscu
+// (tak jak w realnym komponencie).
+.kolofortuny-bar-wheel {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+}
+
+.kolofortuny-bar-wheel-disc {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba($c-black, .3);
+  background: conic-gradient(
+    from 0deg,
+    $c-red 0deg 45deg,
+    #003a5c 45deg 90deg,
+    $c-green 90deg 135deg,
+    #ffd444 135deg 180deg,
+    $c-orange 180deg 225deg,
+    #15171c 225deg 270deg,
+    #4561ff 270deg 315deg,
+    #807700 315deg 360deg
+  );
+  animation: kolofortunyWheelSpin 6s linear infinite;
+}
+
+.kolofortuny-bar-wheel-pointer {
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 3px solid transparent;
+  border-right: 3px solid transparent;
+  border-top: 5px solid #ffd444;
+}
+
+@keyframes kolofortunyWheelSpin { to { transform: rotate(360deg); } }
+
+.kolofortuny-bar-logo {
+  font-family: $kf-font;
+  font-size: 2rem;
+  color: #ffd444;
+  white-space: nowrap;
+  letter-spacing: .03em;
+}
+
+.kolofortuny-bar-text {
+  @include txt(1.3rem, normal, $c-white);
+  font-family: $kf-font;
+  margin: 0;
+  // Jedna linia - obcinamy wielokropkiem, gdy nie ma miejsca, zamiast
+  // zawijać do kolejnego wiersza (zob. flex-wrap: nowrap wyżej).
+  min-width: 0;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+.btn-kolofortuny {
+  @include btn;
+  font-family: $kf-font;
+  padding: .4rem 1.3rem;
+  font-size: .95rem;
+  background: #ffd444;
+  color: #003a5c;
+  text-decoration: none;
+  flex-shrink: 0;
+
+  &:hover {
+    background: #ffe073;
+  }
+}
+
+@include mq(md) {
+  .kolofortuny-bar { padding: .4rem $s-lg; }
+}
+
+// Telefon - tylko logo (koło + napis) i przycisk "Zagraj teraz", bez opisu
+// (zob. .kolofortuny-bar-text), żeby pasek zmieścił się w jednej linii nawet
+// na najwęższych ekranach.
+@include mq(sm) {
+  .kolofortuny-bar { padding: .4rem $s-sm; }
+  .kolofortuny-bar-content { gap: .6rem; }
+  .kolofortuny-bar-text { display: none; }
+  .kolofortuny-bar-logo { font-size: 1.5rem; }
+  .kolofortuny-bar-wheel { width: 26px; height: 26px; }
+  .btn-kolofortuny { padding: .35rem 1rem; font-size: .85rem; }
+}
+
 .summary {
-  &-badge { 
+  &-badge {
     display: inline-flex; align-items: center; gap: .5rem; background: $g-bright; color: $c-white; 
     padding: .8rem $s-lg; border-radius: $r-round; @include txt(1.1rem, bold); margin-bottom: $s-lg; 
     border: 3px solid rgba($c-white, .3); animation: badgePulse 2s ease-in-out infinite; box-shadow: 0 5px 20px rgba($c-green, .4); 
