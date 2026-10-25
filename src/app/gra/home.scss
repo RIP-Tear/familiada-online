@@ -180,16 +180,18 @@
   inset: 0;
   border-radius: 50%;
   box-shadow: 0 0 0 2px rgba($c-black, 0.3);
+  // Prawdziwe kolory marki Koło Fortuny Online (zob. --color-* w ich
+  // globals.css), nie przypadkowe/nasze.
   background: conic-gradient(
     from 0deg,
-    #e63950 0deg 45deg,
-    #003a5c 45deg 90deg,
-    #2a9d8f 90deg 135deg,
-    $c-yellow 135deg 180deg,
-    $c-orange 180deg 225deg,
-    #15171c 225deg 270deg,
-    #4561ff 270deg 315deg,
-    #807700 315deg 360deg
+    #ffd444 0deg 45deg,
+    #006199 45deg 90deg,
+    #8acff8 90deg 135deg,
+    #ffd444 135deg 180deg,
+    #006199 180deg 225deg,
+    #8acff8 225deg 270deg,
+    #ffd444 270deg 315deg,
+    #006199 315deg 360deg
   );
   animation: kolofortunyWheelSpin 6s linear infinite;
 }
