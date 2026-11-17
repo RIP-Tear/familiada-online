@@ -19,6 +19,7 @@ const bebasNeue = Bebas_Neue({
   weight: "400",
 });
 import "../styles/landing.scss";
+import { AdUnit } from "@/components/AdUnit";
 
 const Page = () => {
   const router = useRouter();
@@ -248,6 +249,8 @@ const Page = () => {
         </div>
       </section>
 
+      <AdUnit />
+
       {/* Features Section */}
       <section id="features" className="features-section">
         <div className={`section-header animate-on-scroll ${isVisible['features-header'] ? 'visible' : ''}`} id="features-header">
@@ -387,6 +390,8 @@ const Page = () => {
           </div>
         </div>
       </section>
+
+      <AdUnit />
 
       {/* How It Works Section */}
       <section className="how-it-works-section">
@@ -549,6 +554,8 @@ const Page = () => {
         </div>
       </section>
 
+      <AdUnit />
+
       {/* Security & Privacy Section */}
       <section className="security-section">
         <div className={`section-header animate-on-scroll ${isVisible['security-header'] ? 'visible' : ''}`} id="security-header">
@@ -682,6 +689,8 @@ const Page = () => {
           </div>
         </div>
       </section>
+
+      <AdUnit />
 
       {/* Support Bar */}
       <section className="support-bar">
