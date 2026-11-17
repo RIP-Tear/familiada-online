@@ -1,0 +1,667 @@
+"use client";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { PiGameControllerFill, PiUsersThreeFill, PiLightningFill, PiTrophyFill, PiArrowRightBold, PiSparkle, PiStarFill, PiMagicWandBold, PiCoffeeBold, PiHeartFill } from "react-icons/pi";
+import { Bebas_Neue } from "next/font/google";
+
+// Czcionka CAŁEGO paska promo Koła Fortuny Online (ten projekt ma własną
+// czcionkę "BPdots" - $f w _variables.scss - więc żeby pasek wyglądał tak
+// jak kolofortuny-online.pl, doładowujemy TĘ SAMĄ czcionkę Google jako
+// zmienną CSS (--font-bebas-neue, zob. .kolofortuny-bar w landing.scss) -
+// NIE jako `font-family: inherit`, bo minifikator CSS scala to z
+// `font: ...` z mixinów @include txt/@include btn w jedną (nieprawidłową)
+// deklarację `font: 2rem/1.5 inherit`, przez co cała reguła jest
+// odrzucana przez przeglądarkę.
+const bebasNeue = Bebas_Neue({
+  variable: "--font-bebas-neue",
+  subsets: ["latin", "latin-ext"],
+  weight: "400",
+});
+import "../styles/landing.scss";
+import { AdUnit } from "@/components/AdUnit";
+
+export function LandingContent() {
+  const router = useRouter();
+  const [isVisible, setIsVisible] = useState({});
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible((prev) => ({ ...prev, [entry.target.id]: true }));
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    document.querySelectorAll('.animate-on-scroll').forEach((el) => {
+      observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  const handleStart = () => {
+    router.push('/gra/');
+  };
+
+  return (
+    <div className="landing-page">
+      {/* Promo: Koło Fortuny Online */}
+      <a
+        href="https://kolofortuny-online.pl/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`kolofortuny-bar ${bebasNeue.variable}`}
+      >
+        <div className="kolofortuny-bar-content">
+          <div className="kolofortuny-bar-brand">
+            <span className="kolofortuny-bar-wheel" aria-hidden="true">
+              <span className="kolofortuny-bar-wheel-disc" />
+              <span className="kolofortuny-bar-wheel-pointer" />
+            </span>
+            <span className="kolofortuny-bar-logo">Koło Fortuny</span>
+          </div>
+          <p className="kolofortuny-bar-text">
+            Lubisz Familiadę? Wypróbuj też Koło Fortuny – darmowy teleturniej słowny online, multiplayer po polsku!
+          </p>
+          <span className="btn-kolofortuny">Zagraj teraz</span>
+        </div>
+      </a>
+
+      {/* Hero Section */}
+      <section className="hero-section">
+        <div className="hero-background"></div>
+        <div className="hero-content">
+          <div className="hero-badge">
+            <PiSparkle /> Teleturniej online <PiSparkle />
+          </div>
+          <h1 className="hero-title">
+            <span className="title-word">FAMILIADA</span>
+            <span className="title-subtitle">Online za darmo!</span>
+          </h1>
+          <p className="hero-description">
+            Gra familijna online multiplayer po polsku! Przenieś legendarny teleturniej do swojego domu.
+            Rywalizuj z przyjaciółmi na telefon lub komputer, dodawaj własne pytania i korzystaj z tablicy online.
+            Bez pobierania - zacznij grać natychmiast!
+          </p>
+          <div className="hero-buttons">
+            <button className="btn-primary" onClick={handleStart}>
+              Rozpocznij grę <PiArrowRightBold />
+            </button>
+            <a
+              className="btn-support"
+              href="https://buycoffee.to/rip-tear"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <PiCoffeeBold /> Postaw nam kawę
+            </a>
+          </div>
+          <div className="hero-stats">
+            <div className="stat-item">
+              <PiUsersThreeFill className="stat-icon" />
+              <div className="stat-content">
+                <span className="stat-number">2 drużyny</span>
+                <span className="stat-label">Rozgrywka</span>
+              </div>
+            </div>
+            <div className="stat-item">
+              <PiGameControllerFill className="stat-icon" />
+              <div className="stat-content">
+                <span className="stat-number">5 pytań</span>
+                <span className="stat-label">Na rundę</span>
+              </div>
+            </div>
+            <div className="stat-item">
+              <PiTrophyFill className="stat-icon" />
+              <div className="stat-content">
+                <span className="stat-number">∞ kategorii</span>
+                <span className="stat-label">Pytań</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="hero-image-container">
+          <div className="floating-card">
+            <div className="game-illustration">
+              <div className="game-screen">
+                <div className="screen-header">
+                  <div className="screen-dot"></div>
+                  <div className="screen-dot"></div>
+                  <div className="screen-dot"></div>
+                </div>
+                <div className="screen-content">
+                  <div className="game-title-text">FAMILIADA</div>
+                  <div className="game-buttons">
+                    <div className="game-btn game-btn-1"></div>
+                    <div className="game-btn game-btn-2"></div>
+                  </div>
+                  <div className="game-code">Kod: XXXX</div>
+                </div>
+              </div>
+              <div className="floating-icons">
+                <div className="float-icon icon-1">⚡</div>
+                <div className="float-icon icon-2">🏆</div>
+                <div className="float-icon icon-3">🎮</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <AdUnit />
+
+      {/* Features Section */}
+      <section id="features" className="features-section">
+        <div className={`section-header animate-on-scroll ${isVisible['features-header'] ? 'visible' : ''}`} id="features-header">
+          <span className="section-badge">
+            <PiStarFill /> Funkcje <PiStarFill />
+          </span>
+          <h2 className="section-title-landing">Wszystko, czego potrzebujesz</h2>
+          <p className="section-description">
+            Profesjonalna platforma do rozgrywek online z pełną funkcjonalnością
+          </p>
+        </div>
+
+        <div className="features-grid">
+          <div className={`feature-card animate-on-scroll ${isVisible['feature-1'] ? 'visible' : ''}`} id="feature-1">
+            <div className="feature-icon buzz">
+              <PiLightningFill />
+            </div>
+            <h3 className="feature-title">System Buzzerów</h3>
+            <p className="feature-description">
+              Szybka reakcja decyduje! Pierwszy, który wciśnie buzzer, zdobywa prawo
+              do odpowiedzi i może rozpocząć walkę o punkty dla swojej drużyny.
+            </p>
+            <div className="feature-image">
+              <div className="buzzer-illustration">
+                <div className="buzzer-container">
+                  <div className="buzzer-button buzzer-pulse">
+                    <div className="buzzer-inner">
+                      <PiLightningFill className="buzzer-icon" />
+                      <span className="buzzer-text">NACIŚNIJ!</span>
+                    </div>
+                  </div>
+                  <div className="buzzer-waves">
+                    <div className="wave wave-1"></div>
+                    <div className="wave wave-2"></div>
+                    <div className="wave wave-3"></div>
+                  </div>
+                </div>
+                <div className="buzzer-result">PIERWSZY! 🎯</div>
+              </div>
+            </div>
+          </div>
+
+          <div className={`feature-card animate-on-scroll ${isVisible['feature-2'] ? 'visible' : ''}`} id="feature-2">
+            <div className="feature-icon categories">
+              <PiGameControllerFill />
+            </div>
+            <h3 className="feature-title">Różne Kategorie</h3>
+            <p className="feature-description">
+              Od przysłów szkolnych po popkulturę - wybierz kategorię, która
+              najbardziej Ci odpowiada. Każda runda to nowa przygoda!
+            </p>
+            <div className="feature-image">
+              <div className="categories-illustration">
+                <div className="categories-illustration-header">Głosowanie na kategorię</div>
+                <div className="category-chip-grid">
+                  <div className="category-chip">
+                    <span className="chip-stars">⭐⭐</span>
+                    <span className="chip-name">Sport</span>
+                  </div>
+                  <div className="category-chip voted">
+                    <span className="chip-vote">✓</span>
+                    <span className="chip-stars">⭐</span>
+                    <span className="chip-name">Kuchnia</span>
+                  </div>
+                  <div className="category-chip">
+                    <span className="chip-stars">⭐⭐⭐</span>
+                    <span className="chip-name">Historia</span>
+                  </div>
+                  <div className="category-chip ai-chip">
+                    <span className="chip-stars"><PiMagicWandBold /></span>
+                    <span className="chip-name">Wygenerowana AI</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className={`feature-card animate-on-scroll ${isVisible['feature-3'] ? 'visible' : ''}`} id="feature-3">
+            <div className="feature-icon multiplayer">
+              <PiUsersThreeFill />
+            </div>
+            <h3 className="feature-title">Tryb Multiplayer</h3>
+            <p className="feature-description">
+              Graj z przyjaciółmi w czasie rzeczywistym! Synchronizacja na żywo
+              zapewnia płynną rozgrywkę dla wszystkich uczestników.
+            </p>
+            <div className="feature-image">
+              <div className="multiplayer-illustration">
+                <div className="players-container">
+                  <div className="player-group team-1">
+                    <div className="player-avatar">👤</div>
+                    <div className="player-avatar">👤</div>
+                    <div className="team-label">Drużyna A</div>
+                  </div>
+                  <div className="vs-badge">VS</div>
+                  <div className="player-group team-2">
+                    <div className="player-avatar">👤</div>
+                    <div className="player-avatar">👤</div>
+                    <div className="team-label">Drużyna B</div>
+                  </div>
+                </div>
+                <div className="sync-indicator">
+                  <div className="sync-dot"></div>
+                  <span className="sync-text">Synchronizacja live</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className={`feature-card animate-on-scroll ${isVisible['feature-4'] ? 'visible' : ''}`} id="feature-4">
+            <div className="feature-icon scoring">
+              <PiTrophyFill />
+            </div>
+            <h3 className="feature-title">Tablica Wyników</h3>
+            <p className="feature-description">
+              Profesjonalna tablica z efektami wizualnymi! Odkrywaj odpowiedzi,
+              zbieraj punkty i obserwuj, jak rośnie wynik Twojej drużyny.
+            </p>
+            <div className="feature-image">
+              <div className="board-illustration">
+                <div className="board-question">Podaj odpowiedź na pytanie</div>
+                <div className="board-answers">
+                  <div className="board-answer revealed">
+                    <span className="answer-num">1</span>
+                    <span className="answer-txt">Długopis</span>
+                    <span className="answer-pts">200</span>
+                  </div>
+                  <div className="board-answer">
+                    <span className="answer-num">2</span>
+                  </div>
+                  <div className="board-answer">
+                    <span className="answer-num">3</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <AdUnit />
+
+      {/* How It Works Section */}
+      <section className="how-it-works-section">
+        <div className={`section-header animate-on-scroll ${isVisible['how-header'] ? 'visible' : ''}`} id="how-header">
+          <span className="section-badge">
+            <PiArrowRightBold /> Jak to działa? <PiArrowRightBold />
+          </span>
+          <h2 className="section-title-landing">Rozpocznij w 3 krokach</h2>
+        </div>
+
+        <div className="steps-container">
+          <div className={`step-card animate-on-scroll ${isVisible['step-1'] ? 'visible' : ''}`} id="step-1">
+            <div className="step-number">1</div>
+            <div className="step-content">
+              <h3 className="step-title">Utwórz pokój</h3>
+              <p className="step-description">
+                Jako prowadzący kliknij "Rozpocznij grę" i otrzymaj
+                unikalny kod, który przekażesz drużynom do dołączenia.
+              </p>
+            </div>
+          </div>
+
+          <div className="step-arrow">→</div>
+
+          <div className={`step-card animate-on-scroll ${isVisible['step-2'] ? 'visible' : ''}`} id="step-2">
+            <div className="step-number">2</div>
+            <div className="step-content">
+              <h3 className="step-title">Zapros graczy</h3>
+              <p className="step-description">
+                Twoi znajomi dołączają przez kod, dzielą się na dwie drużyny
+                i gotowi są do rywalizacji!
+              </p>
+            </div>
+          </div>
+
+          <div className="step-arrow">→</div>
+
+          <div className={`step-card animate-on-scroll ${isVisible['step-3'] ? 'visible' : ''}`} id="step-3">
+            <div className="step-number">3</div>
+            <div className="step-content">
+              <h3 className="step-title">Zacznij grać!</h3>
+              <p className="step-description">
+                Wybierz kategorię, wciskaj buzzery, odkrywaj odpowiedzi
+                i walcz o zwycięstwo w emocjonującej rozgrywce!
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Custom Categories Section */}
+      <section className="custom-categories-section">
+        <div className={`section-header animate-on-scroll ${isVisible['custom-header'] ? 'visible' : ''}`} id="custom-header">
+          <span className="section-badge">
+            <PiSparkle /> Twoja gra, Twoje pytania - teraz z AI! <PiSparkle />
+          </span>
+          <h2 className="section-title-landing">Twórz własne kategorie</h2>
+          <p className="section-subtitle">
+            Spersonalizuj swoją rozgrywkę! Napisz pytania i odpowiedzi samodzielnie
+            albo <strong>wygeneruj je automatycznie przy pomocy AI</strong> w kilka sekund -
+            wystarczy podać nazwę kategorii i poziom trudności.
+          </p>
+        </div>
+
+        <div className="custom-categories-content">
+          <div className={`custom-feature ai-feature animate-on-scroll ${isVisible['custom-ai'] ? 'visible' : ''}`} id="custom-ai">
+            <div className="custom-icon">
+              <div className="icon-wrapper ai">
+                <PiMagicWandBold />
+              </div>
+            </div>
+            <div className="custom-text">
+              <h3 className="custom-title">Pytania i odpowiedzi generowane przez AI</h3>
+              <p className="custom-description">
+                Podaj tylko nazwę kategorii i poziom trudności, a AI błyskawicznie wygeneruje
+                <strong> 5 pytań wraz z odpowiedziami</strong> - bez pisania czegokolwiek samodzielnie!
+                Wygenerowaną treść możesz potem dowolnie edytować. Co więcej, <strong>drużyny
+                i uczestnicy</strong> również mogą samodzielnie wygenerować własną kategorię AI
+                podczas głosowania - żeby zaskoczyć wszystkich niespodziewanym tematem!
+              </p>
+            </div>
+          </div>
+
+          <div className={`custom-feature animate-on-scroll ${isVisible['custom-1'] ? 'visible' : ''}`} id="custom-1">
+            <div className="custom-icon">
+              <div className="icon-wrapper create">
+                <PiGameControllerFill />
+              </div>
+            </div>
+            <div className="custom-text">
+              <h3 className="custom-title">Pełna kontrola nad pytaniami</h3>
+              <p className="custom-description">
+                Twórz własne pytania z odpowiedziami dopasowanymi do Twojej grupy, ręcznie
+                lub z pomocą AI jako punktu startowego.
+                Każda kategoria zawiera 5 pytań, a każde pytanie może mieć od 3 do 10 odpowiedzi.
+                Określasz kolejność odpowiedzi, która wpływa na punktację!
+              </p>
+            </div>
+          </div>
+
+          <div className={`custom-feature animate-on-scroll ${isVisible['custom-2'] ? 'visible' : ''}`} id="custom-2">
+            <div className="custom-icon">
+              <div className="icon-wrapper difficulty">
+                <PiStarFill />
+              </div>
+            </div>
+            <div className="custom-text">
+              <h3 className="custom-title">Wybierz poziom trudności</h3>
+              <p className="custom-description">
+                Oznacz swoją kategorię jako łatwą (⭐), średnią (⭐⭐) lub trudną (⭐⭐⭐).
+                To pomaga graczom wybrać odpowiedni poziom wyzwania i dodaje strategiczny element
+                do głosowania na kategorie.
+              </p>
+            </div>
+          </div>
+
+          <div className={`custom-feature animate-on-scroll ${isVisible['custom-3'] ? 'visible' : ''}`} id="custom-3">
+            <div className="custom-icon">
+              <div className="icon-wrapper timing">
+                <PiLightningFill />
+              </div>
+            </div>
+            <div className="custom-text">
+              <h3 className="custom-title">Twórz w dowolnym momencie</h3>
+              <p className="custom-description">
+                Kategorie możesz tworzyć w poczekalni przed rozpoczęciem gry lub nawet podczas
+                głosowania drużyn. Edytuj swoje kategorie w każdej chwili, aby dostosować
+                pytania do sytuacji lub poprawić szczegóły.
+              </p>
+            </div>
+          </div>
+
+          <div className={`custom-feature animate-on-scroll ${isVisible['custom-4'] ? 'visible' : ''}`} id="custom-4">
+            <div className="custom-icon">
+              <div className="icon-wrapper drag">
+                <PiUsersThreeFill />
+              </div>
+            </div>
+            <div className="custom-text">
+              <h3 className="custom-title">Unikalne dla Twojej grupy</h3>
+              <p className="custom-description">
+                Stworzone kategorie są dostępne tylko w Twojej grze - nie są publikowane publicznie.
+                To idealne rozwiązanie do tworzenia pytań nawiązujących do wspólnych wspomnień,
+                wewnętrznych żartów czy specyficznych zainteresowań Twojej grupy!
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className={`custom-note animate-on-scroll ${isVisible['custom-note'] ? 'visible' : ''}`} id="custom-note">
+          <div className="note-box">
+            <PiSparkle className="note-icon" />
+            <p className="note-text">
+              <strong>Wskazówka:</strong> Nie masz pomysłu na pytania? Kliknij "Wygeneruj pytania
+              i odpowiedzi" i pozwól AI zrobić to za Ciebie! Najlepsze kategorie to te, które znają
+              wszyscy gracze - twórz pytania dopasowane do zainteresowań Twojej grupy, od memów po
+              wspólne doświadczenia. Pamiętaj, że kolejność odpowiedzi określa punktację (pierwsza = 100 pkt).
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <AdUnit />
+
+      {/* Security & Privacy Section */}
+      <section className="security-section">
+        <div className={`section-header animate-on-scroll ${isVisible['security-header'] ? 'visible' : ''}`} id="security-header">
+          <span className="section-badge">
+            🔒 Bezpieczeństwo i Prywatność
+          </span>
+          <h2 className="section-title-landing">Twoje dane są bezpieczne</h2>
+          <p className="section-subtitle">
+            Zapewniamy pełne bezpieczeństwo i ochronę prywatności podczas rozgrywki
+          </p>
+        </div>
+
+        <div className="security-features">
+          <div className={`security-card animate-on-scroll ${isVisible['security-1'] ? 'visible' : ''}`} id="security-1">
+            <div className="security-icon ssl">
+              <span className="icon-emoji">🔒</span>
+            </div>
+            <h3 className="security-title">Szyfrowane połączenie</h3>
+            <p className="security-description">
+              Cała komunikacja jest chroniona certyfikatem SSL/HTTPS.
+              Twoje dane są bezpiecznie przesyłane w zaszyfrowanej formie.
+            </p>
+            <div className="security-badge">
+              <span className="badge-text">SSL Secured</span>
+            </div>
+          </div>
+
+          <div className={`security-card animate-on-scroll ${isVisible['security-2'] ? 'visible' : ''}`} id="security-2">
+            <div className="security-icon privacy">
+              <span className="icon-emoji">🛡️</span>
+            </div>
+            <h3 className="security-title">Zero danych osobowych</h3>
+            <p className="security-description">
+              Nie zbieramy żadnych danych osobowych. Nie wymagamy rejestracji,
+              adresu email ani numerów telefonu. Grasz anonimowo!
+            </p>
+            <div className="security-badge">
+              <span className="badge-text">Privacy First</span>
+            </div>
+          </div>
+
+          <div className={`security-card animate-on-scroll ${isVisible['security-3'] ? 'visible' : ''}`} id="security-3">
+            <div className="security-icon cloud">
+              <span className="icon-emoji">☁️</span>
+            </div>
+            <h3 className="security-title">Google Cloud Platform</h3>
+            <p className="security-description">
+              Dane gier przechowywane są w Firebase (Google Cloud),
+              na infrastrukturze o najwyższych standardach bezpieczeństwa.
+            </p>
+            <div className="security-badge">
+              <span className="badge-text">Firebase Secure</span>
+            </div>
+          </div>
+
+          <div className={`security-card animate-on-scroll ${isVisible['security-4'] ? 'visible' : ''}`} id="security-4">
+            <div className="security-icon ads">
+              <span className="icon-emoji">⚡</span>
+            </div>
+            <h3 className="security-title">Szybka i stabilna rozgrywka</h3>
+            <p className="security-description">
+              Nowoczesna infrastruktura zapewnia płynną synchronizację
+              w czasie rzeczywistym. Graj bez opóźnień i zawieszek!
+            </p>
+            <div className="security-badge">
+              <span className="badge-text">Real-time Sync</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Extra Features Section */}
+      <section className="extra-section">
+        <div className="extra-content" id="extra">
+          <div className="extra-summary">
+            <h2 className="summary-title">Gotowy na najlepszą zabawę?</h2>
+            <p className="summary-text">
+              Familiada online to darmowa platforma, która przeniesie kultowy teleturniej
+              wprost do Twojego domu! Żadnych ukrytych kosztów, żadnych ograniczeń -
+              po prostu czysta, emocjonująca rozgrywka z przyjaciółmi!
+            </p>
+            <button className="btn-primary btn-large btn-full-width" onClick={handleStart}>
+              Rozpocznij grę za darmo <PiArrowRightBold />
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* SEO Section */}
+      <section className="seo-section">
+        <div className={`section-header animate-on-scroll ${isVisible['seo-header'] ? 'visible' : ''}`} id="seo-header">
+          <span className="section-badge">
+            🎮 Familiada Online
+          </span>
+          <h2 className="section-title-landing">Gra Familijna Multiplayer Po Polsku</h2>
+        </div>
+
+        <div className={`seo-content animate-on-scroll ${isVisible['seo-content'] ? 'visible' : ''}`} id="seo-content">
+          <div className="seo-text">
+            <p>
+              <strong>Familiada online</strong> to popularna <strong>gra familijna</strong>, która pozwala Ci cieszyć się kultowym teleturniejem
+              bez wychodzenia z domu! Nasza <strong>gra online za darmo</strong> działa w trybie <strong>multiplayer</strong>,
+              co oznacza, że możesz grać z przyjaciółmi w czasie rzeczywistym.
+            </p>
+            <p>
+              <strong>Familiada gra online</strong> jest dostępna <strong>po polsku</strong> i działa na każdym urządzeniu -
+              możesz grać <strong>na telefon</strong>, tablet lub komputer. Nie musisz nic pobierać - wystarczy przeglądarka!
+              Nasza <strong>tablica online</strong> wygląda dokładnie jak w prawdziwym teleturnieju.
+            </p>
+            <p>
+              Jedną z najlepszych funkcji jest możliwość tworzenia <strong>własnych pytań</strong>. Jako prowadzący możesz
+              przygotować pytania dopasowane do Twojej grupy, co sprawia, że <strong>familiada w domu</strong> jest jeszcze
+              bardziej osobista i zabawna. To idealna <strong>gra online</strong> na imprezę lub spotkanie rodzinne!
+            </p>
+            <p>
+              Nie masz czasu na pisanie pytań? Skorzystaj z <strong>generatora pytań AI</strong> wbudowanego w grę!
+              Wystarczy podać nazwę kategorii i poziom trudności, a <strong>pytania generowane przez AI</strong> pojawią się
+              w kilka sekund - razem z gotowymi odpowiedziami. Co więcej, własną kategorię przy pomocy AI mogą
+              wygenerować też drużyny i uczestnicy podczas gry, co czyni <strong>familiadę z AI</strong> jeszcze bardziej
+              nieprzewidywalną i zabawną.
+            </p>
+            <p>
+              <strong>Gra familiada online</strong> nie wymaga rejestracji ani pobierania. Po prostu wejdź na stronę,
+              stwórz pokój jako prowadzący i podziel się kodem z innymi graczami. To naprawdę tak proste!
+              <strong>Familiada gra za darmo</strong> - bez ukrytych opłat i bez ograniczeń czasowych.
+            </p>
+            <p>
+              Zapraszamy do rozgrywki! Wypróbuj najlepszą polską <strong>grę familijną online</strong> i przekonaj się,
+              dlaczego tysiące graczy wybrało naszą <strong>familiadę online</strong>. Rozpocznij grę już teraz i baw się świetnie!
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <AdUnit />
+
+      {/* Support Bar */}
+      <section className="support-bar">
+        <div className="support-bar-content">
+          <PiHeartFill className="support-bar-icon" />
+          <p className="support-bar-text">
+            Podoba Ci się gra? Wesprzyj nas i pomóż pokryć koszty hostingu i AI!
+          </p>
+          <a
+            className="btn-support"
+            href="https://buycoffee.to/rip-tear"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <PiCoffeeBold /> Postaw nam kawę
+          </a>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="landing-footer">
+        <div className="footer-content">
+          <div className="footer-main">
+            <p className="footer-copyright">
+              © 2026 Familiada. Gra stworzona przez{" "}
+              <a
+                href="https://www.rip-tear.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-link"
+              >
+                <img
+                  src="https://www.rip-tear.com/favicon.ico"
+                  alt="RIP & Tear"
+                  className="footer-icon"
+                />
+                RIP & Tear
+              </a>
+            </p>
+          </div>
+
+          <div className="footer-links">
+            <a href="/polityka-prywatnosci/" className="footer-nav-link">
+              Polityka Prywatności
+            </a>
+            <span className="footer-separator">•</span>
+            <a href="/zasady/" className="footer-nav-link">
+              Zasady Gry
+            </a>
+            <span className="footer-separator">•</span>
+            <a href="mailto:service@rip-tear.com" className="footer-nav-link">
+              Kontakt
+            </a>
+          </div>
+
+          <div className="footer-security-badges">
+            <div className="footer-badge">
+              <span>🔒 SSL Secured</span>
+            </div>
+            <div className="footer-badge">
+              <span>🛡️ Privacy Protected</span>
+            </div>
+            <div className="footer-badge">
+              <span>⚡ Real-time Sync</span>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
